@@ -1,0 +1,32 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS services;
+
+CREATE TABLE services(
+service_id serial NOT NULL,
+service_name VARCHAR(10) NOT NULL ,
+CONSTRAINT  users_pkey PRIMARY KEY (service_id),
+UNIQUE (service_id)
+);
+
+INSERT INTO services(service_name) 
+VALUES ('FR'),('Java'),('CL'),('QA'),('ML'),('“à‹Î');
+
+
+CREATE TABLE users(
+user_id serial NOT NULL,
+account_name text NOT NULL,
+user_email VARCHAR(255) NOT NULL,
+user_password text NOT NULL,
+hire_date DATE NOT NULL,
+service_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_user_service(service_fk) REFERENCES services(service_id),
+birth_day DATE NOT NULL,
+introduction TEXT ,
+logined_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+registered_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+deleted boolean NOT NULL default false,
+CONSTRAINT  users_pkey PRIMARY KEY (user_id),
+UNIQUE (user_id,user_email)
+);
+
