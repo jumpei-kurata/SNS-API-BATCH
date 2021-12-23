@@ -9,7 +9,7 @@ UNIQUE (service_id)
 );
 
 INSERT INTO services(service_name) 
-VALUES ('FR'),('Java'),('CL'),('QA'),('ML'),('“à‹Î');
+VALUES ('FR'),('Java'),('CL'),('QA'),('ML'),('å†…å‹¤');
 
 
 CREATE TABLE users(
