@@ -1,8 +1,6 @@
 package com.example.domain;
-
 import java.sql.Date;
 import java.time.LocalDateTime;
-
 /**
  * ユーザーのクラス
  * 
@@ -10,12 +8,11 @@ import java.time.LocalDateTime;
  *
  */
 public class User {
-
-	private Integer userId;
-	private String userName;
+	private Integer id;
+	private String name;
 	private String accountName;
-	private String userEmail;
-	private String userPassword;
+	private String email;
+	private String password;
 	private Date hireDate;
 	private Integer serviceFk;
 	private String serviceName;
@@ -25,19 +22,17 @@ public class User {
 	private LocalDateTime updatedTime;
 	private LocalDateTime registeredTime;
 	private Boolean deleted;
-	
-	
-	public Integer getUserId() {
-		return userId;
+	public Integer getId() {
+		return id;
 	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
-	public String getUserName() {
-		return userName;
+	public String getName() {
+		return name;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getAccountName() {
 		return accountName;
@@ -45,17 +40,17 @@ public class User {
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
 	}
-	public String getUserEmail() {
-		return userEmail;
+	public String getEmail() {
+		return email;
 	}
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	public String getUserPassword() {
-		return userPassword;
+	public String getPassword() {
+		return password;
 	}
-	public void setUserPassword(String userPassword) {
-		this.userPassword = userPassword;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	public Date getHireDate() {
 		return hireDate;
@@ -111,13 +106,11 @@ public class User {
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
-	
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", accountName=" + accountName + ", userEmail="
-				+ userEmail + ", userPassword=" + userPassword + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk
-				+ ", serviceName=" + serviceName + ", birthDay=" + birthDay + ", introduction=" + introduction
-				+ ", loginedTime=" + loginedTime + ", updatedTime=" + updatedTime + ", registeredTime=" + registeredTime
-				+ ", deleted=" + deleted + "]";
+		return "User [id=" + id + ", name=" + name + ", accountName=" + accountName + ", email=" + email + ", password="
+				+ password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", serviceName=" + serviceName
+				+ ", birthDay=" + birthDay + ", introduction=" + introduction + ", loginedTime=" + loginedTime
+				+ ", updatedTime=" + updatedTime + ", registeredTime=" + registeredTime + ", deleted=" + deleted + "]";
 	}
 }
