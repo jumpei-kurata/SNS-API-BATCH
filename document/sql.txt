@@ -1,0 +1,73 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS services;
+
+CREATE TABLE services(
+service_id serial NOT NULL,
+service_name VARCHAR(10) NOT NULL ,
+CONSTRAINT  users_pkey PRIMARY KEY (service_id),
+UNIQUE (service_id)
+);
+
+INSERT INTO services(service_name) 
+VALUES ('FR'),('Java'),('CL'),('QA'),('ML'),('“à‹Î');
+
+
+CREATE TABLE users(
+user_id serial NOT NULL,
+user_name VARCHAR(30) NOT NULL,
+account_name VARCHAR(30) NOT NULL,
+user_email VARCHAR(255) NOT NULL,
+user_password text NOT NULL,
+hire_date DATE NOT NULL,
+service_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_user_service(service_fk) REFERENCES services(service_id),
+birth_day DATE NOT NULL,
+introduction TEXT ,
+logined_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+registered_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+deleted boolean NOT NULL default false,
+CONSTRAINT  users_pkey PRIMARY KEY (user_id),
+UNIQUE (user_id,user_email)
+);
+
+CREATE TABLE timelines(
+timeline_id serial NOT NULL,
+user_fk BIGINT UNSIGNED NOT NULL,
+sentence varchar(140) NOT NULL,
+timeline_like_count BIGINT NOT NULL DEFAULT 0,
+timeline_updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+timeline_posted_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+deleted boolean NOT NULL default false,
+CONSTRAINT timelines_pkey PRIMARY KEY (timeline_id)
+);
+
+CREATE TABLE restaurant_genres(
+restaurant_genre_id serial NOT NULL,
+restaurant_genre_name VARCHAR(10) NOT NULL ,
+CONSTRAINT  restaurant_genre_pkey PRIMARY KEY (restaurant_genre_id),
+);
+
+CREATE TABLE restaurant_types(
+restaurant_type_id serial NOT NULL,
+restaurant_type_value VARCHAR(10) NOT NULL ,
+CONSTRAINT  restaurant_type_pkey PRIMARY KEY (restaurant_type_id),
+);
+
+CREATE TABLE restaurants(
+restaurant_id serial NOT NULL,
+user_fk BIGINT UNSIGNED NOT NULL,
+restaurant_name varchar(30) NOT NULL,
+restaurant_address varchar(100) NOT NULL,
+restaurant_genre_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_restaurant_genre(restaurant_genre_fk) REFERENCES restaurant_genres(restaurant_genre_id),
+restaurant_type_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_restaurant_type(restaurant_type_fk) REFERENCES restaurant_types(restaurant_type_id),
+restaurant_star INT NOT NULL,
+restaurant_like_count BIGINT NOT NULL DEFAULT 0,
+restaurant_posted_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+restaurant_updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+deleted boolean NOT NULL default false,
+CONSTRAINT restaurants_pkey PRIMARY KEY (restaurant_id)
+);
+
