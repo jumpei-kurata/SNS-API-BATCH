@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.UserDao">
+	<resultMap id="userMap" type="com.example.domain.User">
+		<id			property="id"			column="user_id" ></id>
+		<result 	property="name"			column="user_name" ></result>
+		<result 	property="email"		column="user_email" ></result>
+		<result 	property="password"		column="user_password"></result>
+		<result 	property="departmentId"	column="user_departement_id" ></result>
+		<result 	property="position"		column="user_position" ></result>
+		<result 	property="deleted"		column="user_deleted" ></result>
+		<result 	property="serviceName"  column="user_deleted" />
+		<result 	property="serviceName"  column="user_deleted" />
+	</resultMap>
+
+	<select id="findById" resultMap="userMap">
+		SELECT
+		FROM
+		users AS u
+		JOIN 
+		user_departments AS ud 
+		ON 
+		u.user_department_id = ud.user_departments_id 
+		JOIN 
+		user_companies AS uc
+		ON
+		ud.user_company_id = uc.user_companies_id
+		WHERE
+		u.id = #{id}
+	</select>
+	<select id="findByEmail" resultMap="userMap">
+		SELECT
+		FROM
+		users AS u
+		JOIN 
+		user_departments AS ud 
+		ON 
+		u.user_department_id = ud.user_departments_id 
+		JOIN 
+		user_companies AS uc
+		ON
+		ud.user_company_id = uc.user_companies_id
+		WHERE
+		u.email= #{email}
+	</select>
+	<insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+		insert into users (user_name,account_name,user_email,user_password,hire_date,service_fk,birth_day,introduction)
+		values (#{userName},#{accountName},#{userEmail},#{userPassword},#{hireDate},#{serviceFk},#{birthDay},#{introduction})
+	</insert>
+
+</mapper>
