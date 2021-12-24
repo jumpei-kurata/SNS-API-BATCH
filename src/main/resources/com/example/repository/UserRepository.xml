@@ -43,7 +43,7 @@
 		ON 
 		u.service_fk = s.service_id 
 		WHERE
-		u.email= #{email}
+		u.user_email= #{email}
 		AND
 		u.deleted = false 
 	</select>
