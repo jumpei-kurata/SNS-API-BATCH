@@ -62,7 +62,7 @@ public class CreateUserController {
 		}
 		
 		try {
-			user = userService.findById(userService.insertUser(user)) ;
+			user = userService.insertUser(user) ;
 		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("status", "error");
