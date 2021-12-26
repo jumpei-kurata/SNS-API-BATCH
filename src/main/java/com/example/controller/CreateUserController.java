@@ -34,7 +34,7 @@ public class CreateUserController {
 	 * ユーザーを登録します
 	 * @param form 入力されたユーザー情報
 	 * @param result
-	 * @return メッセージ（成功/失敗）
+	 * @return メッセージ（成功/失敗）ステータス（OK/error） ユーザー情報
 	 */
 	@PostMapping(value = "/user")
 	public Map<String, Object> insertUser(@RequestBody @Validated CreateUserForm form,BindingResult result) {
