@@ -45,7 +45,7 @@ public class UserService {
 	 * @return ユーザー情報
 	 */
 	public User insertUser(User user) {
-		user.setId( userRepository.insertUser(user));
+		userRepository.insertUser(user);
 		return user;		
 	}
 

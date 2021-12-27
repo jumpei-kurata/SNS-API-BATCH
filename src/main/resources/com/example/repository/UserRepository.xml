@@ -62,6 +62,9 @@
 	<insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO users (user_name,account_name,user_email,user_password,hire_date,service_fk,birth_day,introduction)
 		VALUES 				(#{name},#{accountName},#{email},#{password},#{hireDate},#{serviceFk},#{birthDay},#{introduction})
+	  <selectKey resultType="int" keyProperty="id" order="AFTER">
+      	select @@IDENTITY
+	  </selectKey>
 	</insert>
 	<update id="updateUser">
 		UPDATE

@@ -12,7 +12,7 @@ public interface UserRepository {
 	// 全件検索
 	List<User> findAll();
 	// ユーザーテーブルにデータを挿入
-	int insertUser(User user);
+	void insertUser(User user);
 	
 	// ユーザーテーブルを更新
 	int updateUser(User user);
