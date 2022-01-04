@@ -154,10 +154,10 @@ public class CreateUserController {
 			map.put("status", "error");
 			
 			if (form.getEmail() != null) {
-				map.put("emailMessage", result.getFieldError("email"));
+				map.put("emailMessage", result.getFieldError("email").getDefaultMessage());
 			}
 			if (form.getPassword() != null) {
-				map.put("passwordMessage", result.getFieldError("password"));
+				map.put("passwordMessage", result.getFieldError("password").getDefaultMessage());
 			}
 			
 			return map;
