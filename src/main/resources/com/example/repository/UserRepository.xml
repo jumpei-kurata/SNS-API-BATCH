@@ -80,7 +80,7 @@
 		introduction = #{introduction} ,
 		updated_time = now() 
 		WHERE
-		users_id = #{id}
+		user_id = #{id}
 	</update>
 	
 </mapper>
