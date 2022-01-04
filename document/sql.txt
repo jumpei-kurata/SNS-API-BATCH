@@ -56,7 +56,6 @@ CONSTRAINT  restaurant_type_pkey PRIMARY KEY (restaurant_type_id),
 
 CREATE TABLE restaurants(
 restaurant_id serial NOT NULL,
-user_fk BIGINT UNSIGNED NOT NULL,
 restaurant_name varchar(30) NOT NULL,
 restaurant_address varchar(100) NOT NULL,
 restaurant_genre_fk BIGINT UNSIGNED NOT NULL,
@@ -70,4 +69,6 @@ restaurant_updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 deleted boolean NOT NULL default false,
 CONSTRAINT restaurants_pkey PRIMARY KEY (restaurant_id)
 );
+
+
 
