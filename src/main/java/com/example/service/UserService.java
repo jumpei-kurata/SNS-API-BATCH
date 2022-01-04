@@ -49,4 +49,13 @@ public class UserService {
 		return user;		
 	}
 
+	/**
+	 * ユーザー情報を更新します
+	 * @param user 入力されたユーザー情報
+	 * @return ユーザー情報
+	 */
+	public User updateUser(User user) {
+		userRepository.updateUser(user);
+		return user;
+	}
 }
