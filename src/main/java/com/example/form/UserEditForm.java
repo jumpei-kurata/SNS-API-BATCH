@@ -2,30 +2,30 @@ package com.example.form;
 
 import java.sql.Date;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class CreateUserForm {
+public class UserEditForm {
 
-	@NotBlank(message = "名前が入力されていません")
+	private Integer id;
 	private String name;
-	@NotBlank(message = "アカウント名が入力されていません")
 	private String accountName;
 	@Pattern(regexp = "^[a-zA-Z0-9_.+-]+@rakus.co.jp$|^[a-zA-Z0-9_.+-]+@rakus-partners.co.jp$",message = "使用できないメールアドレスです")
 	private String email;
 	@Size(min = 8,max = 16,message = "パスワードは8文字以上16文字以内で入力してください")
 	private String password;
-	@NotNull(message = "入社日が入力されていません")
 	private Date hireDate;
-	@NotNull(message = "職種が選択されていません")
 	private Integer serviceFk;
-	@NotNull(message = "誕生日が入力されていません")
 	private Date birthDay;
 	
 	private String introduction;
 	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}
@@ -76,9 +76,9 @@ public class CreateUserForm {
 	}
 	@Override
 	public String toString() {
-		return "CreateUserForm [name=" + name + ", accountName=" + accountName + ", email=" + email + ", password="
-				+ password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", birthDay=" + birthDay
-				+ ", introduction=" + introduction + "]";
+		return "UserEditForm [id=" + id + ", name=" + name + ", accountName=" + accountName + ", email=" + email
+				+ ", password=" + password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", birthDay="
+				+ birthDay + ", introduction=" + introduction + "]";
 	}
 
 	
