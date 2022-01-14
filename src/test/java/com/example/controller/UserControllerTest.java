@@ -7,15 +7,21 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 class UserControllerTest {
 
+	//DBの中身がおそらく違うので、変更しないとオールグリーンにはならないと思います
+	
+	
+	//共通URLを設定するところ
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
 		RestAssured.baseURI = "http://localhost:8080";
 	}
 
+	//POSTの場合の例として　ログイン機能の成功例
 	@Test
 	void testLoginSuccess() {
 		
@@ -40,6 +46,20 @@ class UserControllerTest {
 		
 	}
 
-	
+	//GETの場合の例として
+	@Test
+	void testFindByIdSuccess() {
+		Response response = given()
+				.contentType(ContentType.JSON)
+				.when()
+				.get("/user/14")
+				.then()
+				.extract().response();
+		
+		assertEquals(200,response.statusCode());
+		assertEquals("大友",response.jsonPath().getString("name"));
+		assertEquals("abab@rakus.co.jp", response.jsonPath().getString("email"));
+		
+	}
 
 }
