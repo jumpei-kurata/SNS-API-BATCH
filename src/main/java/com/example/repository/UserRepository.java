@@ -16,4 +16,6 @@ public interface UserRepository {
 	
 	// ユーザーテーブルを更新
 	int updateUser(User user);
+	
+	void loginedUpdate(User user);
 }
