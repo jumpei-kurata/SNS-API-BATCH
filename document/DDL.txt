@@ -1,0 +1,149 @@
+DROP TABLE IF EXISTS links_to_timeline;
+DROP TABLE IF EXISTS links_to_review;
+DROP TABLE IF EXISTS links_to_like_comment;
+DROP TABLE IF EXISTS like_comments;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS timelines;
+DROP TABLE IF EXISTS restaurants;
+DROP TABLE IF EXISTS restaurant_genres;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS services;
+DROP TABLE IF EXISTS mails;
+
+CREATE TABLE mails(
+mail_id serial NOT NULL,
+mail_user_name VARCHAR(10) NOT NULL ,
+mail_email VARCHAR(255) NOT NULL,
+mail_token VARCHAR(32) NOT NULL,
+mail_status TINYINT NOT NULL,
+mail_registered_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+CONSTRAINT  mails_pkey PRIMARY KEY (mail_id),
+UNIQUE (mail_email)
+);
+
+CREATE TABLE services(
+service_id serial NOT NULL,
+service_name VARCHAR(10) NOT NULL ,
+CONSTRAINT  users_pkey PRIMARY KEY (service_id)
+);
+
+INSERT INTO services(service_name) 
+VALUES ('FR'),('Java'),('CL'),('QA'),('ML'),('内勤');
+
+
+CREATE TABLE users(
+user_id serial NOT NULL,
+user_name VARCHAR(30) NOT NULL,
+account_name VARCHAR(30) NOT NULL,
+user_email VARCHAR(255) NOT NULL,
+user_password text NOT NULL,
+hire_date DATE NOT NULL,
+service_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_user_service(service_fk) REFERENCES services(service_id),
+user_photo_path VARCHAR(15) NOT NULL,
+birth_day DATE NOT NULL,
+introduction TEXT ,
+logined_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+registered_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+deleted boolean NOT NULL default false,
+CONSTRAINT  users_pkey PRIMARY KEY (user_id),
+UNIQUE (user_email)
+);
+
+CREATE TABLE timelines(
+timeline_id serial NOT NULL,
+user_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_timeline_to_user(user_fk) REFERENCES users(user_id),
+timeline_sentence varchar(140) NOT NULL,
+timeline_like_count BIGINT NOT NULL DEFAULT 0,
+timeline_comment_count BIGINT NOT NULL DEFAULT 0,
+timeline_updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+timeline_posted_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+deleted boolean NOT NULL default false,
+CONSTRAINT timelines_pkey PRIMARY KEY (timeline_id)
+);
+
+CREATE TABLE restaurant_genres(
+genre_key VARCHAR(5) NOT NULL,
+genre_value VARCHAR(10) NOT NULL ,
+CONSTRAINT  restaurant_genre_pkey PRIMARY KEY (genre_key)
+);
+
+CREATE TABLE restaurants(
+restaurant_id serial NOT NULL,
+restaurant_name varchar(30) NOT NULL,
+restaurant_address varchar(100) NOT NULL,
+restaurant_genre_fk varchar(10) NOT NULL,
+FOREIGN KEY fk_restaurant_genre(restaurant_genre_fk) REFERENCES restaurant_genres(genre_key),
+restaurant_star DECIMAL(2,1),
+restaurant_type INT NOT NULL,
+restaurant_photo_path varchar(40) NOT NULL,
+restaurant_like_count BIGINT NOT NULL DEFAULT 0,
+restaurant_posted_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+restaurant_updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+restaurant_hotpepper_id varchar(10),
+deleted boolean NOT NULL default false,
+CONSTRAINT reviews_pkey PRIMARY KEY (restaurant_id),
+UNIQUE (restaurant_hotpepper_id)
+);
+
+
+CREATE TABLE reviews(
+review_id serial NOT NULL,
+user_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_review_to_user(user_fk) REFERENCES users(user_id),
+restaurant_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_review_to_restaurant(restaurant_fk) REFERENCES restaurants(restaurant_id),
+review_star INT NOT NULL,
+review_sentence varchar(140) NOT NULL,
+review_like_count BIGINT NOT NULL DEFAULT 0,
+review_comment_count BIGINT NOT NULL DEFAULT 0,
+review_posted_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+review_updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+deleted boolean NOT NULL default false,
+CONSTRAINT reviews_pkey PRIMARY KEY (review_id)
+);
+
+CREATE TABLE like_comments(
+like_comment_id serial NOT NULL,
+user_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_like_comment_to_user(user_fk) REFERENCES users(user_id),
+is_like boolean NOT NULL default false,
+comment varchar(140) NOT NULL,
+comment_like_count BIGINT NOT NULL DEFAULT 0,
+actioned_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+is_read boolean NOT NULL default false,
+has_noticed boolean NOT NULL default false,
+comment_deleted boolean default false,
+CONSTRAINT like_comments_pkey PRIMARY KEY (like_comment_id)
+);
+
+CREATE TABLE links_to_timeline(
+link_to_timeline_id serial NOT NULL,
+timeline_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_timeline(timeline_fk) REFERENCES timelines(timeline_id),
+like_comment_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_like_comment(like_comment_fk) REFERENCES like_comments(like_comment_id),
+CONSTRAINT links_to_timeline_pkey PRIMARY KEY (link_to_timeline_id)
+);
+
+CREATE TABLE links_to_review(
+link_to_review_id serial NOT NULL,
+review_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_review(review_fk) REFERENCES reviews(review_id),
+like_comment_fk BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_like_comment(like_comment_fk) REFERENCES like_comments(like_comment_id),
+CONSTRAINT links_to_review_pkey PRIMARY KEY (link_to_review_id)
+);
+
+CREATE TABLE links_to_like_comment(
+link_to_like_comment_id serial NOT NULL,
+like_comment_fk1 BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_like_comment1(like_comment_fk1) REFERENCES like_comments(like_comment_id),
+like_comment_fk2 BIGINT UNSIGNED NOT NULL,
+FOREIGN KEY fk_like_comment2(like_comment_fk2) REFERENCES like_comments(like_comment_id),
+CONSTRAINT links_to_like_comment_pkey PRIMARY KEY (link_to_like_comment_id)
+);
+
+

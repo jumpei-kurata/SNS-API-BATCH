@@ -1,0 +1,5 @@
+INSERT INTO `users` (`user_id`, `user_name`, `account_name`, `user_email`, `user_password`, `hire_date`, `service_fk`, `user_photo_path`, `birth_day`, `introduction`, `logined_time`, `updated_time`, `registered_time`, `deleted`) VALUES (1, 'masayuki', 'used', 'cyjo@rakus.com', 'jojo', '2022-01-11', 2, 'u1.png', '2022-01-11', NULL, '2022-01-11 17:02:09', '2022-01-11 17:02:10', '2022-01-11 17:02:11', 0);
+INSERT INTO `restaurant_genres` (`genre_key`, `genre_value`) VALUES ('G001', '和食');
+INSERT INTO `restaurants` (`restaurant_id`, `restaurant_name`, `restaurant_address`, `restaurant_genre_fk`, `restaurant_star`, `restaurant_type`, `restaurant_photo_path`, `restaurant_like_count`, `restaurant_posted_time`, `restaurant_updated_time`, `restaurant_hotpepper_id`, `deleted`) 
+VALUES (1, '和食　まる', 'しんじゅく', 'G001', NULL, 3, 'restaurant.png', 0, '2022-01-11 17:05:29', '2022-01-11 17:05:30', 'J999999999', 0);
+INSERT INTO `reviews` (`review_id`, `user_fk`, `restaurant_fk`, `review_star`, `review_sentence`, `review_like_count`, `review_posted_time`, `review_updated_time`, `deleted`) VALUES (1, 1, 1, 5, 'すげえうまかったです。', 0, '2022-01-11 17:07:06', '2022-01-11 17:07:07', 0);
