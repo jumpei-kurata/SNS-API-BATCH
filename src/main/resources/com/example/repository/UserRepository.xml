@@ -82,5 +82,13 @@
 		WHERE
 		user_id = #{id}
 	</update>
+	<update id="loginedUpdate">
+		UPDATE
+		users 
+		SET 
+		logined_time = now() 
+		WHERE
+		user_id = #{id}
+	</update>
 	
 </mapper>

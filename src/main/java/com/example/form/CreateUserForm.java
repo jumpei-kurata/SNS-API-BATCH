@@ -16,15 +16,14 @@ public class CreateUserForm {
 	@Pattern(regexp = "^[a-zA-Z0-9_.+-]+@rakus.co.jp$|^[a-zA-Z0-9_.+-]+@rakus-partners.co.jp$",message = "使用できないメールアドレスです")
 	private String email;
 	@Size(min = 8,max = 16,message = "パスワードは8文字以上16文字以内で入力してください")
+	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]+$", message = "アルファベット（大文字小文字混在）と数字とを組み合わせて入力してください")
 	private String password;
-	@NotNull(message = "入社日が入力されていません")
+	@NotNull(message = "入社月が入力されていません")
 	private Date hireDate;
 	@NotNull(message = "職種が選択されていません")
 	private Integer serviceFk;
 	@NotNull(message = "誕生日が入力されていません")
 	private Date birthDay;
-	
-	private String introduction;
 	
 	public String getName() {
 		return name;
@@ -68,19 +67,11 @@ public class CreateUserForm {
 	public void setBirthDay(Date birthDay) {
 		this.birthDay = birthDay;
 	}
-	public String getIntroduction() {
-		return introduction;
-	}
-	public void setIntroduction(String introduction) {
-		this.introduction = introduction;
-	}
+	
 	@Override
 	public String toString() {
 		return "CreateUserForm [name=" + name + ", accountName=" + accountName + ", email=" + email + ", password="
-				+ password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", birthDay=" + birthDay
-				+ ", introduction=" + introduction + "]";
+				+ password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", birthDay=" + birthDay;
 	}
 
-	
-	
 }
