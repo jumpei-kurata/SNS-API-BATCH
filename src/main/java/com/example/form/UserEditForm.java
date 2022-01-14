@@ -2,15 +2,11 @@ package com.example.form;
 
 import java.sql.Date;
 
-import javax.validation.constraints.Size;
-
 public class UserEditForm {
 
 	private Integer id;
 	private String name;
 	private String accountName;
-	@Size(min = 8,max = 16,message = "パスワードは8文字以上16文字以内で入力してください")
-	private String password;
 	private Date hireDate;
 	private Integer serviceFk;
 	private Date birthDay;
@@ -34,12 +30,6 @@ public class UserEditForm {
 	}
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
 	}
 	public Date getHireDate() {
 		return hireDate;
@@ -68,7 +58,7 @@ public class UserEditForm {
 	@Override
 	public String toString() {
 		return "UserEditForm [id=" + id + ", name=" + name + ", accountName=" + accountName 
-				+ ", password=" + password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", birthDay="
+				+ ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", birthDay="
 				+ birthDay + ", introduction=" + introduction + "]";
 	}
 
