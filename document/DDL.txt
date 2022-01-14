@@ -8,8 +8,18 @@ DROP TABLE IF EXISTS restaurants;
 DROP TABLE IF EXISTS restaurant_genres;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS services;
+DROP TABLE IF EXISTS mails;
 
-
+CREATE TABLE mails(
+mail_id serial NOT NULL,
+mail_user_name VARCHAR(10) NOT NULL ,
+mail_email VARCHAR(255) NOT NULL,
+mail_token VARCHAR(32) NOT NULL,
+mail_status TINYINT NOT NULL,
+mail_registered_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+CONSTRAINT  mails_pkey PRIMARY KEY (mail_id),
+UNIQUE (mail_email)
+);
 
 CREATE TABLE services(
 service_id serial NOT NULL,
@@ -45,7 +55,7 @@ CREATE TABLE timelines(
 timeline_id serial NOT NULL,
 user_fk BIGINT UNSIGNED NOT NULL,
 FOREIGN KEY fk_timeline_to_user(user_fk) REFERENCES users(user_id),
-sentence varchar(140) NOT NULL,
+timeline_sentence varchar(140) NOT NULL,
 timeline_like_count BIGINT NOT NULL DEFAULT 0,
 timeline_comment_count BIGINT NOT NULL DEFAULT 0,
 timeline_updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
