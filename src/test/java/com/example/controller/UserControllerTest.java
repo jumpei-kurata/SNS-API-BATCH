@@ -26,8 +26,8 @@ class UserControllerTest {
 	void testLoginSuccess() {
 		
 		String requestBody = "{\n" +
-	            "  \"email\": \"abab@rakus.co.jp\",\n" +
-	            "  \"password\": \"aaaabbbb\" " + 
+	            "  \"email\": \"cyjo@rakus.co.jp\",\n" +
+	            "  \"password\": \"jojo\" " + 
 	            "\n}" ;
 		
 		Response response = given()
@@ -42,7 +42,7 @@ class UserControllerTest {
 		assertEquals(200, response.statusCode());
 		assertEquals("ログインに成功しました", response.jsonPath().getString("message"));
 		assertEquals("success", response.jsonPath().getString("status"));
-		assertEquals("abab@rakus.co.jp", response.jsonPath().getString("user.email"));
+		assertEquals("cyjo@rakus.co.jp", response.jsonPath().getString("user.email"));
 		
 	}
 
@@ -52,13 +52,13 @@ class UserControllerTest {
 		Response response = given()
 				.contentType(ContentType.JSON)
 				.when()
-				.get("/user/14")
+				.get("/user/1")
 				.then()
 				.extract().response();
 		
 		assertEquals(200,response.statusCode());
-		assertEquals("大友",response.jsonPath().getString("name"));
-		assertEquals("abab@rakus.co.jp", response.jsonPath().getString("email"));
+		assertEquals("masayuki",response.jsonPath().getString("name"));
+		assertEquals("cyjo@rakus.co.jp", response.jsonPath().getString("email"));
 		
 	}
 
