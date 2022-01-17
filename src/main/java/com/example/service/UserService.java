@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.Mail;
 import com.example.domain.User;
-import com.example.form.ConfirmMailForm;
 import com.example.form.LoginForm;
 import com.example.repository.UserRepository;
 
@@ -128,18 +127,31 @@ public class UserService {
 		return beforeUser;
 	}
 	
-	public void accountConfirmMail(ConfirmMailForm form) {
+	public void accountConfirmMail(Mail mail) {
+		
+		List<Mail>list = userRepository.findMailByEmail(mail);
+
+		mail.setToken(createToken());
+		mail.setStatus(0);
+		
+		if (list.size() == 0) {
+			userRepository.insertMail(mail);
+		}else {
+			userRepository.changeTokenMail(mail);
+		}
 		
 		SimpleMailMessage msg = new SimpleMailMessage();
 		try {
 			msg.setFrom(FROMEMAIL);
-			msg.setTo(form.getEmail());
+			msg.setTo(mail.getEmail());
 			msg.setSubject("メールアドレス認証のお願い");
-			msg.setText(form.getName()+" 様\nURLです\n\n"+"http://localhost:8080/");
+			msg.setText(mail.getName()+" 様\nURLです\n\n"+"http://localhost:8080/" + mail.getToken());
 			sender.send(msg);
 		} catch (Exception e) {
 				e.printStackTrace();
 		}
+		mail.setStatus(1);
+		userRepository.changeStatusMail(mail);
 	}
 	
 	public void changePasswordMail(User user) {
@@ -180,8 +192,27 @@ public class UserService {
 		return token.toString();
 	}
 	
-	public Mail findByMail(Mail mail) {
-		mail = userRepository.findByToken(mail);
+	public List<Mail> findMailByToken(Mail mail) {
+		List<Mail>list = userRepository.findMailByToken(mail);
+		return list;
+	}
+	
+	public List<Mail> findMailByEmail(Mail mail) {
+		List<Mail>list = userRepository.findMailByEmail(mail);
+		return list;
+	}
+	
+	public Mail changeStatusMail(Mail mail) {
+		userRepository.changeStatusMail(mail);
+		return mail;
+	}
+	
+	public Mail changeTokenMail(Mail mail) {
+
+		String newAccountToken = createToken();
+		mail.setToken(newAccountToken);
+		userRepository.changeTokenMail(mail);
+		
 		return mail;
 	}
 	
@@ -189,4 +220,6 @@ public class UserService {
 		userRepository.insertMail(mail);
 		return mail;
 	}
+	
+	
 }

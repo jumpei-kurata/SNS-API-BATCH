@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.domain.Mail;
 import com.example.domain.User;
 import com.example.form.ConfirmMailForm;
 import com.example.form.CreateUserForm;
@@ -167,18 +168,45 @@ public class UserController {
 		return map;
 	}
 	
-	@PostMapping(value = "user/mail")
+	/**
+	 * ユーザー仮登録のメール送信API
+	 * 
+	 * @param form
+	 * @return
+	 */
+	@PostMapping(value = "/presignup")
 	public Map<String, Object> sendCheckMail(@RequestBody ConfirmMailForm form) {
 		Map<String, Object> map = new HashMap<>();
+		
+		Mail mail = new Mail();
+		mail.setEmail(form.getEmail());
+		List<Mail> list = userService.findMailByEmail(mail);
+		
+		if (list.size() == 0) {
+			mail = new Mail();
+			mail.setName(form.getName());
+			mail.setEmail(form.getEmail());
+		}else {
+			mail = list.get(0);
+		}
+		
 		try {
-			userService.accountConfirmMail(form);
+			userService.accountConfirmMail(mail);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+		map.put("status", "success");
+		map.put("message", "ご登録いただいたメールアドレス宛にメールを送信しました");
 		return map;
 	}
 	
+	/**
+	 * パスワード変更メールAPI
+	 * 
+	 * @param form
+	 * @return
+	 */
 	@PostMapping(value = "password/sendMail")
 	public Map<String, Object> changePassword(@RequestBody changePasswordMailForm form) {
 		Map<String, Object> map = new HashMap<>();
@@ -187,11 +215,9 @@ public class UserController {
 		user.setEmail(form.getEmail());
 		user = userService.findByEmail(user);
 		
-		String token = userService.createToken();
-		System.out.println(token);
 		if (user == null) {
 			map.put("status", "error");
-			map.put("message", "メールアドレスが間違っています");
+			map.put("message", "メールアドレスは使用されていません");
 			return map;
 		}else {
 			
@@ -200,6 +226,31 @@ public class UserController {
 			map.put("message", "ご入力いただいたメールアドレス宛にメールを送信しました");
 			return map;
 		}
+	}
+	
+	/**
+	 * トークンからメールテーブルを検索
+	 * 
+	 * @param token
+	 * @return
+	 */
+	@GetMapping(value = "/mail/{token}")
+	public Map<String, Object> findMailByToken(@PathVariable String token) {
+		Map<String, Object>map = new HashMap<>();
+		Mail mail = new Mail();
+		mail.setToken(token);
+		List<Mail>list = userService.findMailByToken(mail);
+		
+		if (list.size() != 1) {
+			map.put("status", "error");
+			map.put("message", "トークンが有効ではありません");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "ユーザ情報の検索に成功しました");
+		map.put("mail", list.get(0));
+		return map;
 	}
 	
 }

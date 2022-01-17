@@ -23,8 +23,18 @@ public interface UserRepository {
 	void loginedUpdate(User user);
 	
 	//トークンでメールテーブルを検索
-	Mail findByToken(Mail mail);
+	List<Mail> findMailByToken(Mail mail);
+
+	//メールアドレスでメールテーブルを検索
+	List<Mail> findMailByEmail(Mail mail);
 	
 	//メールテーブルに挿入
 	void insertMail (Mail mail);
+	
+	//メールテーブルのステータスを更新
+	void changeStatusMail(Mail mail);
+
+	//メールテーブルのトークンを更新
+	void changeTokenMail(Mail mail);
+	
 }
