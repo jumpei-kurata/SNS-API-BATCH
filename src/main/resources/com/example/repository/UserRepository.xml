@@ -108,8 +108,8 @@
 		mails_token = #{token}
 	</select>
 	<insert id="insertMail" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO mails (mails_id, mails_email, mails_user_name, mails_token, mails_status)
-		VALUES (#{id},#{email},#{name},#{token},#{status})
+		INSERT INTO mails (mails_email, mails_user_name, mails_token, mails_status)
+		VALUES (#{email},#{name},#{token},#{status})
 		<selectKey resultType="int" keyProperty="id" order="AFTER">
       		select @@IDENTITY
 	    </selectKey>
