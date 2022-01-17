@@ -91,4 +91,27 @@
 		user_id = #{id}
 	</update>
 	
+	<resultMap id="mailMap" type="com.example.domain.Mail">
+		<id			property="id"				column="mails_id" ></id>
+		<result 	property="email"			column="mails_email" ></result>
+		<result 	property="name"				column="mails_user_name" ></result>
+		<result 	property="token"			column="mails_token" ></result>
+		<result 	property="status"			column="mails_status" ></result>
+		<result 	property="registeredTime"	column="mails_registered_time" />
+	</resultMap>
+	<select id="findByToken">
+		SELECT
+		*
+		FROM
+		mails
+		WHERE
+		mails_token = #{token}
+	</select>
+	<insert id="insertMail" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO mails (mails_id, mails_email, mails_user_name, mails_token, mails_status)
+		VALUES (#{id},#{email},#{name},#{token},#{status})
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+      		select @@IDENTITY
+	    </selectKey>
+	</insert>
 </mapper>

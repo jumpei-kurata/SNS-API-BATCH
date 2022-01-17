@@ -9,6 +9,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.domain.Mail;
 import com.example.domain.User;
 import com.example.form.ConfirmMailForm;
 import com.example.form.LoginForm;
@@ -179,4 +180,13 @@ public class UserService {
 		return token.toString();
 	}
 	
+	public Mail findByMail(Mail mail) {
+		mail = userRepository.findByToken(mail);
+		return mail;
+	}
+	
+	public Mail insertMail(Mail mail) {
+		userRepository.insertMail(mail);
+		return mail;
+	}
 }
