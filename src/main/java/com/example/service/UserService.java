@@ -127,6 +127,11 @@ public class UserService {
 		return beforeUser;
 	}
 	
+	/**
+	 * ユーザー仮登録時にメールアドレス認証のメールを送ります
+	 * 
+	 * @param mail
+	 */
 	public void accountConfirmMail(Mail mail) {
 		
 		List<Mail>list = userRepository.findMailByEmail(mail);
@@ -155,6 +160,11 @@ public class UserService {
 		userRepository.changeStatusMail(mail);
 	}
 	
+	/**
+	 * パスワード変更時にメールを送信します
+	 * 
+	 * @param user
+	 */
 	public void changePasswordMail(User user) {
 		
 		Mail mail = new Mail();
@@ -182,6 +192,11 @@ public class UserService {
 		
 	}
 	
+	/**
+	 * 32桁の認証用トークンを発行します
+	 * 
+	 * @return
+	 */
 	public String createToken() {
 		
 		byte tokenSize[] = new byte[16];
@@ -201,21 +216,45 @@ public class UserService {
 		return token.toString();
 	}
 	
+	/**
+	 * トークンによってメールを検索
+	 * 
+	 * @param mail
+	 * @return
+	 */
 	public List<Mail> findMailByToken(Mail mail) {
 		List<Mail>list = userRepository.findMailByToken(mail);
 		return list;
 	}
 	
+	/**
+	 * メールによってメールを検索
+	 * 
+	 * @param mail
+	 * @return
+	 */
 	public List<Mail> findMailByEmail(Mail mail) {
 		List<Mail>list = userRepository.findMailByEmail(mail);
 		return list;
 	}
 	
+	/**
+	 * メールテーブルのステータスを変更します
+	 * 
+	 * @param mail
+	 * @return
+	 */
 	public Mail changeStatusMail(Mail mail) {
 		userRepository.changeStatusMail(mail);
 		return mail;
 	}
 	
+	/**
+	 * メールテーブルのトークンを更新します
+	 * 
+	 * @param mail
+	 * @return
+	 */
 	public Mail changeTokenMail(Mail mail) {
 
 		String newAccountToken = createToken();
@@ -225,6 +264,12 @@ public class UserService {
 		return mail;
 	}
 	
+	/**
+	 * メールテーブルにinsertします
+	 * 
+	 * @param mail
+	 * @return
+	 */
 	public Mail insertMail(Mail mail) {
 		userRepository.insertMail(mail);
 		return mail;

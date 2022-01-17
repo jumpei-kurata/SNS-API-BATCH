@@ -10,6 +10,7 @@ public class Mail {
 	private String token;
 	private Integer status;
 	private Date registeredTime;
+	
 	public Integer getId() {
 		return id;
 	}
