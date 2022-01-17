@@ -1,8 +1,8 @@
 package com.example.service;
 
+import java.security.SecureRandom;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -11,9 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.User;
 import com.example.form.ConfirmMailForm;
-import com.example.form.CreateUserForm;
 import com.example.form.LoginForm;
-import com.example.form.UserEditForm;
 import com.example.repository.UserRepository;
 
 /**
@@ -30,6 +28,9 @@ public class UserService {
 	@Autowired
 	private MailSender sender;
 	
+	//このアドレスからメールを送ります
+	private final String FROMEMAIL = "kenji.otomo@rakus-partners.co.jp";
+	
 	/**
 	 * IDからユーザー情報を取得します
 	 * @param user IDだけがセットされたUserドメイン
@@ -44,11 +45,8 @@ public class UserService {
 	 * @param form EmailとpasswordがセットされたLoginForm
 	 * @return 情報が格納されたUserドメイン
 	 */
-	public User findByEmail(LoginForm form) {
+	public User findByEmail(User user) {
 		
-		User user = new User();
-		user.setEmail(form.getEmail());
-
 		List<User> users = userRepository.findByEmail(user);
 		if (users.size() == 0) {
 			return null;
@@ -81,11 +79,8 @@ public class UserService {
 	 * @param user 入力されたユーザー情報
 	 * @return ユーザー情報
 	 */
-	public User insertUser(CreateUserForm form) {
-		//情報移し替える
-		User user = new User();
-		BeanUtils.copyProperties(form, user);
-		
+	public User insertUser(User user) {
+
 		//メールアドレス重複チェック
 		if (userRepository.findByEmail(user).size() != 0) {
 			return null;
@@ -100,49 +95,43 @@ public class UserService {
 	 * @param user 入力されたユーザー情報
 	 * @return ユーザー情報
 	 */
-	public User updateUser(UserEditForm form) {
+	public User updateUser(User user) {
 		
-		User user = new User();
-		user.setId(form.getId());
-		user = userRepository.findById(user);
+		User beforeUser = userRepository.findById(user);
 		
-		if (form.getName() != null) {
-			user.setName(form.getName());
+		if (user.getName() != null) {
+			beforeUser.setName(user.getName());
 		}
 		
-		if (form.getAccountName() != null) {
-			user.setAccountName(form.getAccountName());
+		if (user.getAccountName() != null) {
+			beforeUser.setAccountName(user.getAccountName());
 		}
 		
-		if (form.getPassword() != null) {
-			user.setPassword(form.getPassword());
+		if (user.getHireDate() != null) {
+			beforeUser.setHireDate(user.getHireDate());
 		}
 		
-		if (form.getHireDate() != null) {
-			user.setHireDate(form.getHireDate());
+		if (user.getServiceFk() != null) {
+			beforeUser.setServiceFk(user.getServiceFk());
 		}
 		
-		if (form.getServiceFk() != null) {
-			user.setServiceFk(form.getServiceFk());
+		if (user.getBirthDay() != null) {
+			beforeUser.setBirthDay(user.getBirthDay());
 		}
 		
-		if (form.getBirthDay() != null) {
-			user.setBirthDay(form.getBirthDay());
+		if (user.getIntroduction() != null) {
+			beforeUser.setIntroduction(user.getIntroduction());
 		}
 		
-		if (form.getIntroduction() != null) {
-			user.setIntroduction(form.getIntroduction());
-		}
-		
-		userRepository.updateUser(user);
-		return user;
+		userRepository.updateUser(beforeUser);
+		return beforeUser;
 	}
 	
 	public void accountConfirmMail(ConfirmMailForm form) {
 		
 		SimpleMailMessage msg = new SimpleMailMessage();
 		try {
-			msg.setFrom("kenji.otomo@rakus-partners.co.jp");
+			msg.setFrom(FROMEMAIL);
 			msg.setTo(form.getEmail());
 			msg.setSubject("メールアドレス認証のお願い");
 			msg.setText(form.getName()+" 様\nURLです\n\n"+"http://localhost:8080/");
@@ -150,6 +139,44 @@ public class UserService {
 		} catch (Exception e) {
 				e.printStackTrace();
 		}
+	}
+	
+	public void changePasswordMail(User user) {
+		
+		SimpleMailMessage msg = new SimpleMailMessage();
+		try {
+			msg.setFrom(FROMEMAIL);
+			msg.setTo(user.getEmail());
+			msg.setSubject("パスワードの再設定について");
+			msg.setText(user.getName() + "様\n\n" + "パスワードの再設定がリクエストされました\n" +
+						"以下のリンクから再設定が可能です。\n\n" +
+						"http://localhost:8080/\n\n" +
+						"このメールに心当たりが無い場合は無視してください。\n" +
+						"上記URLを通して再設定しない限り、パスワードは変更されません。\n");
+			sender.send(msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
+	
+	public String createToken() {
+		
+		byte tokenSize[] = new byte[16];
+		StringBuffer token = new StringBuffer();
+		
+		try {
+			SecureRandom random = new SecureRandom();
+			random.nextBytes(tokenSize);
+			for (int i = 0; i < tokenSize.length; i++) {
+				token.append(String.format("%02x", tokenSize[i]));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+		
+		return token.toString();
+	}
+	
 }

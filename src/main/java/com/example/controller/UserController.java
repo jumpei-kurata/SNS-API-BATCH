@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -20,6 +21,7 @@ import com.example.form.ConfirmMailForm;
 import com.example.form.CreateUserForm;
 import com.example.form.LoginForm;
 import com.example.form.UserEditForm;
+import com.example.form.changePasswordMailForm;
 import com.example.service.UserService;
 
 /**
@@ -58,8 +60,10 @@ public class UserController {
 			return map;
 		}
 		
+		User user = new User();
+		BeanUtils.copyProperties(form, user);
 		//インサート処理
-		User user = userService.insertUser(form) ;
+		 user = userService.insertUser(user) ;
 		
 		//メールアドレス重複チェック
 		if (user == null) {
@@ -113,7 +117,10 @@ public class UserController {
 			return map;
 		}
 		
-		User user = userService.findByEmail(form);
+		User user = new User();
+		BeanUtils.copyProperties(form, user);
+		
+		user = userService.findByEmail(user);
 		
 		if (user == null) {
 			map.put("status", "error");
@@ -147,16 +154,10 @@ public class UserController {
 		
 		Map<String, Object> map = new HashMap<>();
 		
-		if ((result.hasErrors() && form.getPassword() != null)) {
-
-			map.put("status", "error");
-			map.put("Message", result.getFieldError().getDefaultMessage());
-			
-			return map;
-		}
-		
 		form.setId(id);
-	 	User user = userService.updateUser(form);
+		User user = new User();
+		BeanUtils.copyProperties(form, user);
+	 	user = userService.updateUser(user);
 		user = userService.findById(user);
 		
 		map.put("status", "success");
@@ -176,6 +177,29 @@ public class UserController {
 		}
 		
 		return map;
+	}
+	
+	@PostMapping(value = "password/sendMail")
+	public Map<String, Object> changePassword(@RequestBody changePasswordMailForm form) {
+		Map<String, Object> map = new HashMap<>();
+		
+		User user = new User();
+		user.setEmail(form.getEmail());
+		user = userService.findByEmail(user);
+		
+		String token = userService.createToken();
+		System.out.println(token);
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "メールアドレスが間違っています");
+			return map;
+		}else {
+			
+			userService.changePasswordMail(user);
+			map.put("status", "success");
+			map.put("message", "ご入力いただいたメールアドレス宛にメールを送信しました");
+			return map;
+		}
 	}
 	
 }
