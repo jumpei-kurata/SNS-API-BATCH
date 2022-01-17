@@ -220,7 +220,6 @@ public class UserController {
 			map.put("message", "メールアドレスは使用されていません");
 			return map;
 		}else {
-			
 			userService.changePasswordMail(user);
 			map.put("status", "success");
 			map.put("message", "ご入力いただいたメールアドレス宛にメールを送信しました");
