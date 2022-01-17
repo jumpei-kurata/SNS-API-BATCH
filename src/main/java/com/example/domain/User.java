@@ -1,6 +1,7 @@
 package com.example.domain;
 import java.sql.Date;
 import java.time.LocalDateTime;
+
 /**
  * ユーザーのクラス
  * 
@@ -16,6 +17,7 @@ public class User {
 	private Date hireDate;
 	private Integer serviceFk;
 	private String serviceName;
+	private String userPhotoPath;
 	private Date birthDay;
 	private String introduction;
 	private LocalDateTime loginedTime;
@@ -70,6 +72,12 @@ public class User {
 	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
 	}
+	public String getUserPhotoPath() {
+		return userPhotoPath;
+	}
+	public void setUserPhotoPath(String userPhotoPath) {
+		this.userPhotoPath = userPhotoPath;
+	}
 	public Date getBirthDay() {
 		return birthDay;
 	}
@@ -110,7 +118,8 @@ public class User {
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", accountName=" + accountName + ", email=" + email + ", password="
 				+ password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", serviceName=" + serviceName
-				+ ", birthDay=" + birthDay + ", introduction=" + introduction + ", loginedTime=" + loginedTime
-				+ ", updatedTime=" + updatedTime + ", registeredTime=" + registeredTime + ", deleted=" + deleted + "]";
+				+ ", userPhotoPath=" + userPhotoPath + ", birthDay=" + birthDay + ", introduction=" + introduction
+				+ ", loginedTime=" + loginedTime + ", updatedTime=" + updatedTime + ", registeredTime=" + registeredTime
+				+ ", deleted=" + deleted + "]";
 	}
 }
