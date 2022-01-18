@@ -148,7 +148,8 @@ public class UserService {
 		}
 		
 		userRepository.updateUser(beforeUser);
-		return beforeUser;
+		user = userRepository.findById(beforeUser);
+		return user;
 	}
 
 	/**

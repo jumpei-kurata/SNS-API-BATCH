@@ -160,7 +160,6 @@ public class UserController {
 		User user = new User();
 		BeanUtils.copyProperties(form, user);
 	 	user = userService.updateUser(user);
-		user = userService.findById(user);
 		
 		map.put("status", "success");
 		map.put("message", "ユーザ情報の編集に成功しました");
