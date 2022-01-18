@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.domain.Mail;
 import com.example.domain.User;
 import com.example.form.LoginForm;
+import com.example.repository.MailRepository;
 import com.example.repository.UserRepository;
 
 /**
@@ -25,6 +26,8 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private MailRepository mailRepository;
 	@Autowired
 	private MailSender sender;
 	
@@ -134,16 +137,16 @@ public class UserService {
 	 */
 	public void accountConfirmMail(Mail mail) {
 		
-		List<Mail>list = userRepository.findMailByEmail(mail);
+		List<Mail>list = mailRepository.findMailByEmail(mail);
 		String token = createToken();
 
 		mail.setToken(token);
 		mail.setStatus(0);
 		
 		if (list.size() == 0) {
-			userRepository.insertMail(mail);
+			mailRepository.insertMail(mail);
 		}else {
-			userRepository.changeTokenMail(mail);
+			mailRepository.changeTokenMail(mail);
 		}
 		
 		SimpleMailMessage msg = new SimpleMailMessage();
@@ -157,7 +160,7 @@ public class UserService {
 				e.printStackTrace();
 		}
 		mail.setStatus(1);
-		userRepository.changeStatusMail(mail);
+		mailRepository.changeStatusMail(mail);
 	}
 	
 	/**
@@ -173,7 +176,7 @@ public class UserService {
 		mail.setEmail(user.getEmail());
 		mail.setToken(token);
 		
-		userRepository.changeTokenMail(mail);
+		mailRepository.changeTokenMail(mail);
 		
 		SimpleMailMessage msg = new SimpleMailMessage();
 		try {
@@ -223,7 +226,7 @@ public class UserService {
 	 * @return
 	 */
 	public List<Mail> findMailByToken(Mail mail) {
-		List<Mail>list = userRepository.findMailByToken(mail);
+		List<Mail>list = mailRepository.findMailByToken(mail);
 		return list;
 	}
 	
@@ -234,7 +237,7 @@ public class UserService {
 	 * @return
 	 */
 	public List<Mail> findMailByEmail(Mail mail) {
-		List<Mail>list = userRepository.findMailByEmail(mail);
+		List<Mail>list = mailRepository.findMailByEmail(mail);
 		return list;
 	}
 	
@@ -245,7 +248,7 @@ public class UserService {
 	 * @return
 	 */
 	public Mail changeStatusMail(Mail mail) {
-		userRepository.changeStatusMail(mail);
+		mailRepository.changeStatusMail(mail);
 		return mail;
 	}
 	
@@ -259,7 +262,7 @@ public class UserService {
 
 		String newAccountToken = createToken();
 		mail.setToken(newAccountToken);
-		userRepository.changeTokenMail(mail);
+		mailRepository.changeTokenMail(mail);
 		
 		return mail;
 	}
@@ -271,7 +274,7 @@ public class UserService {
 	 * @return
 	 */
 	public Mail insertMail(Mail mail) {
-		userRepository.insertMail(mail);
+		mailRepository.insertMail(mail);
 		return mail;
 	}
 	
