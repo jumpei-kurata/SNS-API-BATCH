@@ -22,6 +22,7 @@ import com.example.form.ConfirmMailForm;
 import com.example.form.CreateUserForm;
 import com.example.form.LoginForm;
 import com.example.form.UserEditForm;
+import com.example.form.changePasswordForm;
 import com.example.form.changePasswordMailForm;
 import com.example.service.UserService;
 
@@ -217,7 +218,7 @@ public class UserController {
 		
 		if (user == null) {
 			map.put("status", "error");
-			map.put("message", "メールアドレスは使用されていません");
+			map.put("message", "このメールアドレスは使用されていません");
 			return map;
 		}else {
 			userService.changePasswordMail(user);
@@ -228,6 +229,7 @@ public class UserController {
 	}
 	
 	/**
+	 * アカウント仮登録時に使います
 	 * トークンからメールテーブルを検索
 	 * 
 	 * @param token
@@ -251,5 +253,48 @@ public class UserController {
 		map.put("mail", list.get(0));
 		return map;
 	}
+	
+	/**
+	 * パスワード変更のためのAPI
+	 * 
+	 * @param token
+	 * @param form
+	 * @return
+	 */
+	@PatchMapping(value = "/password/{token}")
+	public Map<String, Object> changePassword(@PathVariable String token,@RequestBody changePasswordForm form) {
+		Map<String, Object>map = new HashMap<>();
+		
+		Mail mail = new Mail();
+		mail.setToken(token);
+		List<Mail>list = userService.findMailByToken(mail);
+		
+		if (list.size() != 1) {
+			map.put("status", "error");
+			map.put("message", "トークンが有効ではありません");
+			return map;
+		}else if(! (list.get(0).getEmail() .equals (form.getEmail()))) {
+			map.put("status", "error");
+			map.put("message", "メールアドレスが正しくありません");
+			return map;
+		}
+		
+		User user = new User();
+		BeanUtils.copyProperties(form, user);
+		user = userService.updatePassword(user);
+		
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "このメールアドレスは登録されていません");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "パスワードの変更が完了しました");
+		map.put("user", user);
+		return map;
+	}
+	
+	
 	
 }
