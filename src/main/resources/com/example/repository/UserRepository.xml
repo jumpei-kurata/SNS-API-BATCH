@@ -13,6 +13,7 @@
 		<result 	property="birthDay"			column="birth_day" ></result>
 		<result 	property="serviceFk"		column="service_fk" ></result>
 		<result 	property="serviceName"		column="service_name" ></result>
+		<result 	property="userPhotoPath"	column="user_photo_path" ></result>
 		<result 	property="introduction"		column="introduction" ></result>
 		<result 	property="loginedTime"  	column="logined_time" />
 		<result 	property="updatedTime"		column="updated_time" />
@@ -60,8 +61,8 @@
 		u.deleted = false 
 	</select>
 	<insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO users (user_name,account_name,user_email,user_password,hire_date,service_fk,birth_day,introduction)
-		VALUES 				(#{name},#{accountName},#{email},#{password},#{hireDate},#{serviceFk},#{birthDay},#{introduction})
+		INSERT INTO users (user_name,account_name,user_email,user_password,hire_date,service_fk,user_photo_path,birth_day,introduction)
+		VALUES 				(#{name},#{accountName},#{email},#{password},#{hireDate},#{serviceFk},#{userPhotoPath},#{birthDay},#{introduction})
 	  <selectKey resultType="int" keyProperty="id" order="AFTER">
       	select @@IDENTITY
 	  </selectKey>
@@ -76,6 +77,7 @@
 		user_password = #{password},
 		hire_date = #{hireDate},
 		service_fk = #{serviceFk},
+		user_photo_path = #{userPhotoPath} ,
 		birth_day = #{birthDay},
 		introduction = #{introduction} ,
 		updated_time = now() 
@@ -90,5 +92,4 @@
 		WHERE
 		user_id = #{id}
 	</update>
-	
 </mapper>

@@ -1,6 +1,7 @@
 package com.example.repository;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+
 import com.example.domain.User;
 @Mapper
 public interface UserRepository {
@@ -17,5 +18,6 @@ public interface UserRepository {
 	// ユーザーテーブルを更新
 	int updateUser(User user);
 	
+	//ログイン日時のみを更新
 	void loginedUpdate(User user);
 }

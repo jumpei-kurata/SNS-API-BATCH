@@ -9,9 +9,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.domain.Mail;
 import com.example.domain.User;
-import com.example.form.ConfirmMailForm;
 import com.example.form.LoginForm;
+import com.example.repository.MailRepository;
 import com.example.repository.UserRepository;
 
 /**
@@ -25,6 +26,8 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private MailRepository mailRepository;
 	@Autowired
 	private MailSender sender;
 	
@@ -82,12 +85,33 @@ public class UserService {
 	public User insertUser(User user) {
 
 		//メールアドレス重複チェック
-		if (userRepository.findByEmail(user).size() != 0) {
+		List<User>list = userRepository.findByEmail(user);
+		
+		if (list.size() != 0) {
 			return null;
 		}else {
+			String userPhotoPath = createUserPhotoPath();
+			user.setUserPhotoPath(userPhotoPath);
+			
 			userRepository.insertUser(user);
 			return user;		
 		}
+	}
+	
+	/**
+	 * ランダムにユーザーの写真パスを生成します
+	 * 
+	 * @return
+	 */
+	public String createUserPhotoPath() {
+		
+		//写真の枚数
+		Integer photoNumber = 6;
+
+		int randomPathNumber = (int)(Math.random() * photoNumber) + 1;
+		String userPhotoPath = "user" + randomPathNumber + ".jpeg";
+		
+		return userPhotoPath;
 	}
 
 	/**
@@ -127,21 +151,53 @@ public class UserService {
 		return beforeUser;
 	}
 	
-	public void accountConfirmMail(ConfirmMailForm form) {
+	/**
+	 * ユーザー仮登録時にメールアドレス認証のメールを送ります
+	 * 
+	 * @param mail
+	 */
+	public void accountConfirmMail(Mail mail) {
+		
+		List<Mail>list = mailRepository.findMailByEmail(mail);
+		String token = createToken();
+
+		mail.setToken(token);
+		mail.setStatus(0);
+		
+		if (list.size() == 0) {
+			mailRepository.insertMail(mail);
+		}else {
+			mailRepository.changeTokenMail(mail);
+		}
 		
 		SimpleMailMessage msg = new SimpleMailMessage();
 		try {
 			msg.setFrom(FROMEMAIL);
-			msg.setTo(form.getEmail());
+			msg.setTo(mail.getEmail());
 			msg.setSubject("メールアドレス認証のお願い");
-			msg.setText(form.getName()+" 様\nURLです\n\n"+"http://localhost:8080/");
+			msg.setText(mail.getName()+" 様\nURLです\n\n"+"http://localhost:8080/" + token);
 			sender.send(msg);
 		} catch (Exception e) {
 				e.printStackTrace();
 		}
+		mail.setStatus(1);
+		mailRepository.changeStatusMail(mail);
 	}
 	
+	/**
+	 * パスワード変更時にメールを送信します
+	 * 
+	 * @param user
+	 */
 	public void changePasswordMail(User user) {
+		
+		Mail mail = new Mail();
+		String token = createToken();
+		
+		mail.setEmail(user.getEmail());
+		mail.setToken(token);
+		
+		mailRepository.changeTokenMail(mail);
 		
 		SimpleMailMessage msg = new SimpleMailMessage();
 		try {
@@ -150,7 +206,7 @@ public class UserService {
 			msg.setSubject("パスワードの再設定について");
 			msg.setText(user.getName() + "様\n\n" + "パスワードの再設定がリクエストされました\n" +
 						"以下のリンクから再設定が可能です。\n\n" +
-						"http://localhost:8080/\n\n" +
+						"http://localhost:8080/" + token + "\n\n" +
 						"このメールに心当たりが無い場合は無視してください。\n" +
 						"上記URLを通して再設定しない限り、パスワードは変更されません。\n");
 			sender.send(msg);
@@ -160,6 +216,11 @@ public class UserService {
 		
 	}
 	
+	/**
+	 * 32桁の認証用トークンを発行します
+	 * 
+	 * @return
+	 */
 	public String createToken() {
 		
 		byte tokenSize[] = new byte[16];
@@ -178,5 +239,65 @@ public class UserService {
 		
 		return token.toString();
 	}
+	
+	/**
+	 * トークンによってメールを検索
+	 * 
+	 * @param mail
+	 * @return
+	 */
+	public List<Mail> findMailByToken(Mail mail) {
+		List<Mail>list = mailRepository.findMailByToken(mail);
+		return list;
+	}
+	
+	/**
+	 * メールによってメールを検索
+	 * 
+	 * @param mail
+	 * @return
+	 */
+	public List<Mail> findMailByEmail(Mail mail) {
+		List<Mail>list = mailRepository.findMailByEmail(mail);
+		return list;
+	}
+	
+	/**
+	 * メールテーブルのステータスを変更します
+	 * 
+	 * @param mail
+	 * @return
+	 */
+	public Mail changeStatusMail(Mail mail) {
+		mailRepository.changeStatusMail(mail);
+		return mail;
+	}
+	
+	/**
+	 * メールテーブルのトークンを更新します
+	 * 
+	 * @param mail
+	 * @return
+	 */
+	public Mail changeTokenMail(Mail mail) {
+
+		String newAccountToken = createToken();
+		mail.setToken(newAccountToken);
+		mailRepository.changeTokenMail(mail);
+		
+		return mail;
+	}
+	
+	/**
+	 * メールテーブルにinsertします
+	 * 
+	 * @param mail
+	 * @return
+	 */
+	public Mail insertMail(Mail mail) {
+		mailRepository.insertMail(mail);
+		return mail;
+	}
+	
 	
 }

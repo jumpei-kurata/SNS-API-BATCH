@@ -71,7 +71,8 @@ public class CreateUserForm {
 	@Override
 	public String toString() {
 		return "CreateUserForm [name=" + name + ", accountName=" + accountName + ", email=" + email + ", password="
-				+ password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", birthDay=" + birthDay;
+				+ password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk
+				+ ", birthDay=" + birthDay + "]";
 	}
 
 }
