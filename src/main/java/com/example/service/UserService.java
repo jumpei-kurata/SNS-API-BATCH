@@ -85,12 +85,33 @@ public class UserService {
 	public User insertUser(User user) {
 
 		//メールアドレス重複チェック
-		if (userRepository.findByEmail(user).size() != 0) {
+		List<User>list = userRepository.findByEmail(user);
+		
+		if (list.size() != 0) {
 			return null;
 		}else {
+			String userPhotoPath = createUserPhotoPath();
+			user.setUserPhotoPath(userPhotoPath);
+			
 			userRepository.insertUser(user);
 			return user;		
 		}
+	}
+	
+	/**
+	 * ランダムにユーザーの写真パスを生成します
+	 * 
+	 * @return
+	 */
+	public String createUserPhotoPath() {
+		
+		//写真の枚数
+		Integer photoNumber = 6;
+
+		int randomPathNumber = (int)(Math.random() * photoNumber) + 1;
+		String userPhotoPath = "user" + randomPathNumber + ".jpeg";
+		
+		return userPhotoPath;
 	}
 
 	/**

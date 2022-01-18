@@ -22,8 +22,6 @@ public class CreateUserForm {
 	private Date hireDate;
 	@NotNull(message = "職種が選択されていません")
 	private Integer serviceFk;
-	@NotBlank(message = "写真が選択されていません")
-	private String userPhotoPath;
 	@NotNull(message = "誕生日が入力されていません")
 	private Date birthDay;
 	
@@ -63,12 +61,6 @@ public class CreateUserForm {
 	public void setServiceFk(Integer serviceFk) {
 		this.serviceFk = serviceFk;
 	}
-	public String getUserPhotoPath() {
-		return userPhotoPath;
-	}
-	public void setUserPhotoPath(String userPhotoPath) {
-		this.userPhotoPath = userPhotoPath;
-	}
 	public Date getBirthDay() {
 		return birthDay;
 	}
@@ -79,7 +71,7 @@ public class CreateUserForm {
 	@Override
 	public String toString() {
 		return "CreateUserForm [name=" + name + ", accountName=" + accountName + ", email=" + email + ", password="
-				+ password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", userPhotoPath=" + userPhotoPath
+				+ password + ", hireDate=" + hireDate + ", serviceFk=" + serviceFk
 				+ ", birthDay=" + birthDay + "]";
 	}
 
