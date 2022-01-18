@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS sns;
+
 DROP TABLE IF EXISTS links_to_timeline;
 DROP TABLE IF EXISTS links_to_review;
 DROP TABLE IF EXISTS links_to_like_comment;
