@@ -9,15 +9,29 @@
 		<result 	property="userName"			column="user_name" ></result>
 		<result 	property="userPhotoPath"	column="user_photo_path" ></result>
 		<result 	property="sentence"			column="timeline_sentence" ></result>
-		<result 	property="likeCount"		column="timeline_like_count" ></result>
-		<result 	property="commentCount"		column="timeline_comment_count" ></result>
+		<result 	property="likeCount"		column="l_count" ></result>
+		<result 	property="commentCount"		column="c_count" ></result>
 		<result 	property="updatedTime"		column="timeline_updated_time" ></result>
 		<result 	property="postedTime"		column="timeline_posted_time" ></result>
 		<result 	property="deleted"	column="t.deleted" />
 	</resultMap>
 	<select id="findAllTimeline" resultMap="timelineMap">
 		SELECT
-		*
+		t.timeline_id, 
+		t.user_fk, 
+		u.user_name, 
+		u.user_photo_path, 
+		t.timeline_sentence, 
+		SUM(
+			CASE
+				WHEN lc.is_like = 1 THEN 1
+				ELSE 0
+				END
+			) AS l_count, 
+		COUNT(lc.comment) AS c_count, 
+		t.timeline_updated_time, 
+		t.timeline_posted_time, 
+		t.deleted
 		FROM
 		timelines AS t 
 		JOIN
@@ -33,6 +47,7 @@
 		ON 
 		lt.like_comment_fk = lc.like_comment_id
 		WHERE
-		t.deleted = 0
+		t.deleted = 0 
+		GROUP BY t.timeline_id
 	</select>
 </mapper>
