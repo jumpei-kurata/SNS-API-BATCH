@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.repository.RestaurantRepository">
+	<resultMap id="restaurantMap" type="com.example.domain.Restaurant">
+		<id			property="id"				column="restaurant_id" ></id>
+		<result 	property="name"				column="restaurant_name" ></result>
+		<result 	property="address"			column="restaurant_address" ></result>
+		<result 	property="genreFk"			column="restaurant_genre_fk" ></result>
+		<result 	property="genreValue"		column="genre_value" ></result>
+		<result 	property="star"				column="restaurant_star"></result>
+		<result 	property="type"				column="restaurant_type"></result>
+		<result 	property="photoPath"		column="restaurant_photo_path" ></result>
+		<result 	property="hotpepperId"		column="restaurant_hotpepper_id" ></result>
+		<result 	property="description"		column="restaurant_description" ></result>
+		<result 	property="access"			column="restaurant_access" ></result>
+		<result 	property="latitude"			column="restaurant_latitude" ></result>
+		<result 	property="longitude"	  	column="restaurant_longitude" />
+		<result 	property="url"				column="restaurant_url" />
+		<result 	property="smoking"			column="restaurant_smoking" />
+		<result 	property="updatedTime"		column="restaurant_updated_time" />
+		<result 	property="postedTime"		column="restaurant_posted_time" />
+		<result 	property="deleted"  		column="deleted" />
+	</resultMap>
+	<select id="findById" resultMap="restaurantMap">
+		SELECT
+		*
+		FROM
+		restaurants AS rst
+		JOIN 
+		restaurant_genres AS rstg 
+		ON 
+		rst.restaurant_genre_fk = rstg.genre_key 
+		WHERE
+		rst.id = #{id}
+		AND
+		rst.deleted = false ;
+	</select>
+	<select id="findAll" resultMap="restaurantMap">
+		SELECT
+		*
+		FROM
+		restaurants AS rst
+		JOIN 
+		restaurant_genres AS rstg 
+		ON 
+		rst.restaurant_genre_fk = rstg.genre_key 
+		WHERE
+		rst.deleted = false 
+		LIMIT 50;
+	</select>
+	<insert id="insertRestaurant" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO users (restaurant_name,account_name,restaurant_email,restaurant_password,hire_date,service_fk,restaurant_photo_path,birth_day,introduction)
+		VALUES 				(#{name},#{accountName},#{email},#{password},#{hireDate},#{serviceFk},#{userPhotoPath},#{birthDay},#{introduction})
+	  <selectKey resultType="int" keyProperty="id" order="AFTER">
+      	select @@IDENTITY
+	  </selectKey>
+	</insert>
+	<update id="updateRestaurant">
+		UPDATE
+		users 
+		SET 
+		restaurant_name = #{name},
+		account_name = #{accountName},
+		restaurant_email = #{email},
+		restaurant_password = #{password},
+		hire_date = #{hireDate},
+		service_fk = #{serviceFk},
+		restaurant_photo_path = #{userPhotoPath} ,
+		birth_day = #{birthDay},
+		introduction = #{introduction} ,
+		updated_time = now() 
+		WHERE
+		restaurant_id = #{id}
+	</update>
+	<update id="loginedUpdate">
+		UPDATE
+		users 
+		SET 
+		logined_time = now() 
+		WHERE
+		restaurant_id = #{id}
+	</update>
+</mapper>

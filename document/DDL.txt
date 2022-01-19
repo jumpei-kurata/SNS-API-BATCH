@@ -68,9 +68,28 @@ CONSTRAINT timelines_pkey PRIMARY KEY (timeline_id)
 
 CREATE TABLE restaurant_genres(
 genre_key VARCHAR(5) NOT NULL,
-genre_value VARCHAR(10) NOT NULL ,
+genre_value VARCHAR(15) NOT NULL ,
 CONSTRAINT  restaurant_genre_pkey PRIMARY KEY (genre_key)
 );
+
+INSERT INTO `restaurant_genres` (`genre_key`, `genre_value`) VALUES
+('G001', '居酒屋'),
+('G002', 'ダイニングバー・バル'),
+('G003', '創作料理'),
+('G004', '和食'),
+('G005', '洋食'),
+('G006', 'イタリアン・フレンチ'),
+('G007', '中華'),
+('G008', '焼肉・ホルモン'),
+('G009', 'アジア・エスニック料理'),
+('G010', '各国料理'),
+('G011', 'カラオケ・パーティ'),
+('G012', 'バー・カクテル'),
+('G013', 'ラーメン'),
+('G014', 'カフェ・スイーツ'),
+('G015', 'その他グルメ'),
+('G016', 'お好み焼き・もんじゃ'),
+('G017', '韓国料理');
 
 CREATE TABLE restaurants(
 restaurant_id serial NOT NULL,
@@ -81,10 +100,15 @@ FOREIGN KEY fk_restaurant_genre(restaurant_genre_fk) REFERENCES restaurant_genre
 restaurant_star DECIMAL(2,1),
 restaurant_type INT NOT NULL,
 restaurant_photo_path varchar(40) NOT NULL,
-restaurant_like_count BIGINT NOT NULL DEFAULT 0,
+restaurant_hotpepper_id varchar(10),
+restaurant_description text,
+restaurant_access text,
+restaurant_latitude text,
+restaurant_longitude text,
+restaurant_url text,
+restaurant_smoking text,
 restaurant_posted_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 restaurant_updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-restaurant_hotpepper_id varchar(10),
 deleted boolean NOT NULL default false,
 CONSTRAINT reviews_pkey PRIMARY KEY (restaurant_id),
 UNIQUE (restaurant_hotpepper_id)

@@ -1,0 +1,33 @@
+package com.example.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.domain.Restaurant;
+import com.example.repository.RestaurantRepository;
+
+/**
+ * レストランクラスに関係する業務処理を行うサービスクラスです。<br>
+ * 
+ * @author cyjoh
+ *
+ */
+@Service
+@Transactional
+public class RestaurantService {
+
+	@Autowired
+	private RestaurantRepository restaurantRepository;
+
+	/**
+	 * レストランの情報を全件取得します。
+	 * 
+	 * @return レストランの情報
+	 */
+	public List<Restaurant> getRestaurantList() {
+		return restaurantRepository.findAll();
+	}
+}
