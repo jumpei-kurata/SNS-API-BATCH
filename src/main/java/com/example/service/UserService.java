@@ -150,6 +150,30 @@ public class UserService {
 		userRepository.updateUser(beforeUser);
 		return beforeUser;
 	}
+
+	/**
+	 * パスワードを変更します
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public User updatePassword(User user) {
+		
+		List<User>userList = userRepository.findByEmail(user);
+		
+		if(userList.size() != 1) {
+			return null;
+		}
+		
+		String password = user.getPassword();
+		user = userList.get(0);
+		user.setPassword(password);
+
+		userRepository.updateUser(user);
+		user = userRepository.findById(user);
+		
+		return user;
+	}
 	
 	/**
 	 * ユーザー仮登録時にメールアドレス認証のメールを送ります
@@ -298,6 +322,4 @@ public class UserService {
 		mailRepository.insertMail(mail);
 		return mail;
 	}
-	
-	
 }
