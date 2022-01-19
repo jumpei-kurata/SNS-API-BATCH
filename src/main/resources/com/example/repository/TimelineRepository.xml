@@ -22,16 +22,11 @@
 		u.user_name, 
 		u.user_photo_path, 
 		t.timeline_sentence, 
-		SUM(
-			CASE
-				WHEN lc.is_like = 1 THEN 1
-				ELSE 0
-				END
-			) AS l_count, 
+		SUM(lc.is_like) AS l_count, 
 		COUNT(lc.comment) AS c_count, 
 		t.timeline_updated_time, 
 		t.timeline_posted_time, 
-		t.deleted
+		t.deleted 
 		FROM
 		timelines AS t 
 		JOIN
@@ -45,10 +40,11 @@
 		LEFT JOIN 
 		like_comments AS lc 
 		ON 
-		lt.like_comment_fk = lc.like_comment_id
-		WHERE
+		lt.like_comment_fk = lc.like_comment_id 
+		GROUP BY 
+		t.timeline_id 
+		HAVING 
 		t.deleted = 0 
-		GROUP BY t.timeline_id
 		ORDER BY t.timeline_posted_time DESC
 		LIMIT 50
 	</select>

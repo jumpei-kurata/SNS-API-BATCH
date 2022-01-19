@@ -16,4 +16,5 @@ public interface TimelineRepository {
 	List<Timeline> findAllTimeline();
 	//タイムラインを登録
 	void insertTimeline(Timeline timeline);
+	
 }

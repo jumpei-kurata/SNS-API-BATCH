@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.domain.LikeComment;
+import com.example.domain.LinkToTimeline;
 import com.example.domain.Timeline;
 import com.example.form.InsertTimelineForm;
+import com.example.form.LikeForm;
 import com.example.service.ErrorService;
 import com.example.service.TimelineService;
 
@@ -74,6 +77,28 @@ public class TimelineController {
 		
 		map.put("status", "success");
 		map.put("message", "タイムラインの投稿に成功しました");
+		return map;
+	}
+	
+	/**
+	 * タイムラインにいいねをします
+	 * 
+	 * @param form
+	 * @return
+	 */
+	@PostMapping(value = "/timeline/like")
+	public Map<String, Object> insertLike(@RequestBody LikeForm form) {
+		Map<String, Object>map = new HashMap<>();
+		LikeComment likeComment = new LikeComment();
+		
+		likeComment.setUserId(form.getUserId());
+		likeComment = timelineService.insertLikeComment(likeComment);
+		
+		LinkToTimeline linkToTimeline = new LinkToTimeline(form.getTimelineId(), likeComment.getId());
+		timelineService.insertLinkToTimeline(linkToTimeline);
+		
+		map.put("status", "success");
+		map.put("message", "いいねに成功しました");
 		return map;
 	}
 }

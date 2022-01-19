@@ -1,6 +1,6 @@
 package com.example.domain;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class Timeline {
 
@@ -11,8 +11,8 @@ public class Timeline {
 	private String sentence;
 	private Integer likeCount;
 	private Integer commentCount;
-	private Date updatedTime;
-	private Date postedTime;
+	private LocalDateTime updatedTime;
+	private LocalDateTime postedTime;
 	private boolean deleted;
 	
 	public Integer getId() {
@@ -57,16 +57,16 @@ public class Timeline {
 	public void setCommentCount(Integer commentCount) {
 		this.commentCount = commentCount;
 	}
-	public Date getUpdatedTime() {
+	public LocalDateTime getUpdatedTime() {
 		return updatedTime;
 	}
-	public void setUpdatedTime(Date updatedTime) {
+	public void setUpdatedTime(LocalDateTime updatedTime) {
 		this.updatedTime = updatedTime;
 	}
-	public Date getPostedTime() {
+	public LocalDateTime getPostedTime() {
 		return postedTime;
 	}
-	public void setPostedTime(Date postedTime) {
+	public void setPostedTime(LocalDateTime postedTime) {
 		this.postedTime = postedTime;
 	}
 	public boolean isDeleted() {
