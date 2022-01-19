@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,14 +15,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.Timeline;
 import com.example.form.InsertTimelineForm;
+import com.example.service.ErrorService;
 import com.example.service.TimelineService;
 
+/**
+ * タイムラインに関するコントローラーです
+ * 
+ * @author ootomokenji
+ *
+ */
 @RestController
 public class TimelineController {
 	
 	@Autowired
 	private TimelineService timelineService;
+	@Autowired
+	private ErrorService errorService;
 
+	/**
+	 * タイムラインを最新50件検索します
+	 * 
+	 * @return
+	 */
 	@GetMapping(value = "/timeline")
 	public Map<String, Object> findAllTimeline() {
 		Map<String, Object> map = new HashMap<>();
@@ -33,10 +49,24 @@ public class TimelineController {
 		return map;
 	}
 	
+	/**
+	 * タイムラインを投稿します
+	 * 
+	 * @param form
+	 * @param result
+	 * @return
+	 */
 	@PostMapping(value = "/timeline")
-	public Map<String, Object> insertTimeline(@RequestBody InsertTimelineForm form) {
+	public Map<String, Object> insertTimeline(@RequestBody @Validated InsertTimelineForm form,BindingResult result) {
 		Map<String, Object> map = new HashMap<>();
 
+		if (result.hasErrors()) {
+			List<String> errorMessageList = errorService.errorMessage(result);
+			
+			map.put("status", "error");
+			map.put("message", errorMessageList);
+			return map;
+		}
 		
 		Timeline timeline = new Timeline();
 		BeanUtils.copyProperties(form, timeline);

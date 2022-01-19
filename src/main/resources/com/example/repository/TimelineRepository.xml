@@ -50,6 +50,7 @@
 		t.deleted = 0 
 		GROUP BY t.timeline_id
 		ORDER BY t.timeline_posted_time DESC
+		LIMIT 50
 	</select>
 	<insert id="insertTimeline" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO timelines (user_fk,timeline_sentence)

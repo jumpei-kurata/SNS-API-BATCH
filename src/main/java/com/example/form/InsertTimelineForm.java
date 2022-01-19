@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 public class InsertTimelineForm {
 
 	private Integer userId;
-	@Size(min = 1,message = "入力してください")
+	@Size(min = 1,message = "NULLでの投稿はできません")
 	@Size(max = 140,message = "つぶやきは140字以内にしてください")
 	private String sentence;
 	
