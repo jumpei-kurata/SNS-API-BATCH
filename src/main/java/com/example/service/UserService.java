@@ -1,6 +1,7 @@
 package com.example.service;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import com.example.domain.Mail;
 import com.example.domain.User;
@@ -324,5 +327,15 @@ public class UserService {
 		return mail;
 	}
 	
-	
+	public List<String> errorMessage(BindingResult result) {
+			
+			List<ObjectError>errorList =  result.getAllErrors();
+			List<String> errorMessageList = new ArrayList<>();
+			
+			for (ObjectError objectError : errorList) {
+				errorMessageList.add(objectError.getDefaultMessage());
+				}
+			
+			return errorMessageList;
+		}
 }
