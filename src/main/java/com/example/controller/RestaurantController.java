@@ -32,17 +32,17 @@ public class RestaurantController {
 		
 		if(restaurantList == null) {
 			map.put("status", "error");
-			map.put("message", "エラーが発生しました。");
+			map.put("message", "エラーが発生しました");
 			return map;
 		}
 		if(restaurantList.size() == 0) {
 			map.put("status", "success");
-			map.put("message", "レストランが1件も登録されていません。");
+			map.put("message", "レストランが1件も登録されていません");
 			return map;
 		}
 		
 		map.put("status", "success");
-		map.put("message", "ログインに成功しました");
+		map.put("message", "レストラン一覧を表示します");
 		map.put("restaurant", restaurantList);
 		
 		return map;
