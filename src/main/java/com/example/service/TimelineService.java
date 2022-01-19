@@ -9,6 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.domain.Timeline;
 import com.example.repository.TimelineRepository;
 
+/**
+ * タイムラインのサービスです
+ * @author ootomokenji
+ *
+ */
 @Service
 @Transactional
 public class TimelineService {
@@ -19,5 +24,11 @@ public class TimelineService {
 	public List<Timeline> findAll() {
 		List<Timeline>list = timelineRepository.findAllTimeline();
 		return list;
+	}
+	
+	public Timeline insertTimeline(Timeline timeline) {
+		
+		timelineRepository.insertTimeline(timeline);
+		return timeline;
 	}
 }
