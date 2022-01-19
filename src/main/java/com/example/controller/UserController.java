@@ -23,6 +23,7 @@ import com.example.form.LoginForm;
 import com.example.form.UserEditForm;
 import com.example.form.changePasswordForm;
 import com.example.form.changePasswordMailForm;
+import com.example.service.ErrorService;
 import com.example.service.UserService;
 
 /**
@@ -35,6 +36,8 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ErrorService errorService;
 
 	/**
 	 * ユーザーを登録します
@@ -49,7 +52,7 @@ public class UserController {
 		
 		//バリデーションチェック
 		if (result.hasErrors()) {
-			List<String> errorMessageList = userService.errorMessage(result);
+			List<String> errorMessageList = errorService.errorMessage(result);
 			
 			map.put("status", "error");
 			map.put("message", errorMessageList);
@@ -103,7 +106,7 @@ public class UserController {
 		Map<String, Object> map = new HashMap<>();
 		
 		if (result.hasErrors()) {
-			List<String> errorMessageList = userService.errorMessage(result);
+			List<String> errorMessageList = errorService.errorMessage(result);
 			
 			map.put("status", "error");
 			map.put("message", errorMessageList);
@@ -257,7 +260,7 @@ public class UserController {
 		Map<String, Object>map = new HashMap<>();
 		
 		if (result.hasErrors()) {
-			List<String> errorMessageList = userService.errorMessage(result);
+			List<String> errorMessageList = errorService.errorMessage(result);
 			
 			map.put("status", "error");
 			map.put("message", errorMessageList);
