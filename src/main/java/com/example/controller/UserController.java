@@ -292,7 +292,7 @@ public class UserController {
 		
 		User user = new User();
 		BeanUtils.copyProperties(form, user);
-		user = userService.updatePassword(user);
+		user = userService.changePassword(user);
 		
 		if (user == null) {
 			map.put("status", "error");
