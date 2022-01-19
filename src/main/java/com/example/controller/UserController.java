@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -50,15 +49,10 @@ public class UserController {
 		
 		//バリデーションチェック
 		if (result.hasErrors()) {
-			List<ObjectError>list =  result.getAllErrors();
-			String errorMessage = "";
-			
-			for (ObjectError objectError : list) {
-				errorMessage = errorMessage +" "+ objectError.getDefaultMessage();
-			}
+			List<String> errorMessageList = userService.errorMessage(result);
 			
 			map.put("status", "error");
-			map.put("message", errorMessage);
+			map.put("message", errorMessageList);
 			return map;
 		}
 		
@@ -109,13 +103,10 @@ public class UserController {
 		Map<String, Object> map = new HashMap<>();
 		
 		if (result.hasErrors()) {
-			List<ObjectError>list =  result.getAllErrors();
-			String errorMessage = "";
-			for (ObjectError objectError : list) {
-				errorMessage = errorMessage +" "+ objectError.getDefaultMessage();
-			}
+			List<String> errorMessageList = userService.errorMessage(result);
+			
 			map.put("status", "error");
-			map.put("message", errorMessage);
+			map.put("message", errorMessageList);
 			return map;
 		}
 		
@@ -262,8 +253,16 @@ public class UserController {
 	 * @return
 	 */
 	@PatchMapping(value = "/password/{token}")
-	public Map<String, Object> changePassword(@PathVariable String token,@RequestBody changePasswordForm form) {
+	public Map<String, Object> changePassword(@PathVariable String token,@RequestBody @Validated changePasswordForm form,BindingResult result) {
 		Map<String, Object>map = new HashMap<>();
+		
+		if (result.hasErrors()) {
+			List<String> errorMessageList = userService.errorMessage(result);
+			
+			map.put("status", "error");
+			map.put("message", errorMessageList);
+			return map;
+		}
 		
 		Mail mail = new Mail();
 		mail.setToken(token);
