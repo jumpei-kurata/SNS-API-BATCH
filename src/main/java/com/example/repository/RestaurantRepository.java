@@ -7,11 +7,13 @@ import com.example.domain.Restaurant;
 public interface RestaurantRepository {
 	// 1件検索
 	Restaurant findById(Restaurant restaurant);
-	// メールアドレスで検索
-	List<Restaurant> findByEmail(Restaurant restaurant);
+
+	// ホットペッパーIDで検索
+	Restaurant findByHotpepperId(Restaurant restaurant);
 	
 	// 全件検索
 	List<Restaurant> findAll();
+	
 	// ユーザーテーブルにデータを挿入
 	void insertRestaurant(Restaurant restaurant);
 	

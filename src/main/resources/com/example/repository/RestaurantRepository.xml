@@ -33,7 +33,21 @@
 		ON 
 		rst.restaurant_genre_fk = rstg.genre_key 
 		WHERE
-		rst.id = #{id}
+		rst.restaurant_id = #{id}
+		AND
+		rst.deleted = false ;
+	</select>
+	<select id="findByHotpepperId" resultMap="restaurantMap">
+		SELECT
+		*
+		FROM
+		restaurants AS rst
+		JOIN 
+		restaurant_genres AS rstg 
+		ON 
+		rst.restaurant_genre_fk = rstg.genre_key 
+		WHERE
+		rst.restaurant_hotpepper_id = #{hotpepperId}
 		AND
 		rst.deleted = false ;
 	</select>
