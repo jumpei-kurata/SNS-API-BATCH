@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.repository.TimelineRepository">
+	<resultMap id="timelineMap" type="com.example.domain.Timeline">
+		<id			property="id"				column="timeline_id" ></id>
+		<result 	property="userId"			column="user_fk" ></result>
+		<result 	property="userName"			column="user_name" ></result>
+		<result 	property="userPhotoPath"	column="user_photo_path" ></result>
+		<result 	property="sentence"			column="timeline_sentence" ></result>
+		<result 	property="likeCount"		column="l_count" ></result>
+		<result 	property="commentCount"		column="c_count" ></result>
+		<result 	property="updatedTime"		column="timeline_updated_time" ></result>
+		<result 	property="postedTime"		column="timeline_posted_time" ></result>
+		<result 	property="deleted"	column="t.deleted" />
+	</resultMap>
+	<select id="findAllTimeline" resultMap="timelineMap">
+		SELECT
+		t.timeline_id, 
+		t.user_fk, 
+		u.user_name, 
+		u.user_photo_path, 
+		t.timeline_sentence, 
+		SUM(
+			CASE
+				WHEN lc.is_like = 1 THEN 1
+				ELSE 0
+				END
+			) AS l_count, 
+		COUNT(lc.comment) AS c_count, 
+		t.timeline_updated_time, 
+		t.timeline_posted_time, 
+		t.deleted
+		FROM
+		timelines AS t 
+		JOIN
+		users AS u 
+		ON 
+		t.user_fk = u.user_id
+		LEFT JOIN 
+		links_to_timeline AS lt 
+		ON
+		t.timeline_id = lt.timeline_fk
+		LEFT JOIN 
+		like_comments AS lc 
+		ON 
+		lt.like_comment_fk = lc.like_comment_id
+		WHERE
+		t.deleted = 0 
+		GROUP BY t.timeline_id
+		ORDER BY t.timeline_posted_time DESC
+		LIMIT 50
+	</select>
+	<insert id="insertTimeline" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO timelines (user_fk,timeline_sentence)
+		VALUES (#{userId},#{sentence})
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+      		select @@IDENTITY
+	    </selectKey>
+	</insert>
+</mapper>
