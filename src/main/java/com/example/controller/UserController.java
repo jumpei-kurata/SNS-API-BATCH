@@ -84,14 +84,24 @@ public class UserController {
 	 * @return IDから取得したユーザー情報
 	 */
 	@GetMapping(value = "/user/{id}")
-	public User findById(@PathVariable Integer id) {
+	public Map<String, Object> findById(@PathVariable Integer id) {
+		Map<String, Object>map = new HashMap<>();
 		
 		User user = new User();
 		user.setId(id);
 		
 		user = userService.findById(user);
 		
-		return user;
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "このIDのアカウントは存在しません");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "ロードに成功しました");
+		map.put("user", user);
+		return map;
 	}
 	
 	/**
@@ -154,7 +164,6 @@ public class UserController {
 		User user = new User();
 		BeanUtils.copyProperties(form, user);
 	 	user = userService.updateUser(user);
-		user = userService.findById(user);
 		
 		map.put("status", "success");
 		map.put("message", "ユーザ情報の編集に成功しました");
