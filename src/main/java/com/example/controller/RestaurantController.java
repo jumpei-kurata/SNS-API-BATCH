@@ -131,8 +131,6 @@ public class RestaurantController {
 		Restaurant restaurant = new Restaurant();
 		BeanUtils.copyProperties(form, restaurant);
 		
-		restaurant.setPhotoPath("r_"+restaurant.getGenreFk()+".jpeg");
-		
 		restaurant = restaurantService.insert(restaurant);
 		
 		map.put("status", "success");
