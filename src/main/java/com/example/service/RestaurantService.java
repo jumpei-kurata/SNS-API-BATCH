@@ -30,4 +30,21 @@ public class RestaurantService {
 	public List<Restaurant> getRestaurantList() {
 		return restaurantRepository.findAll();
 	}
+	
+	/**
+	 * レストランの情報をIDに合わせて1件取得します。
+	 * 
+	 * @return レストランの情報
+	 */
+	public Restaurant findById(Restaurant restaurant) {
+		return restaurantRepository.findById(restaurant);
+	}
+	/**
+	 * レストランの情報をホットペッパーIDに合わせて1件取得します。
+	 * 
+	 * @return レストランの情報
+	 */
+	public Restaurant findByHotpepperId(Restaurant restaurant) {
+		return restaurantRepository.findByHotpepperId(restaurant);
+	}
 }
