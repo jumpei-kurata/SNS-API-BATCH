@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.LikeComment;
-import com.example.domain.LinkToTimeline;
 import com.example.domain.Timeline;
 import com.example.repository.LikeCommentRepository;
 import com.example.repository.LinkToTimelineRepository;
@@ -36,8 +35,8 @@ public class TimelineService {
 	 * 
 	 * @return
 	 */
-	public List<Timeline> findAll() {
-		List<Timeline>list = timelineRepository.findAllTimeline();
+	public List<Timeline> findAll(Timeline timeline) {
+		List<Timeline>list = timelineRepository.findAllTimeline(timeline);
 		return list;
 	}
 	
@@ -68,8 +67,8 @@ public class TimelineService {
 	 * 
 	 * @param linkToTimeline
 	 */
-	public void insertLinkToTimeline(LinkToTimeline linkToTimeline) {
-		linkToTimelineRepository.insertLinksToTimeline(linkToTimeline);
+	public void insertLinkToTimeline(Integer timelineId,Integer likeCountId) {
+		linkToTimelineRepository.insertLinksToTimeline(timelineId,likeCountId);
 	}
 	
 	/**
@@ -81,26 +80,11 @@ public class TimelineService {
 		timelineRepository.updateLikeCount(timeline);
 	}
 	
-	/**
-	 * いいねしたかチェック
-	 * 
-	 * @param linkToTimeline
-	 * @return
-	 */
-	public boolean likeflg(LinkToTimeline linkToTimeline) {
-		List<LinkToTimeline>list = linkToTimelineRepository.findLinkToTimelineByTimelineId(linkToTimeline);
-		//誰からもいいねされていない
-		if (list.isEmpty()) {
-			return false;
-		}
-		//このユーザーはいいねしている
-		for (LinkToTimeline ltt : list) {
-			System.out.println(ltt);
-			if (ltt.getUserId() == linkToTimeline.getUserId()) {
-				return true;
-			}
-		}
-		//このユーザーはいいねしていない
-		return false;
+	public LikeComment findLikeComment(LikeComment likeComment) {
+		return likeCommentRepository.findLikeCommentById(likeComment);
+	}
+	
+	public void updateLike(LikeComment likeComment) {
+		likeCommentRepository.updateLike(likeComment);
 	}
 }

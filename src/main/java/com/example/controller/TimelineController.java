@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.LikeComment;
-import com.example.domain.LinkToTimeline;
 import com.example.domain.Timeline;
 import com.example.form.InsertTimelineForm;
 import com.example.form.LikeForm;
@@ -41,14 +40,16 @@ public class TimelineController {
 	 * 
 	 * @return
 	 */
-	@GetMapping(value = "/timeline")
-	public Map<String, Object> findAllTimeline() {
+	@GetMapping(value = "/timeline/{userId}")
+	public Map<String, Object> findAllTimeline(@PathVariable Integer userId) {
 		Map<String, Object> map = new HashMap<>();
+		Timeline timeline = new Timeline();
+		timeline.setUserId(userId);
 		
-//		long start = System.currentTimeMillis();
-		List<Timeline>list = timelineService.findAll();
-//		long end = System.currentTimeMillis();
-//		System.out.println((end - start) +"ミリ秒");
+		long start = System.currentTimeMillis();
+		List<Timeline>list = timelineService.findAll(timeline);
+		long end = System.currentTimeMillis();
+		System.out.println((end - start) +"ミリ秒");
 		
 		map.put("status", "success");
 		map.put("message", "タイムライン一覧の検索に成功しました");
@@ -94,27 +95,30 @@ public class TimelineController {
 	public Map<String, Object> insertLike(@RequestBody LikeForm form) {
 		Map<String, Object>map = new HashMap<>();
 		
-		LinkToTimeline linkToTimeline = new LinkToTimeline(form.getTimelineId(), null,form.getUserId());
+		LikeComment likeComment = new LikeComment();
+		BeanUtils.copyProperties(form, likeComment);
+		likeComment = timelineService.findLikeComment(likeComment);
 		
-		if (timelineService.likeflg(linkToTimeline)) {
-			map.put("status", "error");
-			map.put("message", "既にいいねされています");
+		if (likeComment == null) {
+			likeComment = new LikeComment();
+			likeComment.setUserId(form.getUserId());
+			likeComment = timelineService.insertLikeComment(likeComment);
+			
+			timelineService.insertLinkToTimeline(form.getTimelineId(),likeComment.getId());
+			
+			Timeline timeline = new Timeline();
+			timeline.setId(form.getTimelineId());
+			timelineService.updateLikeCount(timeline);
+			
+			map.put("status", "success");
+			map.put("message", "いいねを登録しました");
 			return map;
 		}
 		
-		LikeComment likeComment = new LikeComment();
-		likeComment.setUserId(form.getUserId());
-		likeComment = timelineService.insertLikeComment(likeComment);
-		
-		linkToTimeline.setLikeCommentId(likeComment.getId());
-		timelineService.insertLinkToTimeline(linkToTimeline);
-		
-		Timeline timeline = new Timeline();
-		timeline.setId(form.getTimelineId());
-		timelineService.updateLikeCount(timeline);
+		timelineService.updateLike(likeComment);
 		
 		map.put("status", "success");
-		map.put("message", "いいねに成功しました");
+		map.put("message", "いいねを更新しました");
 		return map;
 	}
 	
@@ -137,8 +141,6 @@ public class TimelineController {
 			map.put("message", errorMessageList);
 			return map;
 		}
-		
-		
 		
 		Timeline timeline = new Timeline();
 		BeanUtils.copyProperties(form, timeline);
@@ -168,8 +170,11 @@ public class TimelineController {
 			likeComment.setUserId(form.getUserId());
 			likeComment = timelineService.insertLikeComment(likeComment);
 			
-			LinkToTimeline linkToTimeline = new LinkToTimeline(form.getTimelineId(), likeComment.getId(),null);
-			timelineService.insertLinkToTimeline(linkToTimeline);
+			timelineService.insertLinkToTimeline(form.getTimelineId(),likeComment.getId());
+			
+			Timeline timeline = new Timeline();
+			timeline.setId(form.getTimelineId());
+			timelineService.updateLikeCount(timeline);
 			
 		}
 		map.put("status", "success");

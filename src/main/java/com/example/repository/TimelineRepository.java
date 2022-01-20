@@ -13,7 +13,7 @@ import com.example.domain.Timeline;
 public interface TimelineRepository {
 
 	//タイムライン全件検索
-	List<Timeline> findAllTimeline();
+	List<Timeline> findAllTimeline(Timeline timeline);
 	//タイムラインを登録
 	void insertTimeline(Timeline timeline);
 	//いいねカウントを+1

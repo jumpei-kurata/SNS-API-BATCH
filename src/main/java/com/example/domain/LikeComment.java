@@ -6,6 +6,7 @@ public class LikeComment {
 
 	private Integer id;
 	private Integer userId;
+	private Integer timelineId;	
 	private boolean isLike;
 	private String comment;
 	private Integer commentLikeCount;
@@ -25,6 +26,12 @@ public class LikeComment {
 	}
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+	public Integer getTimelineId() {
+		return timelineId;
+	}
+	public void setTimelineId(Integer timelineId) {
+		this.timelineId = timelineId;
 	}
 	public boolean isLike() {
 		return isLike;
@@ -70,9 +77,9 @@ public class LikeComment {
 	}
 	@Override
 	public String toString() {
-		return "LikeComment [id=" + id + ", userId=" + userId + ", isLike=" + isLike + ", comment=" + comment
-				+ ", commentLikeCount=" + commentLikeCount + ", actionedTime=" + actionedTime + ", hasNoticed="
-				+ hasNoticed + ", isRead=" + isRead + ", commentDeleted=" + commentDeleted + "]";
+		return "LikeComment [id=" + id + ", userId=" + userId + ", timelineId=" + timelineId + ", isLike=" + isLike
+				+ ", comment=" + comment + ", commentLikeCount=" + commentLikeCount + ", actionedTime=" + actionedTime
+				+ ", hasNoticed=" + hasNoticed + ", isRead=" + isRead + ", commentDeleted=" + commentDeleted + "]";
 	}
 	
 	

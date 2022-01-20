@@ -4,9 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.repository.LikeCommentRepository">
 
-<resultMap id="LikeCommentMap" type="com.example.domain.LikeComment">
+	<resultMap id="LikeCommentMap" type="com.example.domain.LikeComment">
 		<id			property="id"					column="like_comment_id"></id>
 		<result 	property="userId"				column="user_fk" ></result>
+		<result 	property="timelineId"			column="timeline_fk" ></result>
 		<result 	property="isLike"				column="is_like" ></result>
 		<result 	property="comment"				column="comment" ></result>
 		<result 	property="commentLikeCount"		column="comment_like_count" ></result>
@@ -16,6 +17,18 @@
 		<result 	property="commentDeleted"		column="comment_deleted"></result>
 	</resultMap>
 
+	<select id="findLikeCommentById" resultMap="LikeCommentMap">
+		SELECT 
+		* 
+		FROM 
+		(SELECT * FROM like_comments WHERE user_fk = #{userId}) AS lc 
+		JOIN 
+		links_to_timeline AS ltt 
+		ON 
+		lc.like_comment_id = ltt.like_comment_fk
+		WHERE 
+		ltt.timeline_fk = #{timelineId}
+	</select>
 	<insert id="insertLikeComment" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO like_comments (user_fk,is_like)
 		VALUES (#{userId},1);
@@ -23,4 +36,14 @@
       		select @@IDENTITY
 	    </selectKey>
 	</insert>
+	<update id="updateLike">
+		UPDATE 
+		like_comments 
+		<set>
+			<if test="isLike == true">is_like = false</if>
+			<if test="isLike == false">is_like = true</if>
+		</set>
+		WHERE 
+		like_comment_id = #{id}
+	</update>
 </mapper>
