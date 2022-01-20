@@ -22,13 +22,40 @@
 		u.user_name, 
 		u.user_photo_path, 
 		t.timeline_sentence, 
-		SUM(lc.is_like) AS l_count, 
-		COUNT(lc.comment) AS c_count, 
+		t.timeline_like_count AS l_count, 
+		t.timeline_comment_count AS c_count, 
 		t.timeline_updated_time, 
 		t.timeline_posted_time, 
 		t.deleted 
 		FROM
 		timelines AS t 
+		JOIN
+		users AS u 
+		ON 
+		t.user_fk = u.user_id
+		ORDER BY t.timeline_id DESC
+		LIMIT 50
+	</select>
+	<insert id="insertTimeline" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO timelines (user_fk,timeline_sentence)
+		VALUES (#{userId},#{sentence})
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+      		select @@IDENTITY
+	    </selectKey>
+	</insert>
+	<update id="updateLikeCount">
+		UPDATE 
+		timelines 
+		SET 
+		timeline_like_count = timeline_like_count + 1 
+		WHERE 
+		timeline_id = #{id}
+	</update>
+	<select id="findTimelineById">
+	 	SELECT
+		* 
+		FROM 
+		(SELECT * FROM timelines WHERE timeline_id = #{id} AND deleted = false ) AS t
 		JOIN
 		users AS u 
 		ON 
@@ -40,19 +67,8 @@
 		LEFT JOIN 
 		like_comments AS lc 
 		ON 
-		lt.like_comment_fk = lc.like_comment_id 
-		GROUP BY 
-		t.timeline_id 
-		HAVING 
-		t.deleted = 0 
-		ORDER BY t.timeline_posted_time DESC
-		LIMIT 50
+		lt.like_comment_fk = lc.like_comment_id
+		WHERE 
+		lc.comment_deleted = false
 	</select>
-	<insert id="insertTimeline" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO timelines (user_fk,timeline_sentence)
-		VALUES (#{userId},#{sentence})
-		<selectKey resultType="int" keyProperty="id" order="AFTER">
-      		select @@IDENTITY
-	    </selectKey>
-	</insert>
 </mapper>

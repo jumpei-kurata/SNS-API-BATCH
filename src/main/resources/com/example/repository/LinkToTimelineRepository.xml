@@ -3,8 +3,30 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.repository.LinkToTimelineRepository">
+	<resultMap id="linkToTimelineMap" type="com.example.domain.LinkToTimeline">
+		<id			property="id"				column="id" ></id>
+		<result 	property="timelineId"		column="tm" ></result>
+		<result 	property="likeCommentId"	column="lcf" ></result>
+		<result 	property="userId"			column="luf" ></result>
+	</resultMap>
+
+	<select id="findLinkToTimelineByTimelineId" resultMap="linkToTimelineMap">
+		SELECT 
+		lt.link_to_timeline_id AS id, 
+		lt.timeline_fk AS tm, 
+		lc.like_comment_id AS lcf, 
+		lc.user_fk AS luf 
+		FROM 
+		links_to_timeline AS lt 
+		JOIN 
+		like_comments AS lc 
+		ON 
+		lt.like_comment_fk = lc.like_comment_id 
+		WHERE timeline_fk = #{timelineId}
+	</select>
 	<insert id="insertLinksToTimeline">
 		INSERT INTO links_to_timeline (timeline_fk,like_comment_fk)
 		VALUES (#{timelineId},#{likeCommentId})
 	</insert>
+	
 </mapper>

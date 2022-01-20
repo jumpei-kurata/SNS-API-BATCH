@@ -5,11 +5,13 @@ public class LinkToTimeline {
 	private Integer id;
 	private Integer timelineId;
 	private Integer likeCommentId;
+	private Integer userId;
 	
-	public LinkToTimeline(Integer timelineId, Integer likeCommentId) {
+	public LinkToTimeline(Integer timelineId, Integer likeCommentId, Integer userId) {
 		super();
 		this.timelineId = timelineId;
 		this.likeCommentId = likeCommentId;
+		this.userId = userId;
 	}
 
 	public Integer getId() {
@@ -36,9 +38,18 @@ public class LinkToTimeline {
 		this.likeCommentId = likeCommentId;
 	}
 
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
 	@Override
 	public String toString() {
-		return "LinkToTimeline [id=" + id + ", timelineId=" + timelineId + ", likeCommentId=" + likeCommentId + "]";
+		return "LinkToTimeline [id=" + id + ", timelineId=" + timelineId + ", likeCommentId=" + likeCommentId
+				+ ", userId=" + userId + "]";
 	}
 	
 	

@@ -29,30 +29,78 @@ public class TimelineService {
 	@Autowired
 	private LinkToTimelineRepository linkToTimelineRepository;
 	
+	
+	
+	/**
+	 * タイムライン全件検索
+	 * 
+	 * @return
+	 */
 	public List<Timeline> findAll() {
 		List<Timeline>list = timelineRepository.findAllTimeline();
-		
-		for (Timeline timeline : list) {
-			if (timeline.getLikeCount() == null) {
-				timeline.setLikeCount(0);
-			}
-		}
-		
 		return list;
 	}
 	
+	/**
+	 * タイムライン投稿
+	 * 
+	 * @param timeline
+	 * @return
+	 */
 	public Timeline insertTimeline(Timeline timeline) {
-		
 		timelineRepository.insertTimeline(timeline);
 		return timeline;
 	}
 	
+	/**
+	 * いいねコメントテーブルに登録
+	 * 
+	 * @param likeComment
+	 * @return
+	 */
 	public LikeComment insertLikeComment(LikeComment likeComment) {
 		likeCommentRepository.insertLikeComment(likeComment);
 		return likeComment;
 	}
 	
+	/**
+	 * タイムライン接続テーブルに登録
+	 * 
+	 * @param linkToTimeline
+	 */
 	public void insertLinkToTimeline(LinkToTimeline linkToTimeline) {
 		linkToTimelineRepository.insertLinksToTimeline(linkToTimeline);
+	}
+	
+	/**
+	 * いいねカウント+1
+	 * 
+	 * @param timeline
+	 */
+	public void updateLikeCount(Timeline timeline) {
+		timelineRepository.updateLikeCount(timeline);
+	}
+	
+	/**
+	 * いいねしたかチェック
+	 * 
+	 * @param linkToTimeline
+	 * @return
+	 */
+	public boolean likeflg(LinkToTimeline linkToTimeline) {
+		List<LinkToTimeline>list = linkToTimelineRepository.findLinkToTimelineByTimelineId(linkToTimeline);
+		//誰からもいいねされていない
+		if (list.isEmpty()) {
+			return false;
+		}
+		//このユーザーはいいねしている
+		for (LinkToTimeline ltt : list) {
+			System.out.println(ltt);
+			if (ltt.getUserId() == linkToTimeline.getUserId()) {
+				return true;
+			}
+		}
+		//このユーザーはいいねしていない
+		return false;
 	}
 }

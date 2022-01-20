@@ -16,5 +16,6 @@ public interface TimelineRepository {
 	List<Timeline> findAllTimeline();
 	//タイムラインを登録
 	void insertTimeline(Timeline timeline);
-	
+	//いいねカウントを+1
+	void updateLikeCount(Timeline timeline);
 }
