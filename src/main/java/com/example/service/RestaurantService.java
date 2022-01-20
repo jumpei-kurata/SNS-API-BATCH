@@ -47,4 +47,14 @@ public class RestaurantService {
 	public Restaurant findByHotpepperId(Restaurant restaurant) {
 		return restaurantRepository.findByHotpepperId(restaurant);
 	}
+
+	/**
+	 * レストランの情報をデータベースに登録します。
+	 * 
+	 * @return レストランの情報
+	 */
+	public Restaurant insert(Restaurant restaurant) {
+		restaurantRepository.insertRestaurant(restaurant);
+		return restaurant;
+	}
 }

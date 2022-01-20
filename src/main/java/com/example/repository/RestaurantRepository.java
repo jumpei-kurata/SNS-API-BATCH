@@ -17,10 +17,5 @@ public interface RestaurantRepository {
 	// ユーザーテーブルにデータを挿入
 	void insertRestaurant(Restaurant restaurant);
 	
-	// ユーザーテーブルを更新
-	int updateRestaurant(Restaurant restaurant);
-	
-	//ログイン日時のみを更新
-	void loginedUpdate(Restaurant restaurant);
 }
 

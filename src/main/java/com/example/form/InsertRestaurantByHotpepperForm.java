@@ -1,35 +1,47 @@
-package com.example.domain;
+package com.example.form;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 
 @Data
-public class Restaurant {
-	Integer id;
+public class InsertRestaurantByHotpepperForm {
+	@NotBlank(message = "名前が入力されていません")
 	String name;
+
+	@NotBlank(message = "店舗住所が入力されていません")
 	String address;
+
+	@NotBlank(message = "店のジャンルが選択されていません")
 	String genreFk;
-	String genreValue;
-	double star;
+
+	@Size(message = "提供タイプが選択されていません")
 	Integer type;
+
+	@NotBlank(message = "画像が登録されていません")
 	String photoPath;
+
+	@NotBlank(message = "ホットペッパーIDが登録されていません")
 	String hotpepperId;
+
+	@NotBlank(message = "説明文が登録されていません")
 	String description;
+
+	@NotBlank(message = "アクセス情報が登録されていません")
 	String access;
+
+	@NotBlank(message = "緯度情報が登録されていません")
 	String latitude;
+
+	@NotBlank(message = "経度情報が登録されていません")
 	String longitude;
+
+	@NotBlank(message = "URLが登録されていません")
 	String url;
+
+	@NotBlank(message = "喫煙情報が登録されていません")
 	String smoking;
-	String updatedTime;
-	String postedTime;
-	boolean deleted;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -53,22 +65,6 @@ public class Restaurant {
 
 	public void setGenreFk(String genreFk) {
 		this.genreFk = genreFk;
-	}
-
-	public String getGenreValue() {
-		return genreValue;
-	}
-
-	public void setGenreValue(String genreValue) {
-		this.genreValue = genreValue;
-	}
-
-	public double getStar() {
-		return star;
-	}
-
-	public void setStar(double star) {
-		this.star = star;
 	}
 
 	public Integer getType() {
@@ -143,37 +139,12 @@ public class Restaurant {
 		this.smoking = smoking;
 	}
 
-	public String getUpdatedTime() {
-		return updatedTime;
-	}
-
-	public void setUpdatedTime(String updatedTime) {
-		this.updatedTime = updatedTime;
-	}
-
-	public String getPostedTime() {
-		return postedTime;
-	}
-
-	public void setPostedTime(String postedTime) {
-		this.postedTime = postedTime;
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
 	@Override
 	public String toString() {
-		return "Restaurant [id=" + id + ", name=" + name + ", address=" + address + ", genreFk=" + genreFk
-				+ ", genreValue=" + genreValue + ", star=" + star + ", type=" + type + ", photoPath=" + photoPath
-				+ ", hotpepperId=" + hotpepperId + ", description=" + description + ", access=" + access + ", latitude="
-				+ latitude + ", longitude=" + longitude + ", url=" + url + ", smoking=" + smoking + ", updatedTime="
-				+ updatedTime + ", postedTime=" + postedTime + ", deleted=" + deleted + "]";
+		return "InsertRestaurantByHotpepperForm [name=" + name + ", address=" + address + ", genreFk=" + genreFk
+				+ ", type=" + type + ", photoPath=" + photoPath + ", hotpepperId=" + hotpepperId + ", description="
+				+ description + ", access=" + access + ", latitude=" + latitude + ", longitude=" + longitude + ", url="
+				+ url + ", smoking=" + smoking + "]";
 	}
 
 }
