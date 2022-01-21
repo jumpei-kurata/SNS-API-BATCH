@@ -170,4 +170,34 @@ public class RestaurantController {
 		
 	}
 	
+	@GetMapping(value = "/restaurant/name/{name}")
+	public Map<String,Object> findByName(@PathVariable String name){
+		Map<String, Object> map = new HashMap<>();
+		
+		List<Restaurant> restaurantList = new ArrayList<>(); 
+		Restaurant restaurant = new Restaurant();
+		
+		restaurant.setName(name);
+		restaurantList = restaurantService.findByName(restaurant);
+		
+		if(restaurantList == null) {
+			map.put("status", "error");
+			map.put("message", "エラーが発生しました");
+			return map;
+		}
+		if(restaurantList.size() == 0) {
+			map.put("status", "success");
+			map.put("message", "該当するレストランはありません。");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "該当するレストラン一覧を表示します");
+		map.put("restaurant", restaurantList);
+		
+		return map;
+
+	}
+
+	
 }
