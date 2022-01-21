@@ -4,36 +4,64 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.repository.TimelineRepository">
 	<resultMap id="timelineMap" type="com.example.domain.Timeline">
-		<id			property="id"				column="timeline_id" ></id>
-		<result 	property="userId"			column="user_fk" ></result>
-		<result 	property="userName"			column="user_name" ></result>
-		<result 	property="userPhotoPath"	column="user_photo_path" ></result>
-		<result 	property="sentence"			column="timeline_sentence" ></result>
-		<result 	property="likeCount"		column="l_count" ></result>
-		<result 	property="commentCount"		column="c_count" ></result>
-		<result 	property="updatedTime"		column="timeline_updated_time" ></result>
-		<result 	property="postedTime"		column="timeline_posted_time" ></result>
-		<result 	property="deleted"	column="t.deleted" />
+		<id			property="id"				column="id" ></id>
+		<result 	property="userId"			column="u_id" ></result>
+		<result 	property="accountName"		column="a_name" ></result>
+		<result 	property="userPhotoPath"	column="u_p_path" ></result>
+		<result 	property="sentence"			column="t_sentence" ></result>
+		<result 	property="likeCount"		column="t_l_count" ></result>
+		<result 	property="commentCount"		column="t_c_count" ></result>
+		<result 	property="postedTime"		column="t_p_time" ></result>
+		<result 	property="isMyLike"			column="is_my_like" />
+		<result 	property="deleted"			column="deleted" />
 	</resultMap>
 	<select id="findAllTimeline" resultMap="timelineMap">
-		SELECT
-		t.timeline_id, 
-		t.user_fk, 
-		u.user_name, 
-		u.user_photo_path, 
-		t.timeline_sentence, 
-		SUM(
-			CASE
-				WHEN lc.is_like = 1 THEN 1
-				ELSE 0
-				END
-			) AS l_count, 
-		COUNT(lc.comment) AS c_count, 
-		t.timeline_updated_time, 
-		t.timeline_posted_time, 
-		t.deleted
-		FROM
-		timelines AS t 
+		SELECT 
+		tl.timeline_id AS id, 
+		tl.user_fk AS u_id, 
+		u.account_name AS a_name, 
+		u.user_photo_path AS u_p_path, 
+		tl.timeline_sentence AS t_sentence, 
+		tl.timeline_like_count AS t_l_count, 
+		tl.timeline_comment_count AS t_c_count, 
+		tl.timeline_posted_time AS t_p_time, 
+		(CASE WHEN lc.like_comment_id is null  THEN false 
+		ELSE true END) AS is_my_like, 
+		tl.deleted AS deleted
+		FROM 
+		(SELECT * from timelines ORDER BY timeline_id DESC LIMIT 50) AS tl 
+		LEFT JOIN
+		(
+		(SELECT like_comment_id FROM like_comments WHERE user_fk = #{userId} AND is_like = true ) AS lc
+		LEFT JOIN links_to_timeline AS ltl
+		ON lc.like_comment_id = ltl.like_comment_fk 
+		)
+		ON tl.timeline_id = ltl.timeline_fk 
+		LEFT JOIN 
+		users AS u 
+		ON 
+		tl.user_fk = u.user_id 
+	</select>
+	<insert id="insertTimeline" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO timelines (user_fk,timeline_sentence)
+		VALUES (#{userId},#{sentence})
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+      		select @@IDENTITY
+	    </selectKey>
+	</insert>
+	<update id="updateLikeCount">
+		UPDATE 
+		timelines 
+		SET 
+		timeline_like_count = timeline_like_count + 1 
+		WHERE 
+		timeline_id = #{id}
+	</update>
+	<select id="findTimelineById">
+	 	SELECT
+		* 
+		FROM 
+		(SELECT * FROM timelines WHERE timeline_id = #{id} AND deleted = false ) AS t
 		JOIN
 		users AS u 
 		ON 
@@ -46,17 +74,7 @@
 		like_comments AS lc 
 		ON 
 		lt.like_comment_fk = lc.like_comment_id
-		WHERE
-		t.deleted = 0 
-		GROUP BY t.timeline_id
-		ORDER BY t.timeline_posted_time DESC
-		LIMIT 50
+		WHERE 
+		lc.comment_deleted = false
 	</select>
-	<insert id="insertTimeline" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO timelines (user_fk,timeline_sentence)
-		VALUES (#{userId},#{sentence})
-		<selectKey resultType="int" keyProperty="id" order="AFTER">
-      		select @@IDENTITY
-	    </selectKey>
-	</insert>
 </mapper>
