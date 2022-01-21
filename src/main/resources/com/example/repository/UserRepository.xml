@@ -85,17 +85,25 @@
 	<update id="updateUser">
 		UPDATE
 		users 
+		<set>
+			<if test="name != null">user_name = #{name},</if>
+			<if test="accountName != null">account_name = #{accountName},</if>
+			<if test="email != null">user_email = #{email},</if>
+			<if test="hireDate != null">hire_date = #{hireDate},</if>
+			<if test="serviceFk != null">service_fk = #{serviceFk},</if>
+			<if test="userPhotoPath != null">user_photo_path = #{userPhotoPath} ,</if>
+			<if test="birthDay != null">birth_day = #{birthDay},</if>
+			<if test="introduction != null">introduction = #{introduction} ,</if>
+			updated_time = now() 
+		</set>
+		WHERE
+		user_id = #{id}
+	</update>
+	<update id="changePassword">
+		UPDATE 
+		users 
 		SET 
-		user_name = #{name},
-		account_name = #{accountName},
-		user_email = #{email},
-		user_password = #{password},
-		hire_date = #{hireDate},
-		service_fk = #{serviceFk},
-		user_photo_path = #{userPhotoPath} ,
-		birth_day = #{birthDay},
-		introduction = #{introduction} ,
-		updated_time = now() 
+		user_password = #{password}
 		WHERE
 		user_id = #{id}
 	</update>

@@ -1,18 +1,19 @@
 package com.example.domain;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class Timeline {
 
 	private Integer id;
 	private Integer userId;
-	private String userName;
+	private String accountName;
 	private String userPhotoPath;
 	private String sentence;
 	private Integer likeCount;
 	private Integer commentCount;
-	private Date updatedTime;
-	private Date postedTime;
+	private LocalDateTime updatedTime;
+	private LocalDateTime postedTime;
+	private boolean isMyLike;
 	private boolean deleted;
 	
 	public Integer getId() {
@@ -27,11 +28,11 @@ public class Timeline {
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
-	public String getUserName() {
-		return userName;
+	public String getAccountName() {
+		return accountName;
 	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
 	}
 	public String getUserPhotoPath() {
 		return userPhotoPath;
@@ -57,17 +58,23 @@ public class Timeline {
 	public void setCommentCount(Integer commentCount) {
 		this.commentCount = commentCount;
 	}
-	public Date getUpdatedTime() {
+	public LocalDateTime getUpdatedTime() {
 		return updatedTime;
 	}
-	public void setUpdatedTime(Date updatedTime) {
+	public void setUpdatedTime(LocalDateTime updatedTime) {
 		this.updatedTime = updatedTime;
 	}
-	public Date getPostedTime() {
+	public LocalDateTime getPostedTime() {
 		return postedTime;
 	}
-	public void setPostedTime(Date postedTime) {
+	public void setPostedTime(LocalDateTime postedTime) {
 		this.postedTime = postedTime;
+	}
+	public boolean isMyLike() {
+		return isMyLike;
+	}
+	public void setMyLike(boolean isMyLike) {
+		this.isMyLike = isMyLike;
 	}
 	public boolean isDeleted() {
 		return deleted;
@@ -77,10 +84,10 @@ public class Timeline {
 	}
 	@Override
 	public String toString() {
-		return "Timeline [id=" + id + ", userId=" + userId + ", userName=" + userName + ", userPhotoPath="
+		return "Timeline [id=" + id + ", userId=" + userId + ", accountName=" + accountName + ", userPhotoPath="
 				+ userPhotoPath + ", sentence=" + sentence + ", likeCount=" + likeCount + ", commentCount="
-				+ commentCount + ", updatedTime=" + updatedTime + ", postedTime=" + postedTime + ", deleted=" + deleted
-				+ "]";
+				+ commentCount + ", updatedTime=" + updatedTime + ", postedTime=" + postedTime + ", isMyLike="
+				+ isMyLike + ", deleted=" + deleted + "]";
 	}
 	
 }

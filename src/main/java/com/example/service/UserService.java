@@ -126,35 +126,8 @@ public class UserService {
 	 * @return ユーザー情報
 	 */
 	public User updateUser(User user) {
-
-		User beforeUser = userRepository.findById(user);
-
-		if (user.getName() != null) {
-			beforeUser.setName(user.getName());
-		}
-
-		if (user.getAccountName() != null) {
-			beforeUser.setAccountName(user.getAccountName());
-		}
-
-		if (user.getHireDate() != null) {
-			beforeUser.setHireDate(user.getHireDate());
-		}
-
-		if (user.getServiceFk() != null) {
-			beforeUser.setServiceFk(user.getServiceFk());
-		}
-
-		if (user.getBirthDay() != null) {
-			beforeUser.setBirthDay(user.getBirthDay());
-		}
-
-		if (user.getIntroduction() != null) {
-			beforeUser.setIntroduction(user.getIntroduction());
-		}
-
-		userRepository.updateUser(beforeUser);
-		user = userRepository.findById(beforeUser);
+		userRepository.updateUser(user);
+		user = userRepository.findById(user);
 		return user;
 	}
 
@@ -164,11 +137,11 @@ public class UserService {
 	 * @param user
 	 * @return
 	 */
-	public User updatePassword(User user) {
-
-		List<User> userList = userRepository.findByEmail(user);
-
-		if (userList.size() != 1) {
+	public User changePassword(User user) {
+		
+		List<User>userList = userRepository.findByEmail(user);
+		
+		if(userList.size() != 1) {
 			return null;
 		}
 
@@ -176,7 +149,7 @@ public class UserService {
 		user = userList.get(0);
 		user.setPassword(password);
 
-		userRepository.updateUser(user);
+		userRepository.changePassword(user);
 		user = userRepository.findById(user);
 
 		return user;

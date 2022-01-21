@@ -23,6 +23,9 @@ public interface UserRepository {
 	// ユーザーテーブルを更新
 	int updateUser(User user);
 	
+	//パスワードを変更
+	void changePassword(User user);
+	
 	//ログイン日時のみを更新
 	void loginedUpdate(User user);
 }
