@@ -1,6 +1,6 @@
 package com.example.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class LikeComment {
 
@@ -10,7 +10,7 @@ public class LikeComment {
 	private boolean isLike;
 	private String comment;
 	private Integer commentLikeCount;
-	private LocalDate actionedTime;
+	private LocalDateTime actionedTime;
 	private boolean hasNoticed;
 	private boolean isRead;
 	private boolean commentDeleted;
@@ -51,10 +51,10 @@ public class LikeComment {
 	public void setCommentLikeCount(Integer commentLikeCount) {
 		this.commentLikeCount = commentLikeCount;
 	}
-	public LocalDate getActionedTime() {
+	public LocalDateTime getActionedTime() {
 		return actionedTime;
 	}
-	public void setActionedTime(LocalDate actionedTime) {
+	public void setActionedTime(LocalDateTime actionedTime) {
 		this.actionedTime = actionedTime;
 	}
 	public boolean isHasNoticed() {

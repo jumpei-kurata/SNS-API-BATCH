@@ -1,6 +1,6 @@
 package com.example.domain;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class Mail {
 	
@@ -9,7 +9,7 @@ public class Mail {
 	private String name;
 	private String token;
 	private Integer status;
-	private Date registeredTime;
+	private LocalDateTime registeredTime;
 	
 	public Integer getId() {
 		return id;
@@ -41,10 +41,10 @@ public class Mail {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	public Date getRegisteredTime() {
+	public LocalDateTime getRegisteredTime() {
 		return registeredTime;
 	}
-	public void setRegisteredTime(Date registeredTime) {
+	public void setRegisteredTime(LocalDateTime registeredTime) {
 		this.registeredTime = registeredTime;
 	}
 	@Override
