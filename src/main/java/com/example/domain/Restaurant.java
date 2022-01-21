@@ -4,24 +4,24 @@ import lombok.Data;
 
 @Data
 public class Restaurant {
-	Integer id;
-	String name;
-	String address;
-	String genreFk;
-	String genreValue;
-	double star;
-	Integer type;
-	String photoPath;
-	String hotpepperId;
-	String description;
-	String access;
-	String latitude;
-	String longitude;
-	String url;
-	String smoking;
-	String updatedTime;
-	String postedTime;
-	boolean deleted;
+	private Integer id;
+	private String name;
+	private String address;
+	private String genreFk;
+	private String genreValue;
+	private double star;
+	private Integer type;
+	private String photoPath;
+	private String hotpepperId;
+	private String description;
+	private String access;
+	private String latitude;
+	private String longitude;
+	private String url;
+	private String smoking;
+	private String updatedTime;
+	private String postedTime;
+	private boolean deleted;
 
 	public Integer getId() {
 		return id;
