@@ -39,6 +39,7 @@ public class RestaurantService {
 	public Restaurant findById(Restaurant restaurant) {
 		return restaurantRepository.findById(restaurant);
 	}
+	
 	/**
 	 * レストランの情報をホットペッパーIDに合わせて1件取得します。
 	 * 
@@ -46,6 +47,15 @@ public class RestaurantService {
 	 */
 	public Restaurant findByHotpepperId(Restaurant restaurant) {
 		return restaurantRepository.findByHotpepperId(restaurant);
+	}
+	
+	/**
+	 * レストランの情報を名前のあいまい検索で取得します。
+	 * 
+	 * @return レストランの情報
+	 */
+	public List<Restaurant> findByName(Restaurant restaurant) {
+		return restaurantRepository.findByName(restaurant);
 	}
 
 	/**
