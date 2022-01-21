@@ -86,7 +86,7 @@ public class UserController {
 	}
 
 	/**
-	 * ユーザーをロードしますs
+	 * ユーザーをロードします
 	 * 
 	 * @param id 受け取ったユーザーID
 	 * @return IDから取得したユーザー情報
