@@ -54,7 +54,9 @@ public class RestaurantService {
 	 * @return レストランの情報
 	 */
 	public Restaurant insert(Restaurant restaurant) {
-		restaurant.setPhotoPath("r_"+restaurant.getGenreFk()+".jpeg");
+		if(restaurant.getPhotoPath() == null) {
+			restaurant.setPhotoPath("r_"+restaurant.getGenreFk()+".jpeg");
+		}
 		restaurantRepository.insertRestaurant(restaurant);
 		return restaurant;
 	}

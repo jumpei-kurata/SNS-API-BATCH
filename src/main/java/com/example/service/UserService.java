@@ -337,13 +337,9 @@ public class UserService {
 		
 		// DBに同じ論理IDがいなくなるまで、トークン生成を行う
 		while(!logicalIdIsUnique) {
-			System.out.println("生成");
 			user.setLogicalId(createHalfToken());
 		
 			// 生成した論理IDでDBを検索し、該当するものがなければ、isUniqueをTRUEに
-			System.out.println("検索結果:"+
-					userRepository.findByLogicalId(user)== null);
-			
 			if(userRepository.findByLogicalId(user) == null) {
 				logicalIdIsUnique = true ;
 			}

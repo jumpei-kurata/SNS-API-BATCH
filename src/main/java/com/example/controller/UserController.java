@@ -67,8 +67,6 @@ public class UserController {
 		// 論理ID発行
 		user = userService.generateLogicalId(user);
 
-		System.out.println(user);
-		
 		// インサート処理
 		user = userService.insertUser(user);
 		

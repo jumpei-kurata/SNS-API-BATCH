@@ -1,7 +1,7 @@
 package com.example.form;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 import lombok.Data;
 
@@ -16,7 +16,7 @@ public class InsertRestaurantByHotpepperForm {
 	@NotBlank(message = "店のジャンルが選択されていません")
 	String genreFk;
 
-	@Size(message = "提供タイプが選択されていません")
+	@Min(value=1,message = "提供タイプが選択されていません")
 	Integer type;
 
 	@NotBlank(message = "画像が登録されていません")

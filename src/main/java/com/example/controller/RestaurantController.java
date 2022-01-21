@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.Restaurant;
+import com.example.form.InsertRestaurantByHotpepperForm;
 import com.example.form.InsertRestaurantForm;
 import com.example.service.ErrorService;
 import com.example.service.RestaurantService;
@@ -142,32 +143,31 @@ public class RestaurantController {
 		
 	}
 
-//	@PostMapping(value = "/restaurant/hp")
-//	public Map<String, Object> insertRestaurantByHotpepper(@RequestBody @Validated InsertRestaurantByHotpepperForm form, BindingResult result){
-//		
-//		Map<String, Object> map = new HashMap<>();
-//		
-//		if (result.hasErrors()) {
-//			List<String> errorMessageList = errorService.errorMessage(result);
-//			
-//			map.put("status", "error");
-//			map.put("message", errorMessageList);
-//			return map;
-//		}
-//		
-//		Restaurant restaurant = new Restaurant();
-//		BeanUtils.copyProperties(form, restaurant);
-////		restaurant.setPhotoPath();
-//		
-//		restaurant = restaurantService.insert(restaurant);
-//		
-//		map.put("status", "success");
-//		map.put("message", "レストラン登録に成功しました。");
-//		restaurant = restaurantService.findById(restaurant);
-//		map.put("restaurant", restaurant);
-//		return map;
-//		
-//		
-//	}
+	@PostMapping(value = "/restaurant/hp")
+	public Map<String, Object> insertRestaurantByHotpepper(@RequestBody @Validated InsertRestaurantByHotpepperForm form, BindingResult result){
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		if (result.hasErrors()) {
+			List<String> errorMessageList = errorService.errorMessage(result);
+			
+			map.put("status", "error");
+			map.put("message", errorMessageList);
+			return map;
+		}
+		
+		Restaurant restaurant = new Restaurant();
+		BeanUtils.copyProperties(form, restaurant);
+		
+		restaurant = restaurantService.insert(restaurant);
+		
+		map.put("status", "success");
+		map.put("message", "レストラン登録に成功しました。");
+		restaurant = restaurantService.findById(restaurant);
+		map.put("restaurant", restaurant);
+		return map;
+		
+		
+	}
 	
 }
