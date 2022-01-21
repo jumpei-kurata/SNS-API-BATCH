@@ -348,5 +348,8 @@ public class UserService {
 		return user;
 	}
 	
+	public User findUserByLogicalId(User user) {
+		return user = userRepository.findByLogicalId(user);
+	}
 	
 }
