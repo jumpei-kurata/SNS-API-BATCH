@@ -7,11 +7,16 @@ import com.example.domain.User;
 public interface UserRepository {
 	// 1件検索
 	User findById(User user);
+	
 	// メールアドレスで検索
 	List<User> findByEmail(User user);
 	
+	// 論理IDで検索
+	User findByLogicalId(User user);
+	
 	// 全件検索
 	List<User> findAll();
+	
 	// ユーザーテーブルにデータを挿入
 	void insertUser(User user);
 	

@@ -15,6 +15,7 @@
 		<result 	property="serviceName"		column="service_name" ></result>
 		<result 	property="userPhotoPath"	column="user_photo_path" ></result>
 		<result 	property="introduction"		column="introduction" ></result>
+		<result 	property="logicalId"		column="user_logical_id" ></result>
 		<result 	property="loginedTime"  	column="logined_time" />
 		<result 	property="updatedTime"		column="updated_time" />
 		<result 	property="registeredTime"	column="registered_time" />
@@ -48,6 +49,20 @@
 		AND
 		u.deleted = false 
 	</select>
+	<select id="findByLogicalId" resultMap="userMap">
+		SELECT
+		*
+		FROM
+		users AS u
+		JOIN 
+		services AS s 
+		ON 
+		u.service_fk = s.service_id 
+		WHERE
+		u.user_logical_id = #{logicalId}
+		AND
+		u.deleted = false 
+	</select>
 	<select id="findAll" resultMap="userMap">
 		SELECT
 		*
@@ -61,8 +76,8 @@
 		u.deleted = false 
 	</select>
 	<insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO users (user_name,account_name,user_email,user_password,hire_date,service_fk,user_photo_path,birth_day,introduction)
-		VALUES 				(#{name},#{accountName},#{email},#{password},#{hireDate},#{serviceFk},#{userPhotoPath},#{birthDay},#{introduction})
+		INSERT INTO users (user_name,account_name,user_email,user_password,hire_date,service_fk,user_photo_path,birth_day,introduction,user_logical_id)
+		VALUES 				(#{name},#{accountName},#{email},#{password},#{hireDate},#{serviceFk},#{userPhotoPath},#{birthDay},#{introduction},#{logicalId})
 	  <selectKey resultType="int" keyProperty="id" order="AFTER">
       	select @@IDENTITY
 	  </selectKey>
