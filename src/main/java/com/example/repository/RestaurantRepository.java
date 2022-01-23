@@ -11,6 +11,9 @@ public interface RestaurantRepository {
 	// ホットペッパーIDで検索
 	Restaurant findByHotpepperId(Restaurant restaurant);
 	
+	// 名前あいまい検索
+	List<Restaurant> findByName(Restaurant restaurant);
+	
 	// 全件検索
 	List<Restaurant> findAll();
 	
