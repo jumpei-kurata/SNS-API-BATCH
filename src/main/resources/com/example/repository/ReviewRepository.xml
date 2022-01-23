@@ -40,7 +40,7 @@
 		(SELECT * from reviews ORDER BY review_id DESC LIMIT 50) AS rv
 		LEFT JOIN
 		(
-		(SELECT like_comment_id FROM like_comments WHERE user_fk = #{userLogicalId} AND is_like = true ) AS lc
+		(SELECT like_comment_id FROM like_comments WHERE user_logical_id = #{userLogicalId} AND is_like = true ) AS lc
 		LEFT JOIN links_to_review AS lrv
 		ON lc.like_comment_id = lrv.like_comment_fk 
 		)
