@@ -18,4 +18,6 @@ public interface TimelineRepository {
 	void insertTimeline(Timeline timeline);
 	//いいねカウントを+1
 	void updateLikeCount(Timeline timeline);
+	
+	Timeline findTimelineById (Timeline timeline);
 }

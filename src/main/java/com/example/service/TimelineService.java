@@ -41,4 +41,8 @@ public class TimelineService {
 		timelineRepository.insertTimeline(timeline);
 		return timeline;
 	}
+	
+	public Timeline findTimelineById(Timeline timeline) {
+		return timelineRepository.findTimelineById(timeline);
+	}
 }

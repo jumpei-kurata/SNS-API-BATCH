@@ -2,14 +2,14 @@ package com.example.form;
 
 public class LikeForm {
 
-	private Integer userId;
+	private String userLogicalId;
 	private Integer timelineId;
 	
-	public Integer getUserId() {
-		return userId;
+	public String getUserLogicalId() {
+		return userLogicalId;
 	}
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setUserLogicalId(String userLogicalId) {
+		this.userLogicalId = userLogicalId;
 	}
 	public Integer getTimelineId() {
 		return timelineId;
@@ -19,7 +19,7 @@ public class LikeForm {
 	}
 	@Override
 	public String toString() {
-		return "LikeForm [userId=" + userId + ", timelineId=" + timelineId + "]";
+		return "LikeForm [userLogicalId=" + userLogicalId + ", timelineId=" + timelineId + "]";
 	}
 	
 	

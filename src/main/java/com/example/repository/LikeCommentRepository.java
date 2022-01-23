@@ -1,5 +1,7 @@
 package com.example.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.domain.LikeComment;
@@ -12,7 +14,9 @@ import com.example.domain.LikeComment;
 @Mapper
 public interface LikeCommentRepository {
 	//userId で SELECT
-	LikeComment findLikeCommentById(LikeComment likeComment);
+	LikeComment findLikeCommentByUserIdAndTimelineId(LikeComment likeComment);
+	//コメントリストを検索
+	List<LikeComment> findCommentList (Integer timelineId);
 	//いいねコメントテーブルに登録
 	void insertLikeComment(LikeComment likeComment);
 	//いいねを更新します

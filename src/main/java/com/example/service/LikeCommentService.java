@@ -1,5 +1,7 @@
 package com.example.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +40,8 @@ public class LikeCommentService {
 	 * 
 	 * @param linkToTimeline
 	 */
-	public void insertLinkToTimeline(Integer timelineId,Integer likeCountId) {
-		linkToTimelineRepository.insertLinksToTimeline(timelineId,likeCountId);
+	public void insertLinkToTimeline(Integer timelineId,Integer likeCommentId) {
+		linkToTimelineRepository.insertLinksToTimeline(timelineId,likeCommentId);
 	}
 	
 	/**
@@ -52,10 +54,14 @@ public class LikeCommentService {
 	}
 	
 	public LikeComment findLikeComment(LikeComment likeComment) {
-		return likeCommentRepository.findLikeCommentById(likeComment);
+		return likeCommentRepository.findLikeCommentByUserIdAndTimelineId(likeComment);
 	}
 	
 	public void updateLike(LikeComment likeComment) {
 		likeCommentRepository.updateLike(likeComment);
+	}
+	
+	public List<LikeComment> findCommentList(Integer timelineId) {
+		return likeCommentRepository.findCommentList(timelineId);
 	}
 }

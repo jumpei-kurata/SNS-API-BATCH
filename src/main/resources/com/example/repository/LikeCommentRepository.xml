@@ -17,7 +17,7 @@
 		<result 	property="commentDeleted"		column="comment_deleted"></result>
 	</resultMap>
 
-	<select id="findLikeCommentById" resultMap="LikeCommentMap">
+	<select id="findLikeCommentByUserIdAndTimelineId" resultMap="LikeCommentMap">
 		SELECT 
 		* 
 		FROM 
@@ -28,6 +28,18 @@
 		lc.like_comment_id = ltt.like_comment_fk
 		WHERE 
 		ltt.timeline_fk = #{timelineId}
+	</select>
+	<select id="findCommentList" resultMap="LikeCommentMap">
+		SELECT 
+		* 
+		FROM 
+		(SELECT * FROM links_to_timeline WHERE timeline_fk = #{timelineId}) AS ltt 
+		JOIN 
+		like_comments AS lc 
+		ON 
+		ltt.like_comment_fk = lc.like_comment_id 
+		WHERE 
+		lc.comment IS NOT NULL 
 	</select>
 	<insert id="insertLikeComment" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO like_comments (user_fk,is_like)

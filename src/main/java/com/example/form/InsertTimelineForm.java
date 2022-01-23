@@ -9,11 +9,11 @@ public class InsertTimelineForm {
 	@Size(max = 140,message = "つぶやきは140字以内にしてください")
 	private String sentence;
 	
-	public String getUserId() {
+	public String getUserLogicalId() {
 		return userLogicalId;
 	}
-	public void setUserId(String userId) {
-		this.userLogicalId = userId;
+	public void setUserLogicalId(String userLogicalId) {
+		this.userLogicalId = userLogicalId;
 	}
 	public String getSentence() {
 		return sentence;
@@ -24,7 +24,7 @@ public class InsertTimelineForm {
 	
 	@Override
 	public String toString() {
-		return "InsertTimelineForm [userId=" + userLogicalId + ", sentence=" + sentence + "]";
+		return "InsertTimelineForm [userLogicalId=" + userLogicalId + ", sentence=" + sentence + "]";
 	}
 	
 }
