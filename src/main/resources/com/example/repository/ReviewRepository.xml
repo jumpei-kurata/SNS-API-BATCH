@@ -41,9 +41,7 @@
 		LEFT JOIN
 		(
 		(SELECT like_comment_id FROM like_comments  
-		LEFT JOIN users 
-		ON like_comments.user_fk = users.user_id
-		WHERE users.user_id = #{userId} AND like_comments.is_like = true ) AS lc
+		WHERE user_fk = #{userId} AND is_like = true ) AS lc
 		LEFT JOIN links_to_review AS lrv
 		ON lc.like_comment_id = lrv.like_comment_fk 
 		)
@@ -79,9 +77,7 @@
 		LEFT JOIN
 		(
 		(SELECT like_comment_id FROM like_comments  
-		LEFT JOIN users 
-		ON like_comments.user_fk = users.user_id
-		WHERE users.user_id = #{userId} AND like_comments.is_like = true ) AS lc
+		WHERE user_fk = #{userId} AND is_like = true ) AS lc
 		LEFT JOIN links_to_review AS lrv
 		ON lc.like_comment_id = lrv.like_comment_fk 
 		)
