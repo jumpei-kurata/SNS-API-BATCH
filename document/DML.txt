@@ -1,31 +1,7 @@
-INSERT INTO `users` (`user_id`, `user_name`, `account_name`, `user_email`, `user_password`, `hire_date`, `service_fk`, `user_photo_path`, `birth_day`, `introduction`, `logined_time`, `updated_time`, `registered_time`, `deleted`) VALUES (1, 'masayuki', 'used', 'cyjo@rakus.co.jp', 'jojo', '2022-01-11', 2, 'u1.png', '2022-01-11', NULL, '2022-01-11 17:02:09', '2022-01-11 17:02:10', '2022-01-11 17:02:11', 0);
+INSERT INTO `users` (`user_id`, `user_name`, `account_name`, `user_email`, `user_password`, `hire_date`, `service_fk`, `user_photo_path`, `birth_day`, `introduction`, `user_logical_id`, `logined_time`, `updated_time`, `registered_time`, `deleted`) VALUES (1, '古本 昌幸', 'ふるほん', 'furumoto2@rakus.co.jp', 'Furu2418', '2021-10-01', 3, 'user3.jpeg', '1994-11-27', NULL, '438fd4d233d12e15', '2022-01-21 22:31:06', '2022-01-21 22:31:06', '2022-01-21 22:31:06', 0);
 
+INSERT INTO `restaurants` (`restaurant_name`, `restaurant_address`, `restaurant_genre_fk`, `restaurant_star`, `restaurant_type`, `restaurant_photo_path`, `restaurant_hotpepper_id`, `restaurant_description`, `restaurant_access`, `restaurant_latitude`, `restaurant_longitude`, `restaurant_url`, `restaurant_smoking`, `restaurant_posted_time`, `restaurant_updated_time`, `deleted`) VALUES ( 'らーめん はやし田', '東京都新宿区新宿３-31-5新宿ペガサス館102', 'G013', NULL, 1, 'https://imgfp.hotp.jp/IMGH/81/98/P038318198/P038318198_168.jpg', 'J001186970', '鴨と大山鶏の奥深いスープ「はやし田」', 'JR線 新宿駅東口 徒歩3分', '35.6907061369', '139.703781714', 'https://www.hotpepper.jp/strJ001186970/?vos=nhppalsa000016', '全面禁煙', '2022-01-21 22:31:29', '2022-01-21 22:31:29', 0);
+INSERT INTO `restaurants` (`restaurant_name`, `restaurant_address`, `restaurant_genre_fk`, `restaurant_star`, `restaurant_type`, `restaurant_photo_path`, `restaurant_hotpepper_id`, `restaurant_description`, `restaurant_access`, `restaurant_latitude`, `restaurant_longitude`, `restaurant_url`, `restaurant_smoking`, `restaurant_posted_time`, `restaurant_updated_time`, `deleted`) VALUES ( 'いきなりステーキ', '東京都新宿区新宿三丁目', 'G005', NULL, 3, 'r_G005.jpeg', NULL, '言わずと知れたステーキのお店。第2ラーセンからめっちゃ近い。帰りに飴がもらえるのが好き。', NULL, NULL, NULL, NULL, NULL, '2022-01-21 22:31:34', '2022-01-21 22:31:34', 0);
 
---レストランジャンル
-
-INSERT INTO `restaurant_genres` (`genre_key`, `genre_value`) VALUES
-('G001', '居酒屋'),
-('G002', 'ダイニングバー・バル'),
-('G003', '創作料理'),
-('G004', '和食'),
-('G005', '洋食'),
-('G006', 'イタリアン・フレンチ'),
-('G007', '中華'),
-('G008', '焼肉・ホルモン'),
-('G009', 'アジア・エスニック料理'),
-('G010', '各国料理'),
-('G011', 'カラオケ・パーティ'),
-('G012', 'バー・カクテル'),
-('G013', 'ラーメン'),
-('G014', 'カフェ・スイーツ'),
-('G015', 'その他グルメ'),
-('G016', 'お好み焼き・もんじゃ'),
-('G017', '韓国料理');
-
-INSERT INTO `restaurants` (`restaurant_name`, `restaurant_address`, `restaurant_genre_fk`, `restaurant_star`, `restaurant_type`, `restaurant_photo_path`, `restaurant_posted_time`, `restaurant_updated_time`, `restaurant_hotpepper_id`) 
-VALUES ('和食　まる', 'しんじゅく', 'G003', NULL, 3, 'r1.png', '2022-01-11 17:05:29', '2022-01-11 17:05:30', 'J999999999'),
- ('焼鳥　どん', '西新宿', 'G001', NULL, 3, 'r2.png', '2022-01-19 15:09:30', '2022-01-19 15:09:30', 'J999999998');
-
-INSERT INTO `reviews` (`review_id`, `user_fk`, `restaurant_fk`, `review_star`, `review_sentence`, `review_like_count`, `review_posted_time`, `review_updated_time`, `deleted`) 
-VALUES (1, 1, 1, 5, 'すげえうまかったです。', 0, '2022-01-11 17:07:06', '2022-01-11 17:07:07', 0);
-
+INSERT INTO reviews  (`user_fk`, `restaurant_fk`, `review_star`, `review_sentence`) 
+VALUES (1, 1, 5, 'すげえうまかったです。'), (1, 2, 3, '飴がもらえました。');
