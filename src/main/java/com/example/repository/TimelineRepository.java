@@ -1,6 +1,7 @@
 package com.example.repository;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.domain.Timeline;
 /**
@@ -16,8 +17,8 @@ public interface TimelineRepository {
 	List<Timeline> findAllTimeline(Timeline timeline);
 	//タイムラインを登録
 	void insertTimeline(Timeline timeline);
-	//いいねカウントを+1
-	void updateLikeCount(Timeline timeline);
+	//いいねカウントを+-1
+	void updateLikeCount(@Param("id") Integer id, @Param("status") Integer status);
 	
 	Timeline findTimelineById (Timeline timeline);
 	
