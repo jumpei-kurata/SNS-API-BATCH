@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.domain.LikeComment;
 import com.example.domain.Review;
 import com.example.form.InsertReviewForm;
 import com.example.service.ErrorService;
@@ -38,8 +40,8 @@ public class ReviewController {
 	 * 
 	 * @return
 	 */
-	@GetMapping(value = "/review/{userLogicalId}")
-	public Map<String, Object> findAllReview(@PathVariable String userLogicalId) {
+	@GetMapping(value = "/review")
+	public Map<String, Object> findAllReview(@RequestBody String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();
 
 		List<Review> list = reviewService.findAll(userLogicalId);
@@ -51,16 +53,50 @@ public class ReviewController {
 		}
 		if(list.size() == 0) {
 			map.put("status", "success");
-			map.put("message", "レビューがが1件も登録されていません");
+			map.put("message", "レビューが1件も登録されていません");
 			return map;
 		}
 		
 		map.put("status", "success");
 		map.put("message", "レビュー一覧の検索に成功しました");
-		map.put("ｒeviewList", list);
+		map.put("reviewList", list);
 		return map;
 	}
 
+	
+	/**
+	 * レビューの詳細を表示します
+	 * 
+	 * @return　参照結果とIDに対応したレビューデータとコメントデータ
+	 */
+	@GetMapping(value = "/review/{id}")
+	public Map<String, Object> findReviewById(@RequestBody String logicalId,@PathVariable Integer id) {
+		Map<String, Object> map = new HashMap<>();
+
+		// レビューIDに対応したレビュー詳細
+		Review review = new Review();
+		review.setId(id);
+		review = reviewService.findById(logicalId,review);
+		
+		if(review == null) {
+			map.put("status", "error");
+			map.put("message", "そのレビューは存在しません");
+			return map;
+		}
+
+		// レビューIDに対応したコメント一覧のロード
+		List<LikeComment> commentList = new ArrayList<>();  
+		
+		// 今はまだコメントリストはロードしてません。
+		
+		map.put("status", "success");
+		map.put("message", "レビューの検索に成功しました");
+		map.put("ｒeview", review);
+		
+		map.put("commentList", commentList);
+		return map;
+	}
+	
 	/**
 	 * レビューを投稿します
 	 * 

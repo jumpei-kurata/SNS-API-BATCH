@@ -1,6 +1,7 @@
 package com.example.repository;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.domain.Review;
 
@@ -15,13 +16,13 @@ import com.example.domain.Review;
 public interface ReviewRepository {
 
 	//　レビュー全件検索
-	List<Review> findAllReview(String userLogicalId);
+	List<Review> findAllReview(String logicalId);
 
 	// レビュー1件検索
-	Review findById(Review review,String userLogicalId);	
+	Review findById(@Param("review") Review review,@Param("logicalId")String logicalId);	
 	
 	// レビューをレストランIDで検索
-	List<Review> findByRestaurantId(Review review,String userLogicalId);	
+	List<Review> findByRestaurantId(@Param("review") Review review,@Param("logicalId")String logicalId);	
 	
 	//　レビューを登録
 	void insertReview(Review review);
