@@ -28,8 +28,8 @@ public class ReviewService {
 	 * 
 	 * @return
 	 */
-	public List<Review> findAll(String ｌogicalId) {
-		List<Review> list = reviewRepository.findAllReview(ｌogicalId);
+	public List<Review> findAll(String logicalId) {
+		List<Review> list = reviewRepository.findAllReview(logicalId);
 		return list;
 	}
 	
