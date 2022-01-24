@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.LikeComment;
 import com.example.domain.Review;
+import com.example.domain.User;
 import com.example.form.InsertReviewForm;
 import com.example.service.ErrorService;
 import com.example.service.ReviewService;
+import com.example.service.UserService;
 
 /**
  * レビューに関するコントローラーです。<br>
@@ -32,16 +34,20 @@ public class ReviewController {
 
 	@Autowired
 	private ReviewService reviewService;
+	
 	@Autowired
 	private ErrorService errorService;
+	
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * レビューを最新50件検索します
 	 * 
 	 * @return
 	 */
-	@GetMapping(value = "/review")
-	public Map<String, Object> findAllReview(@RequestBody String userLogicalId) {
+	@GetMapping(value = "/review/{userLogicalId}")
+	public Map<String, Object> findAllReview(@PathVariable String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();
 
 		List<Review> list = reviewService.findAll(userLogicalId);
@@ -69,14 +75,14 @@ public class ReviewController {
 	 * 
 	 * @return　参照結果とIDに対応したレビューデータとコメントデータ
 	 */
-	@GetMapping(value = "/review/{id}")
-	public Map<String, Object> findReviewById(@RequestBody String logicalId,@PathVariable Integer id) {
+	@GetMapping(value = "/review/detail/{id}/{userLogicalId}")
+	public Map<String, Object> findReviewById(@PathVariable Integer id,@PathVariable String userlogicalId) {
 		Map<String, Object> map = new HashMap<>();
 
 		// レビューIDに対応したレビュー詳細
 		Review review = new Review();
 		review.setId(id);
-		review = reviewService.findById(logicalId,review);
+		review = reviewService.findById(userlogicalId,review);
 		
 		if(review == null) {
 			map.put("status", "error");
@@ -105,24 +111,40 @@ public class ReviewController {
 	 * @return　
 	 */
 	@PostMapping(value = "/review")
-	public Map<String, Object> insertReview(@RequestBody @Validated InsertReviewForm form, BindingResult result) {
+	public Map<String, Object> postReview(@RequestBody @Validated InsertReviewForm form,BindingResult result) {
 		Map<String, Object> map = new HashMap<>();
-
+		
+		// バリデーション
 		if (result.hasErrors()) {
 			List<String> errorMessageList = errorService.errorMessage(result);
-
+			
 			map.put("status", "error");
 			map.put("message", errorMessageList);
 			return map;
 		}
-
+		
+		// userLogicalIdをもとに、userデータを取得する
+		User user = new User();
+		user.setLogicalId(form.getUserLogicalId());
+		user = userService.findUserByLogicalId(user);
+		
+		// userLogicalIdが不正だった場合は、ここで弾かれる
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message","ユーザーが存在しません。");
+			return map;
+		}
+		
+		// レビューをインスタンス化、formのデータとUserIdを詰める
 		Review review = new Review();
+		review.setUserId(user.getId());
 		BeanUtils.copyProperties(form, review);
-		reviewService.insertReview(review);
-
+		
+		// レビューのインサート処理と、レストランの星を更新（サービスで一括）
+		reviewService.postReview(review);
+		
 		map.put("status", "success");
 		map.put("message", "レビューの投稿に成功しました");
 		return map;
 	}
-
 }

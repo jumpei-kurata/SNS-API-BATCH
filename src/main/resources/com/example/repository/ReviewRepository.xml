@@ -43,7 +43,7 @@
 		(SELECT like_comment_id FROM like_comments  
 		LEFT JOIN users 
 		ON like_comments.user_fk = users.user_id
-		WHERE users.user_logical_id = #{logicalId} AND like_comments.is_like = true ) AS lc
+		WHERE users.user_logical_id = #{userlogicalId} AND like_comments.is_like = true ) AS lc
 		LEFT JOIN links_to_review AS lrv
 		ON lc.like_comment_id = lrv.like_comment_fk 
 		)
@@ -81,7 +81,7 @@
 		(SELECT like_comment_id FROM like_comments  
 		LEFT JOIN users 
 		ON like_comments.user_fk = users.user_id
-		WHERE users.user_logical_id = #{logicalId} AND like_comments.is_like = true ) AS lc
+		WHERE users.user_logical_id = #{userlogicalId} AND like_comments.is_like = true ) AS lc
 		LEFT JOIN links_to_review AS lrv
 		ON lc.like_comment_id = lrv.like_comment_fk 
 		)
@@ -96,8 +96,8 @@
 		rv.restaurant_fk = rst.restaurant_id
 	</select>
 	<insert id="insertReview" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO reviews (user_fk,review_sentence)
-		VALUES (#{userId},#{sentence})
+		INSERT INTO reviews  (`user_fk`, `restaurant_fk`, `review_star`, `review_sentence`) 
+		VALUES (#{userId},#{restaurantId},#{star},#{sentence})
 		<selectKey resultType="int" keyProperty="id" order="AFTER">
       		select @@IDENTITY
 	    </selectKey>

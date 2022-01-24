@@ -23,8 +23,10 @@ public interface RestaurantRepository {
 	// 全件検索
 	List<Restaurant> findAll();
 	
-	// ユーザーテーブルにデータを挿入
+	// レストランテーブルにデータを挿入
 	void insertRestaurant(Restaurant restaurant);
 	
+	// レストランテーブルのstar欄を更新
+	void updateStar(Restaurant restaurant);
 }
 

@@ -4,14 +4,14 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 /**
- *　レビュー投稿用のフォームです。<br>
+ * レビュー投稿用のフォームです。<br>
  *
  * @author cyjoh
  *
  */
 public class InsertReviewForm {
 
-	private Integer userId;
+	private String userLogicalId;
 
 	@Min(value = 1, message = "レストランを選択してください")
 	private Integer restaurantId;
@@ -23,12 +23,12 @@ public class InsertReviewForm {
 	@Size(max = 140, message = "レビューは140字以内にしてください")
 	private String sentence;
 
-	public Integer getUserId() {
-		return userId;
+	public String getUserLogicalId() {
+		return userLogicalId;
 	}
 
-	public void setUserId(Integer userId) {
-		this.userId = userId;
+	public void setUserLogicalId(String userLogicalId) {
+		this.userLogicalId = userLogicalId;
 	}
 
 	public Integer getRestaurantId() {
@@ -57,7 +57,7 @@ public class InsertReviewForm {
 
 	@Override
 	public String toString() {
-		return "InsertReviewForm [userId=" + userId + ", restaurantId=" + restaurantId + ", star=" + star
+		return "InsertReviewForm [userLogicalId=" + userLogicalId + ", restaurantId=" + restaurantId + ", star=" + star
 				+ ", sentence=" + sentence + "]";
 	}
 

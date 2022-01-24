@@ -99,4 +99,14 @@
       	select @@IDENTITY
 	  </selectKey>
 	</insert>
+	<update id="updateStar">
+		UPDATE restaurants SET restaurant_star = (SELECT AVG(review_star) FROM reviews WHERE restaurant_fk = #{id} AND deleted = FALSE) 
+		WHERE restaurant_id = #{id}
+	</update>
+	
+	 
+	
+	
+	
+	
 </mapper>
