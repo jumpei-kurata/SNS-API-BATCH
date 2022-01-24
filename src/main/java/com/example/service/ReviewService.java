@@ -66,7 +66,19 @@ public class ReviewService {
 		return review;
 	}
 	
+	/**
+	 * レビューを削除する
+	 * 
+	 * @param review
+	 */
 	public void deleteReview(Review review) {
+		// レビューデータのdeletedカラムをupdate
 		reviewRepository.deleteReview(review);
+		
+		//　その後、そのレストランIDを使って、そのレストランの星（評価）を更新（引数がレストランなのでレストランに詰めてる）
+		Restaurant restaurant = new Restaurant();
+		restaurant.setId(review.getRestaurantId());
+		restaurantRepository.updateStar(restaurant);
+		
 	}
 }

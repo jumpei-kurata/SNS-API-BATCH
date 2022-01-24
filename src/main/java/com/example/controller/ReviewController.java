@@ -205,6 +205,13 @@ public class ReviewController {
 		review.setId(reviewId);
 		review = reviewService.findById(review);
 		
+		if(review == null ) {
+			map.put("status", "error");
+			map.put("message", "そのレビューは存在しません");
+			return map;
+		}
+		
+		
 		if (user.getId() != review.getUserId()) {
 			
 			map.put("status", "error");
@@ -214,7 +221,7 @@ public class ReviewController {
 		
 		reviewService.deleteReview(review);
 		map.put("status", "success");
-		map.put("message", "レビュー＾の削除に成功しました");
+		map.put("message", "レビューの削除に成功しました");
 		return map;
 	}
 	
