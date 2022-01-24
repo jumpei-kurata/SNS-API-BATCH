@@ -62,6 +62,6 @@ public class LikeCommentService {
 	}
 	
 	public List<LikeComment> findCommentList(Integer timelineId) {
-		return likeCommentRepository.findCommentList(timelineId);
+		return likeCommentRepository.findCommentListByTimelineId(timelineId);
 	}
 }

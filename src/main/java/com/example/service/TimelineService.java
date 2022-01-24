@@ -45,4 +45,8 @@ public class TimelineService {
 	public Timeline findTimelineById(Timeline timeline) {
 		return timelineRepository.findTimelineById(timeline);
 	}
+	
+	public void updateDelete(Timeline timeline) {
+		timelineRepository.updateDelete(timeline);
+	}
 }

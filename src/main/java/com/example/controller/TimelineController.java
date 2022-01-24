@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -157,12 +158,17 @@ public class TimelineController {
 	 * @param timelineId
 	 * @return
 	 */
-	@GetMapping(value = "/timeline/detail/{timelineId}")
-	public Map<String, Object> timelineDetail(@PathVariable Integer timelineId) {
+	@GetMapping(value = "/timeline/detail/{timelineId}/{userLogicalId}")
+	public Map<String, Object> timelineDetail(@PathVariable Integer timelineId,@PathVariable String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();
 
+		User user = new User();
+		user.setLogicalId(userLogicalId);
+		user = userService.findUserByLogicalId(user);
+		
 		Timeline timeline = new Timeline();
 		timeline.setId(timelineId);
+		timeline.setUserId(user.getId());
 		timeline = timelineService.findTimelineById(timeline);
 		
 		List<LikeComment> commentList = likeCommentService.findCommentList(timelineId);
@@ -174,7 +180,23 @@ public class TimelineController {
 		return map;
 	}
 	
-	
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	@DeleteMapping(value = "/timeline/{timelineId}")
+	public Map<String, Object> deleteTimeline(@PathVariable Integer timelineId) {
+		Map<String, Object> map = new HashMap<>();
+		
+		Timeline timeline = new Timeline();
+		timeline.setId(timelineId);
+		timelineService.updateDelete(timeline);
+		
+		map.put("status", "success");
+		map.put("message", "タイムラインの削除に成功しました");
+		return map;
+	}
 	
 	
 	

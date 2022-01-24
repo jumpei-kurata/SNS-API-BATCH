@@ -33,7 +33,7 @@ public class UserService {
 	private MailSender sender;
 
 	// このアドレスからメールを送ります
-	private final String FROMEMAIL = "kenji.otomo@rakus-partners.co.jp";
+	private final String FROMEMAIL = "lunchkus@gmail.com";
 
 	/**
 	 * IDからユーザー情報を取得します

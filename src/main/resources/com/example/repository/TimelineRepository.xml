@@ -32,7 +32,7 @@
 		(SELECT * from timelines ORDER BY timeline_id DESC LIMIT 50) AS tl 
 		LEFT JOIN
 		(
-		(SELECT like_comment_id FROM like_comments WHERE user_fk = #{userId} AND is_like = true ) AS lc
+		(SELECT like_comment_id,comment FROM like_comments WHERE user_fk = #{userId} AND is_like = true ) AS lc
 		LEFT JOIN links_to_timeline AS ltl
 		ON lc.like_comment_id = ltl.like_comment_fk 
 		)
@@ -41,6 +41,8 @@
 		users AS u 
 		ON 
 		tl.user_fk = u.user_id 
+		WHERE 
+		tl.deleted = false
 	</select>
 	<insert id="insertTimeline" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO timelines (user_fk,timeline_sentence)
@@ -59,22 +61,38 @@
 	</update>
 	<select id="findTimelineById" resultMap = "timelineMap">
 	 	SELECT
-		* 
+		tl.timeline_id AS id, 
+		tl.user_fk AS u_id, 
+		u.account_name AS a_name, 
+		u.user_photo_path AS u_p_path, 
+		tl.timeline_sentence AS t_sentence, 
+		tl.timeline_like_count AS t_l_count, 
+		tl.timeline_comment_count AS t_c_count, 
+		tl.timeline_posted_time AS t_p_time, 
+		(CASE WHEN lc.like_comment_id is null  THEN false 
+		ELSE true END) AS is_my_like, 
+		tl.deleted AS deleted
 		FROM 
-		(SELECT * FROM timelines WHERE timeline_id = #{id} AND deleted = false ) AS t
+		(SELECT * FROM timelines WHERE timeline_id = #{id} AND deleted = false ) AS tl
 		JOIN
 		users AS u 
 		ON 
-		t.user_fk = u.user_id
+		tl.user_fk = u.user_id
 		LEFT JOIN 
 		links_to_timeline AS lt 
 		ON
-		t.timeline_id = lt.timeline_fk
-		LEFT JOIN 
-		like_comments AS lc 
+		tl.timeline_id = lt.timeline_fk
+		LEFT JOIN (SELECT like_comment_id,comment FROM like_comments WHERE user_fk = #{userId} AND is_like = true ) AS lc 
 		ON 
 		lt.like_comment_fk = lc.like_comment_id
-		WHERE 
-		lc.comment_deleted = false
 	</select>
+	
+	<update id="updateDelete">
+		UPDATE 
+		timelines 
+		SET 
+		deleted = true 
+		WHERE 
+		timeline_id = #{id}
+	</update>
 </mapper>

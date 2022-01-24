@@ -20,6 +20,7 @@ public class LikeComment {
 	private LocalDateTime actionedTime;
 	private boolean hasNoticed;
 	private boolean isRead;
+	private boolean isMyLike;	
 	private boolean commentDeleted;
 
 	public Integer getId() {
@@ -110,6 +111,14 @@ public class LikeComment {
 		this.isRead = isRead;
 	}
 
+	public boolean isMyLike() {
+		return isMyLike;
+	}
+
+	public void setMyLike(boolean isMyLike) {
+		this.isMyLike = isMyLike;
+	}
+
 	public boolean isCommentDeleted() {
 		return commentDeleted;
 	}
@@ -123,7 +132,8 @@ public class LikeComment {
 		return "LikeComment [id=" + id + ", userId=" + userId + ", timelineId=" + timelineId + ", reviewId=" + reviewId
 				+ ", parentCommentId=" + parentCommentId + ", isLike=" + isLike + ", comment=" + comment
 				+ ", commentLikeCount=" + commentLikeCount + ", actionedTime=" + actionedTime + ", hasNoticed="
-				+ hasNoticed + ", isRead=" + isRead + ", commentDeleted=" + commentDeleted + "]";
+				+ hasNoticed + ", isRead=" + isRead + ", isMyLike=" + isMyLike + ", commentDeleted=" + commentDeleted
+				+ "]";
 	}
 
 }
