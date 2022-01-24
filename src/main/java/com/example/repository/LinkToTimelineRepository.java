@@ -1,6 +1,7 @@
 package com.example.repository;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * タイムライン接続用テーブルのRepository
@@ -12,6 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface LinkToTimelineRepository {
 
 	//タイムライン接続テーブルに登録
-	void insertLinksToTimeline(Integer timelineId,Integer likeCountId);
+	void insertLinksToTimeline(@Param("timelineId") Integer timelineId,
+			@Param("likeCommentId") Integer likeCommentId);
 	
 }

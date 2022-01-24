@@ -6,7 +6,7 @@
 	
 	<insert id="insertLinksToTimeline">
 		INSERT INTO links_to_timeline (timeline_fk,like_comment_fk)
-		VALUES (#{timelineId},#{likeCommentId})
+		VALUES (#{timelineId} , #{likeCommentId})
 	</insert>
 	
 </mapper>
