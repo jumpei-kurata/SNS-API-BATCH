@@ -16,7 +16,7 @@ public interface LikeCommentRepository {
 	//userId で SELECT
 	LikeComment findLikeCommentByUserIdAndTimelineId(LikeComment likeComment);
 	//コメントリストを検索
-	List<LikeComment> findCommentList (Integer timelineId);
+	List<LikeComment> findCommentListByTimelineId(Integer timelineId);
 	//いいねコメントテーブルに登録
 	void insertLikeComment(LikeComment likeComment);
 	//いいねを更新します

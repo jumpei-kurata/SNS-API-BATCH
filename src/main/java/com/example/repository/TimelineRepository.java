@@ -20,4 +20,6 @@ public interface TimelineRepository {
 	void updateLikeCount(Timeline timeline);
 	
 	Timeline findTimelineById (Timeline timeline);
+	
+	void updateDelete(Timeline timeline);
 }

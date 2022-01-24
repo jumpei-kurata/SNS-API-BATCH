@@ -14,7 +14,8 @@
 		<result 	property="actionedTime"			column="actioned_time" ></result>
 		<result 	property="hasNoticed"			column="has_noticed" ></result>
 		<result 	property="isRead"				column="is_read" ></result>
-		<result 	property="commentDeleted"		column="comment_deleted"></result>
+		<result 	property="isMyLike"				column="is_my_like" ></result>		
+		<result 	property="commentDeleted"		column="lc.comment_deleted"></result>
 	</resultMap>
 
 	<select id="findLikeCommentByUserIdAndTimelineId" resultMap="LikeCommentMap">
@@ -29,17 +30,36 @@
 		WHERE 
 		ltt.timeline_fk = #{timelineId}
 	</select>
-	<select id="findCommentList" resultMap="LikeCommentMap">
+	<select id="findCommentListByTimelineId" resultMap="LikeCommentMap">
 		SELECT 
-		* 
+		lc.like_comment_id , 
+		lc.user_fk , 
+		ltt.timeline_fk ,
+		lc.is_like ,
+		lc.comment ,
+		lc.comment_like_count ,
+		lc.actioned_time ,
+		lc.has_noticed ,
+		lc.is_read ,
+		(CASE WHEN lc2.like_comment_id is null  THEN false 
+		ELSE true END) AS is_my_like, 
+		lc.comment_deleted
 		FROM 
 		(SELECT * FROM links_to_timeline WHERE timeline_fk = #{timelineId}) AS ltt 
 		JOIN 
 		like_comments AS lc 
 		ON 
 		ltt.like_comment_fk = lc.like_comment_id 
+		JOIN 
+		links_to_like_comment AS ltlc 
+		ON 
+		lc.like_comment_id = ltlc.like_comment_fk1 
+		JOIN 
+		(SELECT * FROM like_comments WHERE user_fk = #{userId} AND is_like = true ) AS lc2
+		ON 
+		ltlc.like_comment_fk2 = lc2.like_comment_id 
 		WHERE 
-		lc.comment IS NOT NULL 
+		lc.comment IS NOT NULL
 	</select>
 	<insert id="insertLikeComment" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO like_comments (user_fk,is_like)
