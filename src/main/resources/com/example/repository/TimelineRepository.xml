@@ -54,8 +54,14 @@
 	<update id="updateLikeCount">
 		UPDATE 
 		timelines 
-		SET 
-		timeline_like_count = timeline_like_count + 1 
+		<set>
+			<if test="status == 0">
+				timeline_like_count = timeline_like_count + 1 
+			</if>
+			<if test="status == 1">
+				timeline_like_count = timeline_like_count - 1 
+			</if>
+		</set>
 		WHERE 
 		timeline_id = #{id}
 	</update>
@@ -69,8 +75,10 @@
 		tl.timeline_like_count AS t_l_count, 
 		tl.timeline_comment_count AS t_c_count, 
 		tl.timeline_posted_time AS t_p_time, 
+		<if test="userId != null">
 		(CASE WHEN lc.like_comment_id is null  THEN false 
 		ELSE true END) AS is_my_like, 
+		</if>
 		tl.deleted AS deleted
 		FROM 
 		(SELECT * FROM timelines WHERE timeline_id = #{id} AND deleted = false ) AS tl
@@ -78,6 +86,7 @@
 		users AS u 
 		ON 
 		tl.user_fk = u.user_id
+		<if test="userId != null">
 		LEFT JOIN 
 		links_to_timeline AS lt 
 		ON
@@ -85,6 +94,7 @@
 		LEFT JOIN (SELECT like_comment_id,comment FROM like_comments WHERE user_fk = #{userId} AND is_like = true ) AS lc 
 		ON 
 		lt.like_comment_fk = lc.like_comment_id
+		</if>
 	</select>
 	
 	<update id="updateDelete">

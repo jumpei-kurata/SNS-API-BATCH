@@ -49,8 +49,8 @@ public class LikeCommentService {
 	 * 
 	 * @param timeline
 	 */
-	public void updateLikeCount(Timeline timeline) {
-		timelineRepository.updateLikeCount(timeline);
+	public void updateLikeCount(Timeline timeline,Integer status) {
+		timelineRepository.updateLikeCount(timeline.getId(),status);
 	}
 	
 	public LikeComment findLikeComment(LikeComment likeComment) {
