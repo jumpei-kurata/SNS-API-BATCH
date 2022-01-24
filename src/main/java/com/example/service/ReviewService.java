@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.domain.Restaurant;
 import com.example.domain.Review;
+import com.example.repository.RestaurantRepository;
 import com.example.repository.ReviewRepository;
 
 
@@ -22,6 +24,9 @@ public class ReviewService {
 
 	@Autowired
 	private ReviewRepository reviewRepository;
+	
+	@Autowired
+	private RestaurantRepository restaurantRepository;
 	
 	/**
 	 * レビュー全件検索
@@ -44,13 +49,20 @@ public class ReviewService {
 	}
 	
 	/**
-	 * レビュー投稿
+	 * レビューを投稿する
 	 * 
 	 * @param review
 	 * @return
 	 */
-	public Review insertReview(Review review) {
+	public Review postReview(Review review) {
+		// レビューデータをインサート
 		reviewRepository.insertReview(review);
+		
+		//　その後、そのレストランIDを使って、そのレストランの星（評価）を更新（引数がレストランなのでレストランに詰めてる）
+		Restaurant restaurant = new Restaurant();
+		restaurant.setId(review.getRestaurantId());
+		restaurantRepository.updateStar(restaurant);
+
 		return review;
 	}
 }
