@@ -91,7 +91,7 @@ public class ReviewController {
 		
 		map.put("status", "success");
 		map.put("message", "レビューの検索に成功しました");
-		map.put("ｒeview", review);
+		map.put("review", review);
 		
 		map.put("commentList", commentList);
 		return map;
