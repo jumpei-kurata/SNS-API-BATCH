@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.LikeComment;
 import com.example.domain.Review;
+import com.example.domain.Timeline;
 import com.example.domain.User;
 import com.example.form.InsertReviewForm;
+import com.example.form.UserLogicalIdForm;
 import com.example.service.ErrorService;
 import com.example.service.ReviewService;
 import com.example.service.UserService;
@@ -50,7 +53,22 @@ public class ReviewController {
 	public Map<String, Object> findAllReview(@PathVariable String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();
 
-		List<Review> list = reviewService.findAll(userLogicalId);
+		// userを論理IDで照合
+		User user = new User();
+		user.setLogicalId(userLogicalId);
+		user = userService.findUserByLogicalId(user);
+		
+		// userLogicalIdが不正だった場合は、ここで弾かれる
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message","ユーザーが存在しません。");
+			return map;
+		}
+		
+		Review review = new Review();
+		review.setUserId(user.getId());
+		
+		List<Review> list = reviewService.findAll(review);
 		
 		if(list == null) {
 			map.put("status", "error");
@@ -76,13 +94,27 @@ public class ReviewController {
 	 * @return　参照結果とIDに対応したレビューデータとコメントデータ
 	 */
 	@GetMapping(value = "/review/detail/{id}/{userLogicalId}")
-	public Map<String, Object> findReviewById(@PathVariable Integer id,@PathVariable String userlogicalId) {
+	public Map<String, Object> findReviewById(@PathVariable Integer id,@PathVariable String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();
 
+		// userを論理IDで照合
+		User user = new User();
+		user.setLogicalId(userLogicalId);
+		user = userService.findUserByLogicalId(user);
+		
+		// userLogicalIdが不正だった場合は、ここで弾かれる
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message","ユーザーが存在しません。");
+			return map;
+		}
+		
+		
 		// レビューIDに対応したレビュー詳細
 		Review review = new Review();
 		review.setId(id);
-		review = reviewService.findById(userlogicalId,review);
+		review.setUserId(user.getId());
+		review = reviewService.findById(review);
 		
 		if(review == null) {
 			map.put("status", "error");
@@ -147,4 +179,54 @@ public class ReviewController {
 		map.put("message", "レビューの投稿に成功しました");
 		return map;
 	}
+	
+	/**
+	 * レビューを削除
+	 * 
+	 * @return
+	 */
+	@DeleteMapping(value = "/review/{reviewId}")
+	public Map<String, Object> deleteReview(@PathVariable Integer reviewId,@RequestBody UserLogicalIdForm form) {
+		Map<String, Object> map = new HashMap<>();
+		
+		// userを論理IDで照合
+		User user = new User();
+		user.setLogicalId(form.getUserLogicalId());
+		user = userService.findUserByLogicalId(user);
+		
+		// userLogicalIdが不正だった場合は、ここで弾かれる
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message","ユーザーが存在しません。");
+			return map;
+		}
+		
+		Review review = new Review();
+		review.setId(reviewId);
+		review = reviewService.findById(review);
+		
+		if(review == null ) {
+			map.put("status", "error");
+			map.put("message", "そのレビューは存在しません");
+			return map;
+		}
+		
+		
+		if (user.getId() != review.getUserId()) {
+			
+			map.put("status", "error");
+			map.put("message", "このレビューを削除できるアカウントではありません");
+			return map;
+		}
+		
+		reviewService.deleteReview(review);
+		map.put("status", "success");
+		map.put("message", "レビューの削除に成功しました");
+		return map;
+	}
+	
+	
+	
+	
+	
 }

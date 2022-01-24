@@ -33,8 +33,8 @@ public class ReviewService {
 	 * 
 	 * @return
 	 */
-	public List<Review> findAll(String userlogicalId) {
-		List<Review> list = reviewRepository.findAllReview(userlogicalId);
+	public List<Review> findAll(Review review) {
+		List<Review> list = reviewRepository.findAllReview(review);
 		return list;
 	}
 	
@@ -43,8 +43,8 @@ public class ReviewService {
 	 * 
 	 * @return
 	 */
-	public Review findById(String userlogicalId,Review review) {
-		review = reviewRepository.findById(review,userlogicalId);
+	public Review findById(Review review) {
+		review = reviewRepository.findById(review);
 		return review;
 	}
 	
@@ -64,5 +64,21 @@ public class ReviewService {
 		restaurantRepository.updateStar(restaurant);
 
 		return review;
+	}
+	
+	/**
+	 * レビューを削除する
+	 * 
+	 * @param review
+	 */
+	public void deleteReview(Review review) {
+		// レビューデータのdeletedカラムをupdate
+		reviewRepository.deleteReview(review);
+		
+		//　その後、そのレストランIDを使って、そのレストランの星（評価）を更新（引数がレストランなのでレストランに詰めてる）
+		Restaurant restaurant = new Restaurant();
+		restaurant.setId(review.getRestaurantId());
+		restaurantRepository.updateStar(restaurant);
+		
 	}
 }

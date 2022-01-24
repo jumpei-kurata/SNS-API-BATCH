@@ -41,9 +41,7 @@
 		LEFT JOIN
 		(
 		(SELECT like_comment_id FROM like_comments  
-		LEFT JOIN users 
-		ON like_comments.user_fk = users.user_id
-		WHERE users.user_logical_id = #{userlogicalId} AND like_comments.is_like = true ) AS lc
+		WHERE user_fk = #{userId} AND is_like = true ) AS lc
 		LEFT JOIN links_to_review AS lrv
 		ON lc.like_comment_id = lrv.like_comment_fk 
 		)
@@ -75,13 +73,11 @@
 		ELSE true END) AS is_my_like, 
 		rv.deleted AS deleted
 		FROM 
-		(SELECT * from reviews WHERE review_id = #{review.id} AND deleted = false ) AS rv
+		(SELECT * from reviews WHERE review_id = #{id} AND deleted = false ) AS rv
 		LEFT JOIN
 		(
 		(SELECT like_comment_id FROM like_comments  
-		LEFT JOIN users 
-		ON like_comments.user_fk = users.user_id
-		WHERE users.user_logical_id = #{userlogicalId} AND like_comments.is_like = true ) AS lc
+		WHERE user_fk = #{userId} AND is_like = true ) AS lc
 		LEFT JOIN links_to_review AS lrv
 		ON lc.like_comment_id = lrv.like_comment_fk 
 		)
@@ -102,6 +98,14 @@
       		select @@IDENTITY
 	    </selectKey>
 	</insert>
+	<update id="deleteReview">
+		UPDATE 
+		reviews 
+		SET 
+		deleted = true 
+		WHERE 
+		review_id = #{id}
+	</update>
 	<update id="updateLikeCount">
 		UPDATE 
 		reviews 
