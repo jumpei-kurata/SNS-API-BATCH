@@ -37,13 +37,47 @@
 		ELSE true END) AS is_my_like, 
 		rv.deleted AS deleted
 		FROM 
-		(SELECT * from reviews ORDER BY review_id DESC LIMIT 50) AS rv
+		(SELECT * from reviews WHERE deleted = false ORDER BY review_id DESC LIMIT 50 ) AS rv
 		LEFT JOIN
 		(
 		(SELECT like_comment_id FROM like_comments  
-		LEFT JOIN users 
-		ON like_comments.user_fk = users.user_id
-		WHERE users.user_logical_id = #{userLogicalId} AND like_comments.is_like = true ) AS lc
+		WHERE user_fk = #{userId} AND is_like = true ) AS lc
+		LEFT JOIN links_to_review AS lrv
+		ON lc.like_comment_id = lrv.like_comment_fk 
+		)
+		ON rv.review_id = lrv.review_fk 
+		LEFT JOIN 
+		users AS u 
+		ON 
+		rv.user_fk = u.user_id 
+		LEFT JOIN 
+		restaurants AS rst
+		ON 
+		rv.restaurant_fk = rst.restaurant_id
+	</select>
+	<select id="findById" resultMap="reviewMap">
+		SELECT 
+		rv.review_id , 
+		rv.user_fk , 
+		u.account_name , 
+		u.user_photo_path ,
+		rv.restaurant_fk,
+		rst.restaurant_name,
+		rst.restaurant_photo_path,
+		rv.review_star , 
+		rv.review_sentence , 
+		rv.review_like_count , 
+		rv.review_comment_count, 
+		rv.review_posted_time ,
+		(CASE WHEN lc.like_comment_id is null  THEN false 
+		ELSE true END) AS is_my_like, 
+		rv.deleted AS deleted
+		FROM 
+		(SELECT * from reviews WHERE review_id = #{id} AND deleted = false ) AS rv
+		LEFT JOIN
+		(
+		(SELECT like_comment_id FROM like_comments  
+		WHERE user_fk = #{userId} AND is_like = true ) AS lc
 		LEFT JOIN links_to_review AS lrv
 		ON lc.like_comment_id = lrv.like_comment_fk 
 		)
@@ -58,12 +92,20 @@
 		rv.restaurant_fk = rst.restaurant_id
 	</select>
 	<insert id="insertReview" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO reviews (user_fk,review_sentence)
-		VALUES (#{userId},#{sentence})
+		INSERT INTO reviews  (`user_fk`, `restaurant_fk`, `review_star`, `review_sentence`) 
+		VALUES (#{userId},#{restaurantId},#{star},#{sentence})
 		<selectKey resultType="int" keyProperty="id" order="AFTER">
       		select @@IDENTITY
 	    </selectKey>
 	</insert>
+	<update id="deleteReview">
+		UPDATE 
+		reviews 
+		SET 
+		deleted = true 
+		WHERE 
+		review_id = #{id}
+	</update>
 	<update id="updateLikeCount">
 		UPDATE 
 		reviews 
