@@ -30,6 +30,11 @@ public class TimelineService {
 		List<Timeline>list = timelineRepository.findAllTimeline(timeline);
 		return list;
 	}
+
+	public List<Timeline> findOld(Timeline timeline) {
+		List<Timeline>list = timelineRepository.findAllTimelineOld(timeline);
+		return list;
+	}
 	
 	/**
 	 * タイムライン投稿
@@ -43,7 +48,10 @@ public class TimelineService {
 	}
 	
 	public Timeline findTimelineById(Timeline timeline) {
-		return timelineRepository.findTimelineById(timeline);
+		
+		timeline = timelineRepository.findTimelineById(timeline);
+		
+		return timeline;
 	}
 	
 	public void updateDelete(Timeline timeline) {

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.domain.LikeComment;
 import com.example.domain.Timeline;
 import com.example.repository.LikeCommentRepository;
+import com.example.repository.LinkToCommentRepository;
 import com.example.repository.LinkToTimelineRepository;
 import com.example.repository.TimelineRepository;
 
@@ -22,6 +23,8 @@ public class LikeCommentService {
 	private LikeCommentRepository likeCommentRepository;
 	@Autowired
 	private LinkToTimelineRepository linkToTimelineRepository;
+	@Autowired
+	private LinkToCommentRepository linkToCommentRepository;
 	
 	/**
 	 * いいねコメントテーブルに登録
@@ -29,8 +32,31 @@ public class LikeCommentService {
 	 * @param likeComment
 	 * @return
 	 */
-	public LikeComment insertLikeComment(LikeComment likeComment) {
+	public LikeComment insertLikeCommentToTimeline(LikeComment likeComment) {
+		
+		if (likeComment.getComment() == null) {
+			likeComment.setLike(true);
+		}
 		likeCommentRepository.insertLikeComment(likeComment);
+		
+		linkToTimelineRepository.insertLinksToTimeline(likeComment.getTimelineId(),likeComment.getId());
+		
+		timelineRepository.updateLikeCount(likeComment.getTimelineId(),0);
+		
+		return likeComment;
+	}
+	
+	public LikeComment insertLikeCommentToLikeComment(LikeComment likeComment) {
+		
+		if (likeComment.getComment() == null) {
+			likeComment.setLike(true);
+		}
+		likeCommentRepository.insertLikeComment(likeComment);
+		
+		linkToCommentRepository.insertLinksToComment(likeComment.getParentCommentId(), likeComment.getId());
+		
+		likeCommentRepository.updateLikeCount(likeComment.getParentCommentId(), 0);
+		
 		return likeComment;
 	}
 	
@@ -45,15 +71,30 @@ public class LikeCommentService {
 	}
 	
 	/**
-	 * いいねカウント+1
+	 * いいねカウント+-1
 	 * 
 	 * @param timeline
 	 */
-	public void updateLikeCount(Timeline timeline,Integer status) {
-		timelineRepository.updateLikeCount(timeline.getId(),status);
+	public void updateLikeCountToTimeline(Integer timelineId,Integer status) {
+		timelineRepository.updateLikeCount(timelineId,status);
+	}
+	public void updateLikeCountToComment(Integer commentId,Integer status) {
+		likeCommentRepository.updateLikeCount(commentId,status);
+	}
+	/**
+	 * コメントカウント+-1
+	 * 
+	 * @param timeline
+	 */
+	public void updateCommentCountTimeline(Integer timelineId,Integer status) {
+		timelineRepository.updateCommentCount(timelineId,status);
 	}
 	
-	public LikeComment findLikeComment(LikeComment likeComment) {
+	public LikeComment findLikeComment(Integer userId,Integer timelineId) {
+		LikeComment likeComment = new LikeComment();
+		
+		likeComment.setUserId(userId);
+		likeComment.setTimelineId(timelineId);
 		return likeCommentRepository.findLikeCommentByUserIdAndTimelineId(likeComment);
 	}
 	
@@ -61,7 +102,29 @@ public class LikeCommentService {
 		likeCommentRepository.updateLike(likeComment);
 	}
 	
-	public List<LikeComment> findCommentList(Integer timelineId) {
-		return likeCommentRepository.findCommentListByTimelineId(timelineId);
+	public void updateComment(LikeComment likeComment) {
+		likeCommentRepository.updateComment(likeComment);
 	}
+	
+	public List<LikeComment> findCommentListToTimeline(Timeline timeline) {
+		return likeCommentRepository.findCommentListByTimelineId(timeline);
+	}
+	
+	public LikeComment findCommentByUserIdAndCommentId(Integer userId, Integer commentId){
+
+		LikeComment likeComment = new LikeComment();
+		likeComment.setUserId(userId);
+		likeComment.setParentCommentId(commentId);
+		
+		return likeCommentRepository.findCommentByUserIdAndCommentId(likeComment);
+	}
+	
+	public void updateDelete(LikeComment likeComment) {
+		likeCommentRepository.updateDelete(likeComment);
+	}
+	
+	public LikeComment findLikeCommentByCommentId(LikeComment likeComment) {
+		return likeCommentRepository.findLikeCommentByCommentId(likeComment);
+	}
+	
 }

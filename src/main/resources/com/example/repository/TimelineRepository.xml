@@ -44,6 +44,36 @@
 		WHERE 
 		tl.deleted = false
 	</select>
+	<select id="findAllTimelineOld" resultMap="timelineMap">
+		SELECT 
+		tl.timeline_id AS id, 
+		tl.user_fk AS u_id, 
+		u.account_name AS a_name, 
+		u.user_photo_path AS u_p_path, 
+		tl.timeline_sentence AS t_sentence, 
+		tl.timeline_like_count AS t_l_count, 
+		tl.timeline_comment_count AS t_c_count, 
+		tl.timeline_posted_time AS t_p_time, 
+		(CASE WHEN lc.like_comment_id is null  THEN false 
+		ELSE true END) AS is_my_like, 
+		tl.deleted AS deleted
+		FROM 
+		(SELECT * from timelines where #{id} > timeline_id AND deleted = false ORDER BY timeline_id DESC LIMIT 50) AS tl 
+		LEFT JOIN
+		(
+		(SELECT like_comment_id,comment FROM like_comments WHERE user_fk = #{userId} AND is_like = true ) AS lc
+		LEFT JOIN links_to_timeline AS ltl
+		ON lc.like_comment_id = ltl.like_comment_fk 
+		)
+		ON tl.timeline_id = ltl.timeline_fk 
+		LEFT JOIN 
+		users AS u 
+		ON 
+		tl.user_fk = u.user_id 
+		WHERE 
+		tl.deleted = false
+	</select>
+	
 	<insert id="insertTimeline" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO timelines (user_fk,timeline_sentence)
 		VALUES (#{userId},#{sentence})
@@ -65,6 +95,20 @@
 		WHERE 
 		timeline_id = #{id}
 	</update>
+	<update id="updateCommentCount">
+		UPDATE 
+		timelines 
+		<set>
+			<if test="status == 0">
+				timeline_comment_count = timeline_comment_count + 1 
+			</if>
+			<if test="status == 1">
+				timeline_comment_count = timeline_comment_count - 1 
+			</if>
+		</set>
+		WHERE 
+		timeline_id = #{id}
+	</update>
 	<select id="findTimelineById" resultMap = "timelineMap">
 	 	SELECT
 		tl.timeline_id AS id, 
@@ -76,24 +120,26 @@
 		tl.timeline_comment_count AS t_c_count, 
 		tl.timeline_posted_time AS t_p_time, 
 		<if test="userId != null">
-		(CASE WHEN lc.like_comment_id is null  THEN false 
+		(CASE WHEN ltlc.like_comment_id is null  THEN false 
 		ELSE true END) AS is_my_like, 
 		</if>
 		tl.deleted AS deleted
 		FROM 
 		(SELECT * FROM timelines WHERE timeline_id = #{id} AND deleted = false ) AS tl
-		JOIN
+		LEFT JOIN
 		users AS u 
 		ON 
-		tl.user_fk = u.user_id
+		tl.user_fk = u.user_id 
 		<if test="userId != null">
 		LEFT JOIN 
-		links_to_timeline AS lt 
-		ON
-		tl.timeline_id = lt.timeline_fk
-		LEFT JOIN (SELECT like_comment_id,comment FROM like_comments WHERE user_fk = #{userId} AND is_like = true ) AS lc 
+			(SELECT * FROM links_to_timeline AS lt 
+			LEFT JOIN 
+			like_comments AS lc 
+			ON 
+			lt.like_comment_fk = lc.like_comment_id 
+			WHERE lc.user_fk = #{userId} AND lc.is_like = true ) AS ltlc 
 		ON 
-		lt.like_comment_fk = lc.like_comment_id
+		tl.timeline_id = ltlc.timeline_fk 
 		</if>
 	</select>
 	

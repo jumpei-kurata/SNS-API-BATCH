@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.repository.LinkToCommentRepository">
+	
+	<insert id="insertLinksToComment">
+		INSERT INTO links_to_like_comment (like_comment_fk1,like_comment_fk2)
+		VALUES (#{commentId} , #{likeCommentId})
+	</insert>
+	
+</mapper>
