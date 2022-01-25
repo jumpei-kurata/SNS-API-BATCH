@@ -113,6 +113,33 @@ public class UserController {
 	}
 
 	/**
+	 * 論理IDで検索するメソッド
+	 * 
+	 * @param userLogicalId
+	 * @return
+	 */
+	@GetMapping(value = "/user/{userLogicalId}")
+	public Map<String, Object> findByuserLogicalId(@PathVariable String userLogicalId) {
+		Map<String, Object> map = new HashMap<>();
+		
+		User user = new User();
+		user.setLogicalId(userLogicalId);
+		
+		user = userService.findUserByLogicalId(user);
+		
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "このIDのアカウントは存在しません");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "ロードに成功しました");
+		map.put("user", user);
+		return map;
+	}
+	
+	/**
 	 * ログインします
 	 * 
 	 * @param form
