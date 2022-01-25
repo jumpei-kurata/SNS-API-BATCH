@@ -91,14 +91,14 @@ public class UserController {
 	 * @param id 受け取ったユーザーID
 	 * @return IDから取得したユーザー情報
 	 */
-	@GetMapping(value = "/user/{userLogicalId}")
-	public Map<String, Object> findById(@PathVariable String userLogicalId) {
+	@GetMapping(value = "/user/{id}/{userLogicalId}")
+	public Map<String, Object> findById(@PathVariable Integer id,@PathVariable String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();
 
 		User user = new User();
-		user.setLogicalId(userLogicalId);
+		user.setId(id);
 
-		user = userService.findUserByLogicalId(user);
+		user = userService.findById(user);
 
 		if (user == null) {
 			map.put("status", "error");
