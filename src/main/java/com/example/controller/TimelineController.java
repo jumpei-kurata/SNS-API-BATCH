@@ -186,12 +186,13 @@ public class TimelineController {
 		
 		if (likeComment.isLike()) {
 			likeCommentService.updateLikeCountToTimeline(form.getTimelineId(),1);
+			map.put("message", "いいねを削除しました");
 		}else {
 			likeCommentService.updateLikeCountToTimeline(form.getTimelineId(),0);
+			map.put("message", "いいねを登録しました");
 		}
 
 		map.put("status", "success");
-		map.put("message", "いいねを更新しました");
 		return map;
 	}
 	
@@ -234,12 +235,13 @@ public class TimelineController {
 		
 		if (likeComment.isLike()) {
 			likeCommentService.updateLikeCountToComment(form.getCommentId(), 1);
+			map.put("message", "いいねを削除しました");
 		}else {
 			likeCommentService.updateLikeCountToComment(form.getCommentId(),0);
+			map.put("message", "いいねを登録しました");
 		}
 		
 		map.put("status", "success");
-		map.put("message", "いいねを更新しました");
 		return map;
 	}
 	
@@ -284,7 +286,7 @@ public class TimelineController {
 		likeCommentService.updateCommentCountTimeline(likeComment.getTimelineId(), 0);
 		
 		map.put("status", "success");
-		map.put("message", "いいねがついていたつぶやきにコメントを登録しました");
+		map.put("message", "コメントを登録しました");
 		return map;
 	}
 	
