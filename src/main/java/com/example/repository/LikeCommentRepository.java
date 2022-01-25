@@ -22,8 +22,10 @@ public interface LikeCommentRepository {
 
 	//コメントリストを検索
 	List<LikeComment> findCommentListByTimelineId(Timeline timeline);
-	//いいねコメントテーブルに登録
-	void insertLikeComment(LikeComment likeComment);
+	//いいねコメントテーブルにいいねを登録
+	void insertLike(LikeComment likeComment);
+	//いいねコメントテーブルにコメントを登録
+	void insertComment(LikeComment likeComment);
 	//いいねを更新します
 	void updateLike(LikeComment likeComment);
 	//コメントを更新します

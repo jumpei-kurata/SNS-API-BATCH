@@ -27,17 +27,15 @@ public class LikeCommentService {
 	private LinkToCommentRepository linkToCommentRepository;
 	
 	/**
-	 * いいねコメントテーブルに登録
+	 * いいねコメントテーブルにタイムラインへのいいねを登録
 	 * 
 	 * @param likeComment
 	 * @return
 	 */
-	public LikeComment insertLikeCommentToTimeline(LikeComment likeComment) {
+	public LikeComment insertLikeToTimeline(LikeComment likeComment) {
 		
-		if (likeComment.getComment() == null) {
-			likeComment.setLike(true);
-		}
-		likeCommentRepository.insertLikeComment(likeComment);
+		likeComment.setLike(true);
+		likeCommentRepository.insertLike(likeComment);
 		
 		linkToTimelineRepository.insertLinksToTimeline(likeComment.getTimelineId(),likeComment.getId());
 		
@@ -45,13 +43,33 @@ public class LikeCommentService {
 		
 		return likeComment;
 	}
-	
-	public LikeComment insertLikeCommentToLikeComment(LikeComment likeComment) {
+	/**
+	 * いいねコメントテーブルにタイムラインへのコメントを登録
+	 * 
+	 * @param likeComment
+	 * @return
+	 */
+	public LikeComment insertCommentToTimeline(LikeComment likeComment) {
 		
-		if (likeComment.getComment() == null) {
-			likeComment.setLike(true);
-		}
-		likeCommentRepository.insertLikeComment(likeComment);
+		likeCommentRepository.insertComment(likeComment);
+		
+		linkToTimelineRepository.insertLinksToTimeline(likeComment.getTimelineId(),likeComment.getId());
+		
+		timelineRepository.updateCommentCount(likeComment.getTimelineId(),0);
+		
+		return likeComment;
+	}
+	
+	/**
+	 * いいねコメントテーブルにコメントへのいいねを登録
+	 * 
+	 * @param likeComment
+	 * @return
+	 */
+	public LikeComment insertLikeToLikeComment(LikeComment likeComment) {
+		
+		likeComment.setLike(true);
+		likeCommentRepository.insertLike(likeComment);
 		
 		linkToCommentRepository.insertLinksToComment(likeComment.getParentCommentId(), likeComment.getId());
 		

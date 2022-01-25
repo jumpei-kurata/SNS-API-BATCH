@@ -7,6 +7,8 @@
 	<resultMap id="LikeCommentMap" type="com.example.domain.LikeComment">
 		<id			property="id"					column="like_comment_id"></id>
 		<result 	property="userId"				column="user_fk" ></result>
+		<result 	property="accountName"			column="account_name" ></result>
+		<result 	property="userPhotoPath"		column="user_photo_path" ></result>
 		<result 	property="timelineId"			column="timeline_fk" ></result>
 		<result 	property="parentCommentId"		column="like_comment_fk1" ></result>
 		<result 	property="isLike"				column="is_like" ></result>
@@ -59,6 +61,8 @@
 		SELECT 
 		lc.like_comment_id , 
 		lc.user_fk , 
+		u.account_name , 
+		u.user_photo_path , 
 		ltt.timeline_fk ,
 		lc.is_like ,
 		lc.comment ,
@@ -75,6 +79,10 @@
 		like_comments AS lc 
 		ON 
 		ltt.like_comment_fk = lc.like_comment_id 
+		JOIN 
+		users AS u 
+		ON 
+		lc.user_fk = u.user_id 
 		LEFT JOIN 
 		links_to_like_comment AS ltlc 
 		ON 
@@ -87,27 +95,21 @@
 		lc.comment IS NOT NULL
 	</select>
 	
-	<insert id="insertLikeComment" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="insertLike" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO like_comments 
-		(
-		user_fk 
-		<if test="isLike != null">
-			, is_like 
-		</if>
-		<if test="comment != null">
-			, comment 
-		</if>
-		) 
+		(user_fk , is_like) 
 		VALUES 
-		(
-		#{userId} 
-		<if test="isLike != null">
-			, #{isLike} 
-		</if>
-		<if test="comment != null">
-			, #{comment} 
-		</if>
-		);
+		(#{userId} , #{isLike});
+		<selectKey resultType="int" keyProperty="id" order="AFTER">
+      		select @@IDENTITY
+	    </selectKey>
+	</insert>
+	
+	<insert id="insertComment" useGeneratedKeys="true" keyProperty="id" >
+		INSERT INTO like_comments 
+		(user_fk , comment ) 
+		VALUES 
+		(#{userId} , #{comment});
 		<selectKey resultType="int" keyProperty="id" order="AFTER">
       		select @@IDENTITY
 	    </selectKey>
