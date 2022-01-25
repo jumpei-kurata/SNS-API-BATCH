@@ -8,6 +8,7 @@
 		<id			property="id"					column="like_comment_id"></id>
 		<result 	property="userId"				column="user_fk" ></result>
 		<result 	property="timelineId"			column="timeline_fk" ></result>
+		<result 	property="parentCommentId"		column="like_comment_fk1" ></result>
 		<result 	property="isLike"				column="is_like" ></result>
 		<result 	property="comment"				column="comment" ></result>
 		<result 	property="commentLikeCount"		column="comment_like_count" ></result>
@@ -30,6 +31,30 @@
 		WHERE 
 		ltt.timeline_fk = #{timelineId}
 	</select>
+	
+	<select id="findCommentByUserIdAndCommentId" resultMap="LikeCommentMap">
+		SELECT 
+		lc.like_comment_id , 
+		lc.user_fk , 
+		ltc.like_comment_fk1 ,
+		lc.is_like ,
+		lc.comment ,
+		lc.comment_like_count ,
+		lc.actioned_time ,
+		lc.has_noticed ,
+		lc.is_read ,
+		(CASE WHEN ltc.link_to_like_comment_id is null  THEN false 
+		ELSE true END) AS is_my_like, 
+		lc.comment_deleted
+		FROM 
+		(SELECT * FROM like_comments WHERE user_fk = #{userId}) AS lc
+		JOIN 
+		links_to_like_comment AS ltc
+		ON 
+		ltc.like_comment_fk2 = lc.like_comment_id
+		WHERE 
+		like_comment_fk1 = #{parentCommentId}
+	</select>
 	<select id="findCommentListByTimelineId" resultMap="LikeCommentMap">
 		SELECT 
 		lc.like_comment_id , 
@@ -41,33 +66,53 @@
 		lc.actioned_time ,
 		lc.has_noticed ,
 		lc.is_read ,
-		(CASE WHEN lc2.like_comment_id is null  THEN false 
+		(CASE WHEN lc2.like_comment_id is null THEN false 
 		ELSE true END) AS is_my_like, 
 		lc.comment_deleted
 		FROM 
-		(SELECT * FROM links_to_timeline WHERE timeline_fk = #{timelineId}) AS ltt 
+		(SELECT * FROM links_to_timeline WHERE timeline_fk = #{id}) AS ltt 
 		JOIN 
 		like_comments AS lc 
 		ON 
 		ltt.like_comment_fk = lc.like_comment_id 
-		JOIN 
+		LEFT JOIN 
 		links_to_like_comment AS ltlc 
 		ON 
 		lc.like_comment_id = ltlc.like_comment_fk1 
-		JOIN 
+		LEFT JOIN 
 		(SELECT * FROM like_comments WHERE user_fk = #{userId} AND is_like = true ) AS lc2
 		ON 
 		ltlc.like_comment_fk2 = lc2.like_comment_id 
 		WHERE 
 		lc.comment IS NOT NULL
 	</select>
+	
 	<insert id="insertLikeComment" useGeneratedKeys="true" keyProperty="id" >
-		INSERT INTO like_comments (user_fk,is_like)
-		VALUES (#{userId},1);
+		INSERT INTO like_comments 
+		(
+		user_fk 
+		<if test="isLike != null">
+			, is_like 
+		</if>
+		<if test="comment != null">
+			, comment 
+		</if>
+		) 
+		VALUES 
+		(
+		#{userId} 
+		<if test="isLike != null">
+			, #{isLike} 
+		</if>
+		<if test="comment != null">
+			, #{comment} 
+		</if>
+		);
 		<selectKey resultType="int" keyProperty="id" order="AFTER">
       		select @@IDENTITY
 	    </selectKey>
 	</insert>
+	
 	<update id="updateLike">
 		UPDATE 
 		like_comments 
@@ -78,4 +123,42 @@
 		WHERE 
 		like_comment_id = #{id}
 	</update>
+	<update id="updateComment">
+		UPDATE 
+		like_comments 
+		SET 
+		comment = #{comment} 
+		WHERE 
+		like_comment_id = #{id}
+	</update>
+	<update id="updateDelete">
+		UPDATE 
+		like_comments 
+		SET 
+		deleted = true 
+		WHERE 
+		like_comment_id = #{id}
+	</update>
+	<update id="updateLikeCount">
+		UPDATE 
+		like_comments  
+		<set>
+			<if test="status == 0">
+				comment_like_count = comment_like_count + 1 
+			</if>
+			<if test="status == 1">
+				comment_like_count = comment_like_count - 1 
+			</if>
+		</set>
+		WHERE 
+		like_comment_id = #{id}
+	</update>
+	<select id="findLikeCommentByCommentId" resultMap="LikeCommentMap">
+		SELECT 
+		* 
+		FROM 
+		like_comments 
+		WHERE 
+		like_comment_id = #{id}
+	</select>
 </mapper>

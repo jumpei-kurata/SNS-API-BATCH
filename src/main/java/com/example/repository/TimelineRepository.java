@@ -15,10 +15,15 @@ public interface TimelineRepository {
 
 	//タイムライン全件検索
 	List<Timeline> findAllTimeline(Timeline timeline);
+
+	List<Timeline> findAllTimelineOld(Timeline timeline);
 	//タイムラインを登録
 	void insertTimeline(Timeline timeline);
 	//いいねカウントを+-1
 	void updateLikeCount(@Param("id") Integer id, @Param("status") Integer status);
+	
+	//コメントカウントを+-1
+	void updateCommentCount(@Param("id") Integer id, @Param("status") Integer status);
 	
 	Timeline findTimelineById (Timeline timeline);
 	
