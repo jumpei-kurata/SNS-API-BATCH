@@ -55,7 +55,7 @@ public class LikeCommentService {
 		
 		linkToCommentRepository.insertLinksToComment(likeComment.getParentCommentId(), likeComment.getId());
 		
-		timelineRepository.updateLikeCount(likeComment.getTimelineId(),0);
+		likeCommentRepository.updateLikeCount(likeComment.getParentCommentId(), 0);
 		
 		return likeComment;
 	}
