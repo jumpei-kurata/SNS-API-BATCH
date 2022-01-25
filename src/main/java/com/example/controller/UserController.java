@@ -91,8 +91,8 @@ public class UserController {
 	 * @param id 受け取ったユーザーID
 	 * @return IDから取得したユーザー情報
 	 */
-	@GetMapping(value = "/user/{id}")
-	public Map<String, Object> findById(@PathVariable Integer id) {
+	@GetMapping(value = "/user/{id}/{userLogicalId}")
+	public Map<String, Object> findById(@PathVariable Integer id,@PathVariable String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();
 
 		User user = new User();
@@ -165,14 +165,16 @@ public class UserController {
 	 * @param result
 	 * @return
 	 */
-	@PatchMapping(value = "/user/edit/{id}")
-	public Map<String, Object> userEdit(@PathVariable("id") Integer id, @RequestBody @Validated UserEditForm form,
+	@PatchMapping(value = "/user/edit/{userLogicalId}")
+	public Map<String, Object> userEdit(@PathVariable("id") String userLogicalId, @RequestBody @Validated UserEditForm form,
 			BindingResult result) {
 
 		Map<String, Object> map = new HashMap<>();
 
-		form.setId(id);
+		
 		User user = new User();
+		user.setLogicalId(userLogicalId);
+		user = userService.findUserByLogicalId(user);
 		BeanUtils.copyProperties(form, user);
 		user = userService.updateUser(user);
 

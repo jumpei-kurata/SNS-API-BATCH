@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class UserEditForm {
 
-	private Integer id;
+	private String userLogicalId;
 	private String name;
 	private String accountName;
 	private Date hireDate;
@@ -13,11 +13,11 @@ public class UserEditForm {
 	
 	private String introduction;
 	
-	public Integer getId() {
-		return id;
+	public String getUserLogicalId() {
+		return userLogicalId;
 	}
-	public void setId(Integer id) {
-		this.id = id;
+	public void setUserLogicalId(String userLogicalId) {
+		this.userLogicalId = userLogicalId;
 	}
 	public String getName() {
 		return name;
@@ -57,7 +57,7 @@ public class UserEditForm {
 	}
 	@Override
 	public String toString() {
-		return "UserEditForm [id=" + id + ", name=" + name + ", accountName=" + accountName 
+		return "UserEditForm [userLogicalId=" + userLogicalId + ", name=" + name + ", accountName=" + accountName 
 				+ ", hireDate=" + hireDate + ", serviceFk=" + serviceFk + ", birthDay="
 				+ birthDay + ", introduction=" + introduction + "]";
 	}

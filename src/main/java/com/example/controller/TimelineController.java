@@ -175,7 +175,7 @@ public class TimelineController {
 			likeComment.setUserId(user.getId());
 			likeComment.setTimelineId(form.getTimelineId());
 
-			likeComment = likeCommentService.insertLikeCommentToTimeline(likeComment);
+			likeComment = likeCommentService.insertLikeToTimeline(likeComment);
 			
 			map.put("status", "success");
 			map.put("message", "いいねを登録しました");
@@ -224,7 +224,7 @@ public class TimelineController {
 			likeComment.setUserId(user.getId());
 			likeComment.setParentCommentId(form.getCommentId());
 			
-			likeComment = likeCommentService.insertLikeCommentToLikeComment(likeComment);
+			likeComment = likeCommentService.insertLikeToLikeComment(likeComment);
 			
 			map.put("status", "success");
 			map.put("message", "いいねを登録しました");
@@ -274,7 +274,7 @@ public class TimelineController {
 			likeComment.setTimelineId(form.getTimelineId());
 			likeComment.setComment(form.getSentence());
 
-			likeComment = likeCommentService.insertLikeCommentToTimeline(likeComment);
+			likeComment = likeCommentService.insertCommentToTimeline(likeComment);
 			
 			map.put("status", "success");
 			map.put("message", "コメントを登録しました");
@@ -332,7 +332,7 @@ public class TimelineController {
 	}
 	
 	/**
-	 * 
+	 * タイムラインを削除します
 	 * 
 	 * @return
 	 */
@@ -368,6 +368,13 @@ public class TimelineController {
 		return map;
 	}
 	
+	/**
+	 * タイムラインに対するコメントを削除します
+	 * 
+	 * @param commentId
+	 * @param userLogicalId
+	 * @return
+	 */
 	@DeleteMapping(value = "/timeline/comment/{commentId}/{userLogicalId}")
 	public Map<String, Object> DeleteComment(@PathVariable Integer commentId,@PathVariable String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();

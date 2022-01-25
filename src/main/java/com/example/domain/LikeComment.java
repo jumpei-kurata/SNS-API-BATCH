@@ -11,6 +11,8 @@ public class LikeComment {
 
 	private Integer id;
 	private Integer userId;
+	private String accountName;
+	private String userPhotoPath;
 	private Integer timelineId;
 	private Integer reviewId;
 	private Integer parentCommentId;
@@ -39,6 +41,22 @@ public class LikeComment {
 		this.userId = userId;
 	}
 
+	public String getAccountName() {
+		return accountName;
+	}
+	
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+	
+	public String getUserPhotoPath() {
+		return userPhotoPath;
+	}
+	
+	public void setUserPhotoPath(String userPhotoPath) {
+		this.userPhotoPath = userPhotoPath;
+	}
+	
 	public Integer getTimelineId() {
 		return timelineId;
 	}
