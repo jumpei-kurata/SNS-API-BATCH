@@ -94,8 +94,10 @@
 		ON 
 		lc.like_comment_id = joinedltlc.like_comment_fk1
 		WHERE 
-		ltt.timeline_fk = #{id}
+		ltt.timeline_fk = #{id} 
 		AND lc.comment IS NOT NULL
+		AND lc.comment_deleted = false 
+		ORDER BY lc.like_comment_id ASC
 	</select>
 <!-- 	一応大友さんが書いたコードも残しておきます -->
 <!-- 	<select id="findCommentListByTimelineId" resultMap="LikeCommentMap"> -->
