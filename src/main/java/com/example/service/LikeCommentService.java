@@ -134,7 +134,7 @@ public class LikeCommentService {
 		likeComment.setUserId(userId);
 		likeComment.setParentCommentId(commentId);
 		
-		return likeCommentRepository.findCommentByUserIdAndCommentId(likeComment);
+		return likeCommentRepository.findLikeCommentByUserIdAndParentCommentId(likeComment);
 	}
 	
 	public void updateDelete(LikeComment likeComment) {

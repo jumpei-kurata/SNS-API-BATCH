@@ -34,7 +34,7 @@
 		ltt.timeline_fk = #{timelineId}
 	</select>
 	
-	<select id="findCommentByUserIdAndCommentId" resultMap="LikeCommentMap">
+	<select id="findLikeCommentByUserIdAndParentCommentId" resultMap="LikeCommentMap">
 		SELECT 
 		lc.like_comment_id , 
 		lc.user_fk , 
