@@ -395,7 +395,7 @@ public class TimelineController {
 		LikeComment likeComment = new LikeComment();
 		likeComment.setId(commentId);
 		
-		likeComment = likeCommentService.findLikeCommentByCommentId(likeComment);
+		likeComment = likeCommentService.load(likeComment);
 		
 		if (user.getId() != likeComment.getUserId()) {
 			
