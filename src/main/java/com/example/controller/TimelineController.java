@@ -78,6 +78,14 @@ public class TimelineController {
 		return map;
 	}
 	
+	
+	/**
+	 * 該当のtimelineIdより番号が小さい投稿を50件検索(古い投稿ロード)
+	 * 
+	 * @param timelineId
+	 * @param userLogicalId
+	 * @return
+	 */
 	@GetMapping(value = "/timeline/old/{timelineId}/{userLogicalId}")
 	public Map<String, Object> findAllTimelineOld(@PathVariable Integer timelineId ,@PathVariable String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();
@@ -107,6 +115,49 @@ public class TimelineController {
 		return map;
 	}
 	
+	/**
+	 * タイムライン詳細を表示します
+	 * 
+	 * @param timelineId
+	 * @return
+	 */
+	@GetMapping(value = "/timeline/detail/{timelineId}/{userLogicalId}")
+	public Map<String, Object> timelineDetail(@PathVariable Integer timelineId,@PathVariable String userLogicalId) {
+		Map<String, Object> map = new HashMap<>();
+
+		User user = new User();
+		user.setLogicalId(userLogicalId);
+		user = userService.findUserByLogicalId(user);
+		
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "ユーザーが存在しません");
+			return map;
+		}
+		
+		Timeline timeline = new Timeline();
+		timeline.setId(timelineId);
+		timeline.setUserId(user.getId());
+		
+		timeline = timelineService.findTimelineById(timeline);
+		
+		if (timeline == null) {
+			map.put("status", "error");
+			map.put("message", "つぶやきが存在しません");
+			return map;
+		}
+		
+		List<LikeComment> commentList = likeCommentService.findCommentListToTimeline(timeline);
+		
+		map.put("status", "success");
+		map.put("message", "タイムライン詳細の検索に成功しました");
+		map.put("timeline", timeline);
+		map.put("commentList", commentList);
+		return map;
+	}
+	
+	
+
 	/**
 	 * タイムラインを投稿します
 	 * 
@@ -144,6 +195,43 @@ public class TimelineController {
 		
 		map.put("status", "success");
 		map.put("message", "タイムラインの投稿に成功しました");
+		return map;
+	}
+	/**
+	 * タイムラインを削除します
+	 * 
+	 * @return
+	 */
+	
+	@DeleteMapping(value = "/timeline/{timelineId}/{userLogicalId}")
+	public Map<String, Object> deleteTimeline(@PathVariable Integer timelineId,@PathVariable String userLogicalId) {
+		Map<String, Object> map = new HashMap<>();
+		
+		User user = new User();
+		user.setLogicalId(userLogicalId);
+		user = userService.findUserByLogicalId(user);
+		
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "ユーザーが存在しません");
+			return map;
+		}
+		
+		Timeline timeline = new Timeline();
+		timeline.setId(timelineId);
+		
+		timeline = timelineService.findTimelineById(timeline);
+		
+		if (user.getId() != timeline.getUserId()) {
+			
+			map.put("status", "error");
+			map.put("message", "このタイムラインを削除できるアカウントではありません");
+			return map;
+		}
+		
+		timelineService.updateDelete(timeline);
+		map.put("status", "success");
+		map.put("message", "タイムラインの削除に成功しました");
 		return map;
 	}
 	
@@ -282,83 +370,6 @@ public class TimelineController {
 		return map;
 	}
 	
-	/**
-	 * タイムライン詳細を表示します
-	 * 
-	 * @param timelineId
-	 * @return
-	 */
-	@GetMapping(value = "/timeline/detail/{timelineId}/{userLogicalId}")
-	public Map<String, Object> timelineDetail(@PathVariable Integer timelineId,@PathVariable String userLogicalId) {
-		Map<String, Object> map = new HashMap<>();
-
-		User user = new User();
-		user.setLogicalId(userLogicalId);
-		user = userService.findUserByLogicalId(user);
-		
-		if (user == null) {
-			map.put("status", "error");
-			map.put("message", "ユーザーが存在しません");
-			return map;
-		}
-		
-		Timeline timeline = new Timeline();
-		timeline.setId(timelineId);
-		timeline.setUserId(user.getId());
-		
-		timeline = timelineService.findTimelineById(timeline);
-		
-		if (timeline == null) {
-			map.put("status", "error");
-			map.put("message", "つぶやきが存在しません");
-			return map;
-		}
-		
-		List<LikeComment> commentList = likeCommentService.findCommentListToTimeline(timeline);
-		
-		map.put("status", "success");
-		map.put("message", "タイムライン詳細の検索に成功しました");
-		map.put("timeline", timeline);
-		map.put("commentList", commentList);
-		return map;
-	}
-	
-	/**
-	 * タイムラインを削除します
-	 * 
-	 * @return
-	 */
-	@DeleteMapping(value = "/timeline/{timelineId}/{userLogicalId}")
-	public Map<String, Object> deleteTimeline(@PathVariable Integer timelineId,@PathVariable String userLogicalId) {
-		Map<String, Object> map = new HashMap<>();
-		
-		User user = new User();
-		user.setLogicalId(userLogicalId);
-		user = userService.findUserByLogicalId(user);
-		
-		if (user == null) {
-			map.put("status", "error");
-			map.put("message", "ユーザーが存在しません");
-			return map;
-		}
-		
-		Timeline timeline = new Timeline();
-		timeline.setId(timelineId);
-		
-		timeline = timelineService.findTimelineById(timeline);
-		
-		if (user.getId() != timeline.getUserId()) {
-			
-			map.put("status", "error");
-			map.put("message", "このタイムラインを削除できるアカウントではありません");
-			return map;
-		}
-		
-		timelineService.updateDelete(timeline);
-		map.put("status", "success");
-		map.put("message", "タイムラインの削除に成功しました");
-		return map;
-	}
 	
 	/**
 	 * タイムラインに対するコメントを削除します
@@ -384,7 +395,7 @@ public class TimelineController {
 		LikeComment likeComment = new LikeComment();
 		likeComment.setId(commentId);
 		
-		likeComment = likeCommentService.findLikeCommentByCommentId(likeComment);
+		likeComment = likeCommentService.load(likeComment);
 		
 		if (user.getId() != likeComment.getUserId()) {
 			

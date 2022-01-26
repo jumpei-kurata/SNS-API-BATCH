@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.LikeComment;
 import com.example.domain.Review;
-import com.example.domain.Timeline;
 import com.example.domain.User;
 import com.example.form.InsertReviewForm;
 import com.example.form.UserLogicalIdForm;
 import com.example.service.ErrorService;
+import com.example.service.LikeCommentService;
 import com.example.service.ReviewService;
 import com.example.service.UserService;
 
@@ -37,6 +37,9 @@ public class ReviewController {
 
 	@Autowired
 	private ReviewService reviewService;
+	
+	@Autowired
+	private LikeCommentService likeCommentService;
 	
 	@Autowired
 	private ErrorService errorService;
@@ -124,13 +127,12 @@ public class ReviewController {
 
 		// レビューIDに対応したコメント一覧のロード
 		List<LikeComment> commentList = new ArrayList<>();  
+		commentList = likeCommentService.findCommentListToReview(review);
 		
-		// 今はまだコメントリストはロードしてません。
-		
+		// それぞれの情報をマップに詰めて送る
 		map.put("status", "success");
 		map.put("message", "レビューの検索に成功しました");
 		map.put("review", review);
-		
 		map.put("commentList", commentList);
 		return map;
 	}
