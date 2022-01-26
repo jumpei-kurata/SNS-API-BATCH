@@ -255,6 +255,7 @@ public class TimelineController {
 	public Map<String, Object> insertComment(@RequestBody InsertTimelineCommentForm form) {
 		Map<String, Object> map = new HashMap<>();
 		
+		// 論理IDが正しいか、Userをロードして確認
 		User user = new User();
 		user.setLogicalId(form.getUserLogicalId());
 		user = userService.findUserByLogicalId(user);
@@ -264,26 +265,17 @@ public class TimelineController {
 			map.put("message", "ユーザーが存在しません");
 			return map;
 		}
-
-		LikeComment likeComment = 
-				likeCommentService.findLikeComment(user.getId(), form.getTimelineId());
 		
-		if (likeComment == null) {
-			likeComment = new LikeComment();
-			likeComment.setUserId(user.getId());
-			likeComment.setTimelineId(form.getTimelineId());
-			likeComment.setComment(form.getSentence());
-
-			likeComment = likeCommentService.insertCommentToTimeline(likeComment);
-			
-			map.put("status", "success");
-			map.put("message", "コメントを登録しました");
-			return map;
-		}
+		// 他にLikeCommentが同タイムライン、同作成ユーザーがあっても、スルーしてインサートする流れに変更
+		// LikeCommentを生成、コメントを生成してインサート
 		
+		LikeComment likeComment = new LikeComment();
+		likeComment.setUserId(user.getId());
+		likeComment.setTimelineId(form.getTimelineId());
 		likeComment.setComment(form.getSentence());
-		likeCommentService.updateComment(likeComment);
-		likeCommentService.updateCommentCountTimeline(likeComment.getTimelineId(), 0);
+
+		likeComment = likeCommentService.insertCommentToTimeline(likeComment);
+		
 		
 		map.put("status", "success");
 		map.put("message", "コメントを登録しました");
