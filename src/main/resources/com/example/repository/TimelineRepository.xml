@@ -29,7 +29,7 @@
 		ELSE true END) AS is_my_like, 
 		tl.deleted AS deleted
 		FROM 
-		(SELECT * from timelines ORDER BY timeline_id DESC LIMIT 50) AS tl 
+		timelines AS tl 
 		LEFT JOIN
 		(
 		(SELECT like_comment_id,comment FROM like_comments WHERE user_fk = #{userId} AND is_like = true ) AS lc
@@ -43,6 +43,7 @@
 		tl.user_fk = u.user_id 
 		WHERE 
 		tl.deleted = false
+		ORDER BY tl.timeline_id DESC LIMIT 50
 	</select>
 	<select id="findAllTimelineOld" resultMap="timelineMap">
 		SELECT 
