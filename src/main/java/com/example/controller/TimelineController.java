@@ -245,6 +245,7 @@ public class TimelineController {
 	public Map<String, Object> insertLike(@RequestBody LikeTimelineForm form) {
 		Map<String, Object>map = new HashMap<>();
 		
+		// 論理ID照合
 		User user = new User();
 		user.setLogicalId(form.getUserLogicalId());
 		user = userService.findUserByLogicalId(user);
@@ -255,9 +256,13 @@ public class TimelineController {
 			return map;
 		}
 		
-		LikeComment likeComment = 
-				likeCommentService.findLikeComment(user.getId(), form.getTimelineId());
 		
+		// 渡されたUserと渡されたTimelineに該当するいいねがある/あったか検索
+		LikeComment likeComment = 
+				likeCommentService.findLikeToTLByUserIdAndTimeLineId(user.getId(), form.getTimelineId());
+		
+		// いいねがなければ新しく挿入する（コメントがすでに有っても、いいねがなければ新しく挿入する）
+		// その後結果を戻す
 		if (likeComment == null) {
 			likeComment = new LikeComment();
 			likeComment.setUserId(user.getId());
@@ -270,6 +275,8 @@ public class TimelineController {
 			return map;
 		}
 		
+		// いいねがあればそれを更新する
+		// その後結果を戻す
 		likeCommentService.updateLike(likeComment);
 		
 		if (likeComment.isLike()) {
@@ -409,12 +416,6 @@ public class TimelineController {
 		map.put("message", "コメントの削除に成功しました");
 		return map;
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 	/**
