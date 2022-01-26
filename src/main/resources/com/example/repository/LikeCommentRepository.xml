@@ -21,6 +21,26 @@
 		<result 	property="commentDeleted"		column="lc.comment_deleted"></result>
 	</resultMap>
 
+	<select id="load" resultMap="LikeCommentMap">
+		SELECT 
+		* 
+		FROM 
+		(SELECT * FROM like_comments
+		WHERE like_comment_id = #{id} ) AS lc 
+		LEFT JOIN 
+		links_to_timeline AS ltt
+		ON 
+		lc.like_comment_id = ltt.like_comment_fk
+		LEFT JOIN 
+		links_to_review AS ltr
+		ON 
+		lc.like_comment_id = ltr.like_comment_fk
+		LEFT JOIN 
+		links_to_like_comment AS ltc
+		ON 
+		ltc.like_comment_fk2 = lc.like_comment_id
+	</select>
+
 	<select id="findLikeCommentByUserIdAndTimelineId" resultMap="LikeCommentMap">
 		SELECT 
 		* 
@@ -219,12 +239,5 @@
 		WHERE 
 		like_comment_id = #{id}
 	</update>
-	<select id="load" resultMap="LikeCommentMap">
-		SELECT 
-		* 
-		FROM 
-		like_comments 
-		WHERE 
-		like_comment_id = #{id}
-	</select>
+
 </mapper>
