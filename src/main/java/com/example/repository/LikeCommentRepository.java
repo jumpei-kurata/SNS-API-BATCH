@@ -21,9 +21,6 @@ public interface LikeCommentRepository {
 	// 純粋なロード。
 	LikeComment load(LikeComment likeComment);
 
-	//　userId で SELECT
-	LikeComment findLikeCommentByUserIdAndTimelineId(LikeComment likeComment);
-
 	//　いいねコメントテーブルにいいねを登録
 	void insertLike(LikeComment likeComment);
 	
@@ -41,6 +38,12 @@ public interface LikeCommentRepository {
 // タイムライン周り
 	//　タイムラインに紐づくコメントリストを検索
 	List<LikeComment> findCommentListByTimelineId(Timeline timeline);
+
+	//　userId で SELECT
+	LikeComment findLikeCommentByUserIdAndTimelineId(LikeComment likeComment);
+	
+	//　userIdとtimelineIdで、いいね有無を検索
+	LikeComment findLikeToTLByUserIdAndTimeLineId(LikeComment likeComment);
 	
 // レビュー周り	
 	//　タイムラインに紐づくコメントリストを検索

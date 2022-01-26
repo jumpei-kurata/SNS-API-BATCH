@@ -34,6 +34,21 @@
 		ltt.timeline_fk = #{timelineId}
 	</select>
 	
+	<select id="findLikeToTLByUserIdAndTimeLineId" resultMap="LikeCommentMap">
+		SELECT 
+		* 
+		FROM 
+		(SELECT * FROM like_comments WHERE user_fk = #{userId}) AS lc 
+		LEFT JOIN 
+		links_to_timeline AS ltt 
+		ON 
+		lc.like_comment_id = ltt.like_comment_fk
+		WHERE 
+		ltt.timeline_fk = #{timelineId}
+		AND
+		lc.comment IS NULL 
+	</select>
+
 	<select id="findLikeCommentByUserIdAndParentCommentId" resultMap="LikeCommentMap">
 		SELECT 
 		lc.like_comment_id , 
@@ -57,6 +72,7 @@
 		WHERE 
 		like_comment_fk1 = #{parentCommentId}
 	</select>
+	
 	<select id="findCommentListByTimelineId" resultMap="LikeCommentMap">
 		SELECT 
 		lc.like_comment_id , 
@@ -99,6 +115,7 @@
 		AND lc.comment_deleted = false 
 		ORDER BY lc.like_comment_id ASC
 	</select>
+
 	<select id="findCommentListByReviewId" resultMap="LikeCommentMap">
 		SELECT 
 		lc.like_comment_id , 

@@ -130,6 +130,23 @@ public class LikeCommentService {
 		likeComment.setTimelineId(timelineId);
 		return likeCommentRepository.findLikeCommentByUserIdAndTimelineId(likeComment);
 	}
+
+	
+	/**
+	 * 渡されたUserと渡されたTimelineに該当するいいねがある/あったか検索
+	 * 
+	 * @param userId
+	 * @param timelineId
+	 * @return
+	 */
+	public LikeComment findLikeToTLByUserIdAndTimeLineId(Integer userId,Integer timelineId) {
+		LikeComment likeComment = new LikeComment();
+		likeComment.setUserId(userId);
+		likeComment.setTimelineId(timelineId);
+		return likeCommentRepository.findLikeToTLByUserIdAndTimeLineId(likeComment);
+	}
+	
+	
 	
 	
 	/**
