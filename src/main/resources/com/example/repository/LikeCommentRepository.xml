@@ -184,7 +184,7 @@
 		UPDATE 
 		like_comments 
 		SET 
-		deleted = true 
+		comment_deleted = true 
 		WHERE 
 		like_comment_id = #{id}
 	</update>
