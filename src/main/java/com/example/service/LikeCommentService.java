@@ -48,6 +48,14 @@ public class LikeCommentService {
 	 */
 	public void updateDelete(LikeComment likeComment) {
 		likeCommentRepository.updateDelete(likeComment);
+		System.out.println(likeComment);
+		if (likeComment.getTimelineId() != null) {
+			timelineRepository.updateCommentCount(likeComment.getTimelineId(),1);
+		}
+
+		if (likeComment.getReviewId() != null) {
+			timelineRepository.updateCommentCount(likeComment.getReviewId(),1);
+		}
 	}
 	
 	/**
