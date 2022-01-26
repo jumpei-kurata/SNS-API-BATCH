@@ -16,22 +16,14 @@ import com.example.domain.Timeline;
  */
 @Mapper
 public interface LikeCommentRepository {
+
+// 汎用
+	// 純粋なロード。
+	LikeComment load(LikeComment likeComment);
+
 	//　userId で SELECT
 	LikeComment findLikeCommentByUserIdAndTimelineId(LikeComment likeComment);
 
-	//　コメントに対するいいねを検索
-	LikeComment findLikeCommentByUserIdAndParentCommentId(LikeComment likeComment);
-
-
-// タイムライン周り
-	
-	//　タイムラインに紐づくコメントリストを検索
-	List<LikeComment> findCommentListByTimelineId(Timeline timeline);
-	
-// レビュー周り	
-	//　タイムラインに紐づくコメントリストを検索
-	List<LikeComment> findCommentListByReviewId(Review review);
-	
 	//　いいねコメントテーブルにいいねを登録
 	void insertLike(LikeComment likeComment);
 	
@@ -45,9 +37,20 @@ public interface LikeCommentRepository {
 	void updateComment(LikeComment likeComment);
 	
 	void updateDelete(LikeComment likeComment);
+
+// タイムライン周り
+	//　タイムラインに紐づくコメントリストを検索
+	List<LikeComment> findCommentListByTimelineId(Timeline timeline);
 	
+// レビュー周り	
+	//　タイムラインに紐づくコメントリストを検索
+	List<LikeComment> findCommentListByReviewId(Review review);
+	
+// コメントへのいいね周り	
+	//　コメントに対するいいねを検索
+	LikeComment findLikeCommentByUserIdAndParentCommentId(LikeComment likeComment);
+		
+	// コメントのいいねカウントを更新する
 	void updateLikeCount(@Param("id") Integer id, @Param("status") Integer status);
 	
-	// 純粋なロード。
-	LikeComment load(LikeComment likeComment);
 }
