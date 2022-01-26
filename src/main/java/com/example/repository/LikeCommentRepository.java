@@ -18,7 +18,7 @@ public interface LikeCommentRepository {
 	//userId で SELECT
 	LikeComment findLikeCommentByUserIdAndTimelineId(LikeComment likeComment);
 //	コメントに対するいいねを検索
-	LikeComment findCommentByUserIdAndCommentId(LikeComment likeComment);
+	LikeComment findLikeCommentByUserIdAndParentCommentId(LikeComment likeComment);
 
 	//コメントリストを検索
 	List<LikeComment> findCommentListByTimelineId(Timeline timeline);
