@@ -10,6 +10,7 @@
 		<result 	property="accountName"			column="account_name" ></result>
 		<result 	property="userPhotoPath"		column="user_photo_path" ></result>
 		<result 	property="timelineId"			column="timeline_fk" ></result>
+		<result 	property="reviewId"				column="review_fk" ></result>
 		<result 	property="parentCommentId"		column="like_comment_fk1" ></result>
 		<result 	property="isLike"				column="is_like" ></result>
 		<result 	property="comment"				column="comment" ></result>
@@ -18,7 +19,7 @@
 		<result 	property="hasNoticed"			column="has_noticed" ></result>
 		<result 	property="isRead"				column="is_read" ></result>
 		<result 	property="isMyLike"				column="is_my_like" ></result>		
-		<result 	property="commentDeleted"		column="lc.comment_deleted"></result>
+		<result 	property="commentDeleted"		column="comment_deleted"></result>
 	</resultMap>
 
 	<select id="load" resultMap="LikeCommentMap">
