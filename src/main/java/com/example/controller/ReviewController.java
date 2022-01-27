@@ -94,6 +94,39 @@ public class ReviewController {
 	}
 	
 	/**
+	 * 該当のreviewIdより番号が小さい投稿を50件検索(古い投稿ロード)
+	 * 
+	 * @param reviewId
+	 * @param userLogicalId
+	 * @return
+	 */
+	@GetMapping(value = "/review/old/{reviewId}/{userLogicalId}")
+	public Map<String, Object> findAllReviewOld(@PathVariable Integer reviewId ,@PathVariable String userLogicalId) {
+		Map<String, Object> map = new HashMap<>();
+		Review review = new Review();
+		
+		User user = new User();
+		user.setLogicalId(userLogicalId);
+		user = userService.findUserByLogicalId(user);
+		
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "ユーザーが存在しません");
+			return map;
+		}
+		
+		review.setId(reviewId);
+		review.setUserId(user.getId());
+		
+		List<Review>list = reviewService.findOld(review);
+		
+		map.put("status", "success");
+		map.put("message", "レビュー一覧の検索に成功しました");
+		map.put("reviewList", list);
+		return map;
+	}
+	
+	/**
 	 * レストランIDを指定して、そのレストランに関するレビューを最新50件検索します
 	 * 
 	 * @return
@@ -138,34 +171,47 @@ public class ReviewController {
 	}
 
 	/**
-	 * 該当のreviewIdより番号が小さい投稿を50件検索(古い投稿ロード)
+	 * 該当のreviewIdより番号が小さい投稿で、レストランIDを指定して、そのレストランに関するレビューを50件検索(レストラン絞りしつつ、古い投稿ロード)
 	 * 
-	 * @param reviewId
-	 * @param userLogicalId
 	 * @return
 	 */
-	@GetMapping(value = "/review/old/{reviewId}/{userLogicalId}")
-	public Map<String, Object> findAllReviewOld(@PathVariable Integer reviewId ,@PathVariable String userLogicalId) {
+	@GetMapping(value = "/review/restaurant/old/{restaurantId}/{reviewId}/{userLogicalId}")
+	public Map<String, Object> findReviewListOlderForRestaurant
+	(@PathVariable Integer restaurantId , @PathVariable Integer reviewId , @PathVariable String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();
-		Review review = new Review();
 		
+		// userを論理IDで照合
 		User user = new User();
 		user.setLogicalId(userLogicalId);
 		user = userService.findUserByLogicalId(user);
 		
+		// userLogicalIdが不正だった場合は、ここで弾かれる
 		if (user == null) {
 			map.put("status", "error");
-			map.put("message", "ユーザーが存在しません");
+			map.put("message", "ユーザーが存在しません。");
 			return map;
 		}
 		
-		review.setId(reviewId);
+		Review review = new Review();
 		review.setUserId(user.getId());
+		review.setId(reviewId);
+		review.setRestaurantId(restaurantId);
 		
-		List<Review>list = reviewService.findOld(review);
+		List<Review> list = reviewService.showOlderReviewListForRestaurant(review);
+		
+		if (list == null) {
+			map.put("status", "error");
+			map.put("message", "エラーが発生しました");
+			return map;
+		}
+		if (list.size() == 0) {
+			map.put("status", "success");
+			map.put("message", "レビューが1件も登録されていません");
+			return map;
+		}
 		
 		map.put("status", "success");
-		map.put("message", "タイムライン一覧の検索に成功しました");
+		map.put("message", "レビュー一覧の検索に成功しました");
 		map.put("reviewList", list);
 		return map;
 	}

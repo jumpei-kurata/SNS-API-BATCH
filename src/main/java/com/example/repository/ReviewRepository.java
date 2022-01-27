@@ -19,13 +19,15 @@ public interface ReviewRepository {
 	// レビュー全件検索
 	List<Review> findAllReview(Review review);
 
-
 	// 引数のレビューIDより古いレビューを新しい順に50件検索 
 	List<Review> findAllReviewOld(Review review);
 
 	// レビューをレストランIDで検索
 	List<Review> findByRestaurantId(Review review);
 
+	//引数のレビューIDより古く、レストランIDに該当するレビューを新しい順に50件検索
+	List<Review> findOlderByRestaurantId(Review review);
+	
 	// レビュー1件検索
 	Review findById(Review review);
 
