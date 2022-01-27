@@ -92,6 +92,50 @@ public class ReviewController {
 		map.put("reviewList", list);
 		return map;
 	}
+	
+	/**
+	 * レストランIDを指定して、そのレストランに関するレビューを最新50件検索します
+	 * 
+	 * @return
+	 */
+	@GetMapping(value = "/review/restaurant/{restaurantId}/{userLogicalId}")
+	public Map<String, Object> findReviewListForRestaurant(@PathVariable Integer restaurantId,@PathVariable String userLogicalId) {
+		Map<String, Object> map = new HashMap<>();
+		
+		// userを論理IDで照合
+		User user = new User();
+		user.setLogicalId(userLogicalId);
+		user = userService.findUserByLogicalId(user);
+		
+		// userLogicalIdが不正だった場合は、ここで弾かれる
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "ユーザーが存在しません。");
+			return map;
+		}
+		
+		Review review = new Review();
+		review.setUserId(user.getId());
+		review.setRestaurantId(restaurantId);
+		
+		List<Review> list = reviewService.showReviewListForRestaurant(review);
+		
+		if (list == null) {
+			map.put("status", "error");
+			map.put("message", "エラーが発生しました");
+			return map;
+		}
+		if (list.size() == 0) {
+			map.put("status", "success");
+			map.put("message", "レビューが1件も登録されていません");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "レビュー一覧の検索に成功しました");
+		map.put("reviewList", list);
+		return map;
+	}
 
 	/**
 	 * 該当のreviewIdより番号が小さい投稿を50件検索(古い投稿ロード)
