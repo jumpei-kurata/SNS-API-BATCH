@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.Timeline;
+import com.example.domain.User;
 import com.example.repository.TimelineRepository;
 
 /**
@@ -35,6 +36,22 @@ public class TimelineService {
 		List<Timeline>list = timelineRepository.findAllTimelineOld(timeline);
 		return list;
 	}
+	
+	/**
+	 * 渡されたUserのIDで投稿されたタイムライン最新50件を検索する。
+	 * 
+	 * @param user
+	 * @return　
+	 */
+	public List<Timeline> showListByPostUserId(User requestedUser,User visitingUser) {
+		
+		// もらってきたUserをもとに,レポジトリへuserIdを渡す
+		List<Timeline>list = timelineRepository.findByPostUserId(requestedUser.getId(),visitingUser.getId());
+		return list;
+	}
+	
+	
+	
 	
 	/**
 	 * タイムライン投稿

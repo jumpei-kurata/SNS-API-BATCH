@@ -22,6 +22,9 @@ public interface TimelineRepository {
 	// 1件ロード
 	Timeline findTimelineById (Timeline timeline);
 
+	// 投稿ユーザーの最新50件のつぶやきを新しい順に検索
+	List<Timeline> findByPostUserId(@Param("requestedUserId") Integer requestedUserId ,@Param("visitingUserId") Integer visitingUserId );
+
 	//タイムラインを登録
 	void insertTimeline(Timeline timeline);
 
