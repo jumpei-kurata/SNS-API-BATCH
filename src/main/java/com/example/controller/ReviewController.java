@@ -351,45 +351,54 @@ public class ReviewController {
 		return map;
 	}
 
-//	/**
-//	 * レビューに対するコメントを削除します
-//	 * 
-//	 * @param commentId
-//	 * @param userLogicalId
-//	 * @return
-//	 */
-//	@DeleteMapping(value = "/review/comment/{commentId}/{userLogicalId}")
-//	public Map<String, Object> DeleteComment(@PathVariable Integer commentId,@PathVariable String userLogicalId) {
-//		Map<String, Object> map = new HashMap<>();
-//		
-//		User user = new User();
-//		user.setLogicalId(userLogicalId);
-//		user = userService.findUserByLogicalId(user);
-//		
-//		if (user == null) {
-//			map.put("status", "error");
-//			map.put("message", "ユーザーが存在しません");
-//			return map;
-//		}
-//		
-//		LikeComment likeComment = new LikeComment();
-//		likeComment.setId(commentId);
-//		
-//		likeComment = likeCommentService.load(likeComment);
-//		
-//		if (user.getId() != likeComment.getUserId()) {
-//			
-//			map.put("status", "error");
-//			map.put("message", "このコメントを削除できるアカウントではありません");
-//			return map;
-//		}
-//		
-//		likeCommentService.updateDelete(likeComment);
-//		map.put("status", "success");
-//		map.put("message", "コメントの削除に成功しました");
-//		return map;
-//	}
-//	
+	/**
+	 * レビューに対するコメントを削除します
+	 * 
+	 * @param commentId
+	 * @param userLogicalId
+	 * @return
+	 */
+	@DeleteMapping(value = "/review/comment/{commentId}/{userLogicalId}")
+	public Map<String, Object> DeleteComment(@PathVariable Integer commentId,@PathVariable String userLogicalId) {
+		Map<String, Object> map = new HashMap<>();
+		
+		User user = new User();
+		user.setLogicalId(userLogicalId);
+		user = userService.findUserByLogicalId(user);
+		
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "ユーザーが存在しません");
+			return map;
+		}
+		
+		LikeComment likeComment = new LikeComment();
+		likeComment.setId(commentId);
+		
+		// 該当のcommentをロード
+		likeComment = likeCommentService.load(likeComment);
+		
+		// ユーザーが違ったらreturn
+		if (user.getId() != likeComment.getUserId()) {
+			map.put("status", "error");
+			map.put("message", "このコメントを削除できるアカウントではありません");
+			return map;
+		}
+		
+		// 削除処理を実行、もしすでに削除されていればnullをreturn
+		likeComment = likeCommentService.updateDelete(likeComment);
+		
+		if (likeComment == null) {
+			map.put("status", "error");
+			map.put("message", "このコメントは存在していません");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "コメントの削除に成功しました");
+		return map;
+	}
+	
 //	
 //	/**
 //	 * レビューコメントに良いね

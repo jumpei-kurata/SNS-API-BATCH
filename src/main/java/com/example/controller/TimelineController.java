@@ -411,7 +411,15 @@ public class TimelineController {
 			return map;
 		}
 		
-		likeCommentService.updateDelete(likeComment);
+		// 削除処理を実行、もしすでに削除されていればnullをreturn
+		likeComment = likeCommentService.updateDelete(likeComment);
+		
+		if (likeComment == null) {
+			map.put("status", "error");
+			map.put("message", "このコメントは存在していません");
+			return map;
+		}
+		
 		map.put("status", "success");
 		map.put("message", "コメントの削除に成功しました");
 		return map;
