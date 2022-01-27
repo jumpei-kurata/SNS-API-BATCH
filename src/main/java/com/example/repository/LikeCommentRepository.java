@@ -49,6 +49,9 @@ public interface LikeCommentRepository {
 	//　タイムラインに紐づくコメントリストを検索
 	List<LikeComment> findCommentListByReviewId(Review review);
 	
+	//　userIdとreviewIdで、いいね有無を検索
+	LikeComment findLikeToReviewByUserIdAndReviewId(LikeComment likeComment);
+	
 // コメントへのいいね周り	
 	//　コメントに対するいいねを検索
 	LikeComment findLikeCommentByUserIdAndParentCommentId(LikeComment likeComment);
