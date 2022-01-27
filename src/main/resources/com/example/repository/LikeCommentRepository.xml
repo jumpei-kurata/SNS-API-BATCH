@@ -68,6 +68,21 @@
 		AND
 		lc.comment IS NULL 
 	</select>
+	
+	<select id="findLikeToReviewByUserIdAndReviewId" resultMap="LikeCommentMap">
+		SELECT 
+		* 
+		FROM 
+		(SELECT * FROM like_comments WHERE user_fk = #{userId}) AS lc 
+		LEFT JOIN 
+		links_to_review AS ltr 
+		ON 
+		lc.like_comment_id = ltr.like_comment_fk
+		WHERE 
+		ltr.review_fk = #{reviewId}
+		AND
+		lc.comment IS NULL 
+	</select>
 
 	<select id="findLikeCommentByUserIdAndParentCommentId" resultMap="LikeCommentMap">
 		SELECT 

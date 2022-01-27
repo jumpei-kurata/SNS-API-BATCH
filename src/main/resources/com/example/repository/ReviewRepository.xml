@@ -154,8 +154,28 @@
 	<update id="updateLikeCount">
 		UPDATE 
 		reviews 
-		SET 
-		review_like_count = review_like_count + 1 
+		<set>
+			<if test="status == 0">
+				review_like_count = review_like_count + 1 
+			</if>
+			<if test="status == 1">
+				review_like_count = review_like_count - 1 
+			</if>
+		</set>
+		WHERE 
+		review_id = #{id}
+	</update>
+	<update id="updateCommentCount">
+		UPDATE 
+		reviews 
+		<set>
+			<if test="status == 0">
+				review_comment_count = review_comment_count + 1 
+			</if>
+			<if test="status == 1">
+				review_comment_count = review_comment_count - 1 
+			</if>
+		</set>
 		WHERE 
 		review_id = #{id}
 	</update>

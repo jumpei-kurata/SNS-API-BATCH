@@ -11,7 +11,9 @@ import com.example.domain.Review;
 import com.example.domain.Timeline;
 import com.example.repository.LikeCommentRepository;
 import com.example.repository.LinkToCommentRepository;
+import com.example.repository.LinkToReviewRepository;
 import com.example.repository.LinkToTimelineRepository;
+import com.example.repository.ReviewRepository;
 import com.example.repository.TimelineRepository;
 
 @Service
@@ -21,15 +23,22 @@ public class LikeCommentService {
 	@Autowired
 	private TimelineRepository timelineRepository;
 	@Autowired
-	private LikeCommentRepository likeCommentRepository;
-	@Autowired
 	private LinkToTimelineRepository linkToTimelineRepository;
+
+	@Autowired
+	private ReviewRepository reviewRepository;
+	@Autowired
+	private LinkToReviewRepository linkToReviewRepository;
+
+	@Autowired
+	private LikeCommentRepository likeCommentRepository;
 	@Autowired
 	private LinkToCommentRepository linkToCommentRepository;
 	
 	
 	
 // 汎用	
+	
 	
 	/**
 	 * サーバー側の処理で使うためのロードメソッド
@@ -78,6 +87,7 @@ public class LikeCommentService {
 	
 // タイムライン周り
 
+	
 	/**
 	 * いいねコメントテーブルにタイムラインへのいいねを登録
 	 * 
@@ -124,6 +134,7 @@ public class LikeCommentService {
 	
 	/**
 	 * タイムラインのコメントカウント+-1
+	 * insert時に合わせて実行しているので、現状このメソッドが呼ばれることはない
 	 * 
 	 * @param timeline
 	 */
@@ -154,9 +165,6 @@ public class LikeCommentService {
 		return likeCommentRepository.findLikeToTLByUserIdAndTimeLineId(likeComment);
 	}
 	
-	
-	
-	
 	/**
 	 * 一つのタイムラインに連なる、コメントリストの取得(詳細表示にて使用)
 	 * @param timeline
@@ -175,7 +183,80 @@ public class LikeCommentService {
 		linkToTimelineRepository.insertLinksToTimeline(timelineId,likeCommentId);
 	}
 	
+	
 // レビュー周り
+	
+	
+	/**
+	 * いいねコメントテーブルにタイムラインへのいいねを登録
+	 * 
+	 * @param likeComment
+	 * @return
+	 */
+	public LikeComment insertLikeToReview(LikeComment likeComment) {
+		
+		likeComment.setLike(true);
+		likeCommentRepository.insertLike(likeComment);
+		
+		linkToReviewRepository.insertLinksToReview(likeComment.getReviewId(),likeComment.getId());
+		
+		reviewRepository.updateLikeCount(likeComment.getReviewId(),0);
+		
+		return likeComment;
+	}
+	
+	/**
+	 * いいねコメントテーブルにレビューへのコメントを登録
+	 * 
+	 * @param likeComment
+	 * @return
+	 */
+	public LikeComment insertCommentToReview(LikeComment likeComment) {
+		
+		likeCommentRepository.insertComment(likeComment);
+		
+		linkToReviewRepository.insertLinksToReview(likeComment.getReviewId(),likeComment.getId());
+		
+		reviewRepository.updateCommentCount(likeComment.getReviewId(),0);
+		
+		return likeComment;
+	}
+	
+	/**
+	 * レビューのいいねカウント+-1
+	 * 
+	 * @param review
+	 */
+	public void updateLikeCountToReview(Integer reviewId,Integer status) {
+		reviewRepository.updateLikeCount(reviewId,status);
+	}
+	
+	/**
+	 * レビューのコメントカウント+-1
+	 * insert時に合わせて実行しているので、現状このメソッドが呼ばれることはない
+	 * 
+	 * @param review
+	 */
+	public void updateCommentCountReview(Integer reviewId,Integer status) {
+		reviewRepository.updateCommentCount(reviewId,status);
+	}
+	
+	
+	/**
+	 * 渡されたUserと渡されたReviewに該当するいいねがある/あったか検索
+	 * 
+	 * @param userId
+	 * @param reviewId
+	 * @return
+	 */
+	public LikeComment findLikeToReviewByUserIdAndReviewId(Integer userId,Integer reviewId) {
+		LikeComment likeComment = new LikeComment();
+		likeComment.setUserId(userId);
+		likeComment.setReviewId(reviewId);
+		return likeCommentRepository.findLikeToReviewByUserIdAndReviewId(likeComment);
+	}
+	
+	
 	/**
 	 * 一つのレビューに連なる、コメントリストの取得(詳細表示にて使用)
 	 * @param review
@@ -187,6 +268,8 @@ public class LikeCommentService {
 	
 	
 // コメントへのいいね周り
+	
+	
 	/**
 	 * @param userId
 	 * @param commentId
