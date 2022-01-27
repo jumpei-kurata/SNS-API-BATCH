@@ -193,8 +193,7 @@ public class UserController {
 	 * @return
 	 */
 	@PatchMapping(value = "/user/edit/{userLogicalId}")
-	public Map<String, Object> userEdit(@PathVariable("id") String userLogicalId, @RequestBody @Validated UserEditForm form,
-			BindingResult result) {
+	public Map<String, Object> userEdit(@PathVariable String userLogicalId, @RequestBody @Validated UserEditForm form,BindingResult result) {
 
 		Map<String, Object> map = new HashMap<>();
 
