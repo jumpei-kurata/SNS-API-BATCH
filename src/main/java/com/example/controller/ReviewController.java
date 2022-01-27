@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.domain.LikeComment;
 import com.example.domain.Review;
 import com.example.domain.User;
+import com.example.form.InsertReviewCommentForm;
 import com.example.form.InsertReviewForm;
 import com.example.form.LikeReviewForm;
 import com.example.form.UserLogicalIdForm;
@@ -313,82 +314,91 @@ public class ReviewController {
 		return map;
 	}
 	
-//	/**
-//	 * レビューにコメントを登録します
-//	 * 
-//	 * @param form
-//	 * @return
-//	 */
-//	@PostMapping(value = "/review/comment")
-//	public Map<String, Object> insertComment(@RequestBody InsertReviewCommentForm form) {
-//		Map<String, Object> map = new HashMap<>();
-//		
-//		// 論理IDが正しいか、Userをロードして確認
-//		User user = new User();
-//		user.setLogicalId(form.getUserLogicalId());
-//		user = userService.findUserByLogicalId(user);
-//		
-//		if (user == null) {
-//			map.put("status", "error");
-//			map.put("message", "ユーザーが存在しません");
-//			return map;
-//		}
-//		
-//		// 他にLikeCommentが同レビュー、同作成ユーザーがあっても、スルーしてインサートする流れに変更
-//		// LikeCommentを生成、コメントを生成してインサート
-//		
-//		LikeComment likeComment = new LikeComment();
-//		likeComment.setUserId(user.getId());
-//		likeComment.setReviewId(form.getReviewId());
-//		likeComment.setComment(form.getSentence());
-//
-//		likeComment = likeCommentService.insertCommentToReview(likeComment);
-//		
-//		
-//		map.put("status", "success");
-//		map.put("message", "コメントを登録しました");
-//		return map;
-//	}
-//
-//	/**
-//	 * レビューに対するコメントを削除します
-//	 * 
-//	 * @param commentId
-//	 * @param userLogicalId
-//	 * @return
-//	 */
-//	@DeleteMapping(value = "/review/comment/{commentId}/{userLogicalId}")
-//	public Map<String, Object> DeleteComment(@PathVariable Integer commentId,@PathVariable String userLogicalId) {
-//		Map<String, Object> map = new HashMap<>();
-//		
-//		User user = new User();
-//		user.setLogicalId(userLogicalId);
-//		user = userService.findUserByLogicalId(user);
-//		
-//		if (user == null) {
-//			map.put("status", "error");
-//			map.put("message", "ユーザーが存在しません");
-//			return map;
-//		}
-//		
-//		LikeComment likeComment = new LikeComment();
-//		likeComment.setId(commentId);
-//		
-//		likeComment = likeCommentService.load(likeComment);
-//		
-//		if (user.getId() != likeComment.getUserId()) {
-//			
-//			map.put("status", "error");
-//			map.put("message", "このコメントを削除できるアカウントではありません");
-//			return map;
-//		}
-//		
-//		likeCommentService.updateDelete(likeComment);
-//		map.put("status", "success");
-//		map.put("message", "コメントの削除に成功しました");
-//		return map;
-//	}
-//	
+	/**
+	 * レビューにコメントを登録します
+	 * 
+	 * @param form
+	 * @return
+	 */
+	@PostMapping(value = "/review/comment")
+	public Map<String, Object> insertComment(@RequestBody InsertReviewCommentForm form) {
+		Map<String, Object> map = new HashMap<>();
+		
+		// 論理IDが正しいか、Userをロードして確認
+		User user = new User();
+		user.setLogicalId(form.getUserLogicalId());
+		user = userService.findUserByLogicalId(user);
+		
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "ユーザーが存在しません");
+			return map;
+		}
+		
+		// 他にLikeCommentが同レビュー、同作成ユーザーがあっても、スルーしてインサートする流れに変更
+		// LikeCommentを生成、コメントを生成してインサート
+		
+		LikeComment likeComment = new LikeComment();
+		likeComment.setUserId(user.getId());
+		likeComment.setReviewId(form.getReviewId());
+		likeComment.setComment(form.getSentence());
+
+		likeComment = likeCommentService.insertCommentToReview(likeComment);
+		
+		
+		map.put("status", "success");
+		map.put("message", "コメントを登録しました");
+		return map;
+	}
+
+	/**
+	 * レビューに対するコメントを削除します
+	 * 
+	 * @param commentId
+	 * @param userLogicalId
+	 * @return
+	 */
+	@DeleteMapping(value = "/review/comment/{commentId}/{userLogicalId}")
+	public Map<String, Object> DeleteComment(@PathVariable Integer commentId,@PathVariable String userLogicalId) {
+		Map<String, Object> map = new HashMap<>();
+		
+		User user = new User();
+		user.setLogicalId(userLogicalId);
+		user = userService.findUserByLogicalId(user);
+		
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "ユーザーが存在しません");
+			return map;
+		}
+		
+		LikeComment likeComment = new LikeComment();
+		likeComment.setId(commentId);
+		
+		// 該当のcommentをロード
+		likeComment = likeCommentService.load(likeComment);
+		
+		// ユーザーが違ったらreturn
+		if (user.getId() != likeComment.getUserId()) {
+			map.put("status", "error");
+			map.put("message", "このコメントを削除できるアカウントではありません");
+			return map;
+		}
+		
+		// 削除処理を実行、もしすでに削除されていればnullをreturn
+		likeComment = likeCommentService.updateDelete(likeComment);
+		
+		if (likeComment == null) {
+			map.put("status", "error");
+			map.put("message", "このコメントは存在していません");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "コメントの削除に成功しました");
+		return map;
+	}
+	
 //	
 //	/**
 //	 * レビューコメントに良いね

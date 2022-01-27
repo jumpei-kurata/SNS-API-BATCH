@@ -55,16 +55,27 @@ public class LikeCommentService {
 	 * 
 	 * @param likeComment
 	 */
-	public void updateDelete(LikeComment likeComment) {
+	public LikeComment updateDelete(LikeComment likeComment) {
+		
+		//　もしもうすでにコメント削除されていたら、nullをreturn
+		if(likeComment.isCommentDeleted()) {
+			return null;
+		}
+		
+		// そうでないならば、削除を実施
+		likeComment.setCommentDeleted(true);
 		likeCommentRepository.updateDelete(likeComment);
-		System.out.println(likeComment);
+		
+		
 		if (likeComment.getTimelineId() != null) {
 			timelineRepository.updateCommentCount(likeComment.getTimelineId(),1);
 		}
 
 		if (likeComment.getReviewId() != null) {
-			timelineRepository.updateCommentCount(likeComment.getReviewId(),1);
+			reviewRepository.updateCommentCount(likeComment.getReviewId(),1);
 		}
+		
+		return likeComment;
 	}
 	
 	/**
