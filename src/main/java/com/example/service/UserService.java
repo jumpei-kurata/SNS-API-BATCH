@@ -133,6 +133,8 @@ public class UserService {
 
 	/**
 	 * パスワードを変更します
+	 * (パスワードを忘れた際の変更用メソッド)
+	 * 
 	 * 
 	 * @param user
 	 * @return
@@ -152,6 +154,32 @@ public class UserService {
 		userRepository.changePassword(user);
 		user = userRepository.findById(user);
 
+		return user;
+	}
+	
+	/**
+	 * パスワードを変更します
+	 * (ログイン後にパスワードを変更したい際の変更用メソッド)
+	 * 
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public User changePasswordAfterLogin(User user,String beforePassword,String afterPassword) {
+		
+		// 上記でDBから持ってきたUser情報と、入力されたパスワードが一致しているかを確認
+		// 一致していなければ、return
+		if (!( user.getPassword().equals(beforePassword) && beforePassword.equals(user.getPassword()) )) {
+			return null ;
+		}
+		
+		// 一致していれば、パスワードの経脳を実行
+		user.setPassword(afterPassword);
+		userRepository.changePassword(user);
+		
+		// 最後に最新情報をロードして、コントローラーに返す。
+		user = userRepository.findByLogicalId(user);
+		
 		return user;
 	}
 

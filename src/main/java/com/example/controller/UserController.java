@@ -21,6 +21,7 @@ import com.example.form.ConfirmMailForm;
 import com.example.form.CreateUserForm;
 import com.example.form.LoginForm;
 import com.example.form.UserEditForm;
+import com.example.form.changePasswordAfterLoginForm;
 import com.example.form.changePasswordForm;
 import com.example.form.changePasswordMailForm;
 import com.example.service.ErrorService;
@@ -345,6 +346,57 @@ public class UserController {
 		return map;
 	}
 
+	
+	/**
+	 * ログイン後のパスワード変更のためのAPI
+	 * 
+	 * @param form
+	 * @param result
+	 * @return
+	 */
+	@PatchMapping(value = "/password")
+	public Map<String, Object> changePasswordAfterLogin(@RequestBody @Validated changePasswordAfterLoginForm form, BindingResult result) {
+		Map<String, Object> map = new HashMap<>();
+
+		if (result.hasErrors()) {
+			List<String> errorMessageList = errorService.errorMessage(result);
+
+			map.put("status", "error");
+			map.put("message", errorMessageList);
+			return map;
+		}
+
+		// userを論理IDで照合
+		User user = new User();
+		user.setLogicalId(form.getUserLogicalId());
+		user = userService.findUserByLogicalId(user);
+
+		// userLogicalIdが不正だった場合は、ここで弾かれる
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "ユーザーが存在しません。");
+			return map;
+		}
+
+		// userServiceにて、入力されたパスワードがあっているかの判断
+		// 間違っていればnullをreturn、あっていればupdateしてuserをreternしてくれる
+		
+		user = userService.changePasswordAfterLogin(user,form.getBeforePassword(),form.getAfterPassword());
+	
+		// 結果に合わせて対応
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "入力されたパスワードが違います。");
+			return map;
+		}
+
+		map.put("status", "success");
+		map.put("message", "パスワードの変更が完了しました");
+		map.put("user", user);
+		return map;
+	}
+
+	
 	@GetMapping(value = "test/generateLogical")
 	public String generateLogicalId() {
 		return userService.createHalfToken();
