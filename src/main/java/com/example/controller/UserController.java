@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.Mail;
+import com.example.domain.Timeline;
 import com.example.domain.User;
 import com.example.form.ConfirmMailForm;
 import com.example.form.CreateUserForm;
@@ -25,6 +26,7 @@ import com.example.form.changePasswordAfterLoginForm;
 import com.example.form.changePasswordForm;
 import com.example.form.changePasswordMailForm;
 import com.example.service.ErrorService;
+import com.example.service.TimelineService;
 import com.example.service.UserService;
 
 /**
@@ -40,6 +42,9 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private ErrorService errorService;
+
+	@Autowired
+	private TimelineService timelineService;
 
 	/**
 	 * ユーザーを登録します
@@ -95,21 +100,36 @@ public class UserController {
 	@GetMapping(value = "/user/{id}/{userLogicalId}")
 	public Map<String, Object> findById(@PathVariable Integer id,@PathVariable String userLogicalId) {
 		Map<String, Object> map = new HashMap<>();
+		
+		// 表示されようとしているUserの情報をロード
+		User requestedUser = new User();
+		requestedUser.setId(id);
+		requestedUser = userService.findById(requestedUser);
 
-		User user = new User();
-		user.setId(id);
-
-		user = userService.findById(user);
-
-		if (user == null) {
+		if (requestedUser == null) {
 			map.put("status", "error");
 			map.put("message", "このIDのアカウントは存在しません");
 			return map;
 		}
 
+		// 表示しようとしているUserの情報をロード
+		User visitingUser = new User();
+		visitingUser.setLogicalId(userLogicalId);
+		visitingUser = userService.findUserByLogicalId(visitingUser);
+		
+		if (visitingUser == null) {
+			map.put("status", "error");
+			map.put("message", "不正なユーザーによるリクエストです");
+			return map;
+		}
+		
+		List<Timeline> postedTimelineList = timelineService.showListByPostUserId(requestedUser,visitingUser);
+		
 		map.put("status", "success");
 		map.put("message", "ロードに成功しました");
-		map.put("user", user);
+		map.put("user", requestedUser);
+		map.put("postedTimelineList", postedTimelineList);
+		
 		return map;
 	}
 
