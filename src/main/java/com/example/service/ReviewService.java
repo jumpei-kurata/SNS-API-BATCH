@@ -29,12 +29,22 @@ public class ReviewService {
 	private RestaurantRepository restaurantRepository;
 	
 	/**
-	 * レビュー全件検索
+	 * レビューの50件検索
 	 * 
 	 * @return
 	 */
 	public List<Review> findAll(Review review) {
 		List<Review> list = reviewRepository.findAllReview(review);
+		return list;
+	}
+	
+	/**
+	 * 渡されたレビューのレビューIDより古いレビューを50件検索
+	 * 
+	 * @return
+	 */
+	public List<Review> findOld(Review review) {
+		List<Review> list = reviewRepository.findAllReviewOld(review);
 		return list;
 	}
 	

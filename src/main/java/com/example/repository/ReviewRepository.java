@@ -3,6 +3,7 @@ package com.example.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.domain.Review;
 
@@ -18,6 +19,9 @@ public interface ReviewRepository {
 	// レビュー全件検索
 	List<Review> findAllReview(Review review);
 
+	// 引数のレビューIDより古いレビューを新しい順に50件検索 
+	List<Review> findAllReviewOld(Review review);
+		
 	// レビュー1件検索
 	Review findById(Review review);
 
@@ -29,4 +33,10 @@ public interface ReviewRepository {
 
 	// レビューの削除
 	void deleteReview(Review review);
+	
+	//いいねカウントを+-1
+	void updateLikeCount(@Param("id") Integer id, @Param("status") Integer status);
+		
+	//コメントカウントを+-1
+	void updateCommentCount(@Param("id") Integer id, @Param("status") Integer status);
 }
