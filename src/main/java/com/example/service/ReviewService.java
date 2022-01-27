@@ -38,17 +38,6 @@ public class ReviewService {
 		return list;
 	}
 	
-	
-	/**
-	 * レビューの50件検索
-	 * 
-	 * @return
-	 */
-	public List<Review> showReviewListForRestaurant(Review review) {
-		List<Review> list = reviewRepository.findByRestaurantId(review);
-		return list;
-	}
-	
 	/**
 	 * 渡されたレビューのレビューIDより古いレビューを50件検索
 	 * 
@@ -58,6 +47,28 @@ public class ReviewService {
 		List<Review> list = reviewRepository.findAllReviewOld(review);
 		return list;
 	}
+	
+	/**
+	 * レストランに対応する、レビューの50件検索
+	 * 
+	 * @return
+	 */
+	public List<Review> showReviewListForRestaurant(Review review) {
+		List<Review> list = reviewRepository.findByRestaurantId(review);
+		return list;
+	}
+	
+	/**
+	 * レストランに対応しており、さらに渡されたレビューのレビューIDより古いレビューを50件検索
+	 * 
+	 * @return
+	 */
+	public List<Review> showOlderReviewListForRestaurant(Review review) {
+		List<Review> list = reviewRepository.findOlderByRestaurantId(review);
+		return list;
+	}
+	
+	
 	
 	/**
 	 * レビューをIDで検索
