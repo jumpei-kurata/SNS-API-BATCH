@@ -1,6 +1,6 @@
 package com.example.form;
 
-public class LikeTimelineCommentForm {
+public class LikeCommentForm {
 
 	private String userLogicalId;
 	private Integer commentId;

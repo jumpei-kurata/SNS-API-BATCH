@@ -20,7 +20,7 @@ import com.example.domain.Timeline;
 import com.example.domain.User;
 import com.example.form.InsertTimelineCommentForm;
 import com.example.form.InsertTimelineForm;
-import com.example.form.LikeTimelineCommentForm;
+import com.example.form.LikeCommentForm;
 import com.example.form.LikeTimelineForm;
 import com.example.service.ErrorService;
 import com.example.service.LikeCommentService;
@@ -298,7 +298,7 @@ public class TimelineController {
 	 * @return
 	 */
 	@PostMapping(value = "/timeline/comment/like")
-	public Map<String, Object> insertCommentInLike(@RequestBody LikeTimelineCommentForm form) {
+	public Map<String, Object> insertCommentInLike(@RequestBody LikeCommentForm form) {
 		Map<String, Object>map = new HashMap<>();
 		
 		User user = new User();
@@ -310,9 +310,22 @@ public class TimelineController {
 			map.put("message", "ユーザーが存在しません");
 			return map;
 		}
+		
+		// いいねの対象となっているコメントが存在するかどうかを確認
+		LikeComment parentComment = new LikeComment(); 
+		parentComment.setId(form.getCommentId());
+		parentComment = likeCommentService.load(parentComment);
+		
+		// ロード結果、commentDeletedがtrueならreturn
+		
+		if (parentComment == null || parentComment.isCommentDeleted()) {
+			map.put("status", "error");
+			map.put("message", "そのコメントは存在していません");
+			return map;
+		}
 
 		LikeComment likeComment = 
-				likeCommentService.findCommentByUserIdAndCommentId(user.getId(), form.getCommentId());
+				likeCommentService.findLikeByUserIdAndCommentId(user.getId(), form.getCommentId());
 
 		if (likeComment == null) {
 			likeComment = new LikeComment();

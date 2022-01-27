@@ -282,11 +282,12 @@ public class LikeCommentService {
 	
 	
 	/**
+	 * 渡されたUserIdによる、渡されたCommentIdの投稿へのいいねがあるかどうかを検索するメソッド
 	 * @param userId
 	 * @param commentId
 	 * @return
 	 */
-	public LikeComment findCommentByUserIdAndCommentId(Integer userId, Integer commentId){
+	public LikeComment findLikeByUserIdAndCommentId(Integer userId, Integer commentId){
 
 		LikeComment likeComment = new LikeComment();
 		likeComment.setUserId(userId);
