@@ -21,6 +21,7 @@ import com.example.domain.Review;
 import com.example.domain.User;
 import com.example.form.InsertReviewCommentForm;
 import com.example.form.InsertReviewForm;
+import com.example.form.LikeCommentForm;
 import com.example.form.LikeReviewForm;
 import com.example.form.UserLogicalIdForm;
 import com.example.service.ErrorService;
@@ -390,7 +391,7 @@ public class ReviewController {
 		
 		if (likeComment == null) {
 			map.put("status", "error");
-			map.put("message", "このコメントは存在していません");
+			map.put("message", "そのコメントは存在していません");
 			return map;
 		}
 		
@@ -399,55 +400,69 @@ public class ReviewController {
 		return map;
 	}
 	
-//	
-//	/**
-//	 * レビューコメントに良いね
-//	 * 
-//	 * @param form
-//	 * @return
-//	 */
-//	@PostMapping(value = "/review/comment/like")
-//	public Map<String, Object> insertCommentInLike(@RequestBody LikeReviewCommentForm form) {
-//		Map<String, Object>map = new HashMap<>();
-//		
-//		User user = new User();
-//		user.setLogicalId(form.getUserLogicalId());
-//		user = userService.findUserByLogicalId(user);
-//		
-//		if (user == null) {
-//			map.put("status", "error");
-//			map.put("message", "ユーザーが存在しません");
-//			return map;
-//		}
-//
-//		LikeComment likeComment = 
-//				likeCommentService.findCommentByUserIdAndCommentId(user.getId(), form.getCommentId());
-//
-//		if (likeComment == null) {
-//			likeComment = new LikeComment();
-//			likeComment.setUserId(user.getId());
-//			likeComment.setParentCommentId(form.getCommentId());
-//			
-//			likeComment = likeCommentService.insertLikeToLikeComment(likeComment);
-//			
-//			map.put("status", "success");
-//			map.put("message", "いいねを登録しました");
-//			return map;
-//		}
-//		
-//		likeCommentService.updateLike(likeComment);
-//		
-//		if (likeComment.isLike()) {
-//			likeCommentService.updateLikeCountToComment(form.getCommentId(), 1);
-//			map.put("message", "いいねを削除しました");
-//		}else {
-//			likeCommentService.updateLikeCountToComment(form.getCommentId(),0);
-//			map.put("message", "いいねを登録しました");
-//		}
-//		
-//		map.put("status", "success");
-//		return map;
-//	}
+	
+	/**
+	 * レビューコメントに良いね
+	 * 
+	 * @param form
+	 * @return
+	 */
+	@PostMapping(value = "/review/comment/like")
+	public Map<String, Object> insertCommentInLike(@RequestBody LikeCommentForm form) {
+		Map<String, Object>map = new HashMap<>();
+		
+		User user = new User();
+		user.setLogicalId(form.getUserLogicalId());
+		user = userService.findUserByLogicalId(user);
+		
+		if (user == null) {
+			map.put("status", "error");
+			map.put("message", "ユーザーが存在しません");
+			return map;
+		}
+		
+		// いいねの対象となっているコメントが存在するかどうかを確認
+		LikeComment parentComment = new LikeComment(); 
+		parentComment.setId(form.getCommentId());
+		parentComment = likeCommentService.load(parentComment);
+		
+		// ロード結果、commentDeletedがtrueならreturn
+		
+		if (parentComment == null || parentComment.isCommentDeleted()) {
+			map.put("status", "error");
+			map.put("message", "そのコメントは存在していません");
+			return map;
+		}
+		
+		
+		LikeComment likeComment = 
+				likeCommentService.findLikeByUserIdAndCommentId(user.getId(), form.getCommentId());
+
+		if (likeComment == null) {
+			likeComment = new LikeComment();
+			likeComment.setUserId(user.getId());
+			likeComment.setParentCommentId(form.getCommentId());
+			
+			likeComment = likeCommentService.insertLikeToLikeComment(likeComment);
+			
+			map.put("status", "success");
+			map.put("message", "いいねを登録しました");
+			return map;
+		}
+		
+		likeCommentService.updateLike(likeComment);
+		
+		if (likeComment.isLike()) {
+			likeCommentService.updateLikeCountToComment(form.getCommentId(), 1);
+			map.put("message", "いいねを削除しました");
+		}else {
+			likeCommentService.updateLikeCountToComment(form.getCommentId(),0);
+			map.put("message", "いいねを登録しました");
+		}
+		
+		map.put("status", "success");
+		return map;
+	}
 	
 	
 	
