@@ -76,7 +76,7 @@
 		rst.restaurant_genre_fk = rstg.genre_key 
 		WHERE
 		rst.deleted = false 
-		ORDER BY rst.id DESC
+		ORDER BY restaurant_id DESC
 		LIMIT 50;
 	</select>
 	<select id="findAllMore" resultMap="restaurantMap">
@@ -92,7 +92,7 @@
 		#{id} > rst.restaurant_id  
 		AND
 		rst.deleted = false 
-		ORDER BY rst.id DESC
+		ORDER BY restaurant_id DESC
 		LIMIT 50;
 	</select>
 	<insert id="insertRestaurant" useGeneratedKeys="true" keyProperty="id">
