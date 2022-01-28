@@ -35,6 +35,11 @@ public class RestaurantController {
 	@Autowired
 	private ErrorService errorService;
 
+	/**
+	 * レストラン一覧について、IDが新しい順に50件ロードします。
+	 * 
+	 * @return
+	 */
 	@GetMapping(value = "/restaurant")
 	public Map<String,Object> getRestaurantList(){
 		Map<String, Object> map = new HashMap<>();
