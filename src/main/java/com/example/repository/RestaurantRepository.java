@@ -23,6 +23,9 @@ public interface RestaurantRepository {
 	// 全件検索
 	List<Restaurant> findAll();
 	
+	// 古いレストランを検索
+	List<Restaurant> findAllMore(Restaurant restaurant);
+	
 	// レストランテーブルにデータを挿入
 	void insertRestaurant(Restaurant restaurant);
 	

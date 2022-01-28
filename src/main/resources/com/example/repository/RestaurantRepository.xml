@@ -76,6 +76,23 @@
 		rst.restaurant_genre_fk = rstg.genre_key 
 		WHERE
 		rst.deleted = false 
+		ORDER BY restaurant_id DESC
+		LIMIT 50;
+	</select>
+	<select id="findAllMore" resultMap="restaurantMap">
+		SELECT
+		*
+		FROM
+		restaurants AS rst
+		JOIN 
+		restaurant_genres AS rstg 
+		ON 
+		rst.restaurant_genre_fk = rstg.genre_key 
+		WHERE
+		#{id} > rst.restaurant_id  
+		AND
+		rst.deleted = false 
+		ORDER BY restaurant_id DESC
 		LIMIT 50;
 	</select>
 	<insert id="insertRestaurant" useGeneratedKeys="true" keyProperty="id">
