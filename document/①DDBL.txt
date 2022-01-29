@@ -1,0 +1,8 @@
+-- rootアカウントで実行
+CREATE DATABASE IF NOT EXISTS sns;
+
+-- ユーザーを作成
+CREATE USER 'lunchkus'@'localhost' identified by 'lunchkus';
+
+-- 権限を付与
+GRANT ALL ON sns.* TO 'lunchkus'@'localhost';
