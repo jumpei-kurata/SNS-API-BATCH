@@ -2,7 +2,7 @@
 CREATE DATABASE IF NOT EXISTS sns;
 
 -- ユーザーを作成
-CREATE USER 'lunchkus'@'localhost' identified by 'lunchkus';
+CREATE USER IF NOT EXISTS 'lunchkus'@'localhost' identified by 'lunchkus';
 
 -- 権限を付与
 GRANT ALL ON sns.* TO 'lunchkus'@'localhost';
