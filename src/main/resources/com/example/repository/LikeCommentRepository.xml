@@ -22,6 +22,24 @@
 		<result 	property="commentDeleted"		column="comment_deleted"></result>
 	</resultMap>
 
+	<resultMap id="NotificationMap" type="com.example.domain.Notification">
+		<id			property="id"						column="like_comment_id"></id>
+		<result 	property="userId"					column="user_fk" ></result>
+		<result 	property="accountName"				column="account_name" ></result>
+		<result 	property="userPhotoPath"			column="user_photo_path" ></result>
+		<result 	property="isLike"					column="is_like" ></result>
+		<result 	property="comment"					column="comment" ></result>
+		<result 	property="timelineId"				column="timeline_fk" ></result>
+		<result 	property="timelineSentence"			column="timeline_sentence" ></result>
+		<result 	property="reviewId"					column="review_fk" ></result>
+		<result 	property="reviewSentence"			column="review_sentence" ></result>
+		<result 	property="parentCommentId"			column="like_comment_fk1" ></result>
+		<result 	property="parentCommentSentence"	column="parent_comment_sentence" ></result>
+		<result 	property="actionedTime"				column="actioned_time" ></result>
+		<result 	property="hasNoticed"				column="has_noticed" ></result>
+		<result 	property="isRead"					column="is_read" ></result>
+	</resultMap>	
+
 	<select id="load" resultMap="LikeCommentMap">
 		SELECT 
 		* 
@@ -193,6 +211,49 @@
 		AND lc.comment IS NOT NULL
 		AND lc.comment_deleted = false 
 		ORDER BY lc.like_comment_id ASC
+	</select>	
+
+	<select id="findNotificationByUserId" resultMap="NotificationMap">
+		SELECT 
+		lc.like_comment_id , 
+		lc.user_fk , 
+		u.account_name , 
+		u.user_photo_path , 
+		lc.is_like ,
+		lc.comment ,
+		ltt.timeline_fk ,
+		tl.timeline_sentence,
+		ltr.review_fk ,
+		rv.review_sentence,
+		ltlc.like_comment_fk1,
+		parentLC.comment AS parent_comment_sentence,
+		lc.actioned_time ,
+		lc.has_noticed ,
+		lc.is_read 
+		FROM like_comments AS lc
+		LEFT JOIN
+		links_to_timeline AS ltt
+		ON lc.like_comment_id = ltt.like_comment_fk
+		LEFT JOIN 
+		timelines AS tl
+		ON ltt.timeline_fk = tl.timeline_id
+		LEFT JOIN
+		links_to_review AS ltr
+		ON lc.like_comment_id = ltr.like_comment_fk
+		LEFT JOIN 
+		reviews AS rv
+		ON ltr.review_fk = rv.review_id
+		LEFT JOIN links_to_like_comment AS ltlc
+		ON lc.like_comment_id = ltlc.like_comment_fk1
+		LEFT JOIN like_comments AS parentLC
+		ON ltlc.like_comment_fk1 = parentLC.like_comment_id
+		LEFT JOIN users AS u
+		ON lc.user_fk = u.user_id
+		WHERE tl.user_fk = #{id}
+		OR rv.user_fk = #{id}
+		OR parentLC.user_fk = #{id}
+		ORDER BY lc.actioned_time DESC
+		LIMIT 50
 	</select>	
 	
 	<insert id="insertLike" useGeneratedKeys="true" keyProperty="id" >
