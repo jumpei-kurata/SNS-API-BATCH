@@ -30,7 +30,7 @@ public class NotificationService {
 		List<Notification> list = likeCommentRepository.findNotificationByUserId(user);
 		
 		// 現時点でDBに格納されているnoticed カラムを更新
-		// 未実装
+		likeCommentRepository.updateHasNoticed(user);
 		
 		return list ;
 	}

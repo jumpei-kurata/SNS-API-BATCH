@@ -244,7 +244,7 @@
 		reviews AS rv
 		ON ltr.review_fk = rv.review_id
 		LEFT JOIN links_to_like_comment AS ltlc
-		ON lc.like_comment_id = ltlc.like_comment_fk1
+		ON lc.like_comment_id = ltlc.like_comment_fk2
 		LEFT JOIN like_comments AS parentLC
 		ON ltlc.like_comment_fk1 = parentLC.like_comment_id
 		LEFT JOIN users AS u
@@ -315,6 +315,33 @@
 		</set>
 		WHERE 
 		like_comment_id = #{id}
+	</update>
+
+	<update id="updateHasNoticed">
+		UPDATE 
+		like_comments AS lc
+		LEFT JOIN
+		links_to_timeline AS ltt
+		ON lc.like_comment_id = ltt.like_comment_fk
+		LEFT JOIN 
+		timelines AS tl
+		ON ltt.timeline_fk = tl.timeline_id
+		LEFT JOIN
+		links_to_review AS ltr
+		ON lc.like_comment_id = ltr.like_comment_fk
+		LEFT JOIN 
+		reviews AS rv
+		ON ltr.review_fk = rv.review_id
+		LEFT JOIN links_to_like_comment AS ltlc
+		ON lc.like_comment_id = ltlc.like_comment_fk2
+		LEFT JOIN like_comments AS parentLC
+		ON ltlc.like_comment_fk1 = parentLC.like_comment_id
+		LEFT JOIN users AS u
+		ON lc.user_fk = u.user_id
+		SET lc.has_noticed = TRUE , lc.is_read = TRUE
+		WHERE tl.user_fk = #{id}
+		OR rv.user_fk = #{id}
+		OR parentLC.user_fk = #{id}
 	</update>
 
 </mapper>

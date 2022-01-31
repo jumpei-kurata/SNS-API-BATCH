@@ -65,4 +65,8 @@ public interface LikeCommentRepository {
 	// 通知を表示する
 	List<Notification> findNotificationByUserId (User user);
 	
+	// 通知を表示する
+	void updateHasNoticed (User user);
+	
+	
 }
