@@ -25,12 +25,21 @@ public class RestaurantService {
 	private RestaurantRepository restaurantRepository;
 
 	/**
-	 * レストランの情報を全件取得します。
+	 * レストランの情報を50件取得します。
 	 * 
 	 * @return レストランの情報
 	 */
 	public List<Restaurant> getRestaurantList() {
 		return restaurantRepository.findAll();
+	}
+	
+	/**
+	 * レストランの情報を指定されたIDよりDIDが小さいもののリストを50件取得します。
+	 * 
+	 * @return レストランの情報
+	 */
+	public List<Restaurant> getRestaurantListMore(Restaurant restaurant) {
+		return restaurantRepository.findAllMore(restaurant);
 	}
 	
 	/**

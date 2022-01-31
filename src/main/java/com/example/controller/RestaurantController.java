@@ -36,6 +36,11 @@ public class RestaurantController {
 	@Autowired
 	private ErrorService errorService;
 
+	/**
+	 * レストラン一覧について、IDが新しい順に50件ロードします。
+	 * 
+	 * @return
+	 */
 	@GetMapping(value = "/restaurant")
 	public Map<String,Object> getRestaurantList(){
 		Map<String, Object> map = new HashMap<>();
@@ -60,6 +65,43 @@ public class RestaurantController {
 		
 		return map;
 
+	}
+
+	/**
+	 * レストラン一覧について、渡されたレストランより古い50件をロードします。
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@GetMapping(value = "/restaurant/more/{id}")
+	public Map<String,Object> getRestaurantListMore(@PathVariable Integer id){
+		Map<String, Object> map = new HashMap<>();
+		
+		// レストランサービスの引数に合わせるために、レストランドメインに情報を詰める
+		Restaurant param = new Restaurant();
+		param.setId(id) ;
+		
+		// 返す用のリストを作って、サービスに値を渡してロードする
+		List<Restaurant> restaurantList = new ArrayList<>(); 
+		restaurantList = restaurantService.getRestaurantListMore(param);
+		
+		if(restaurantList == null) {
+			map.put("status", "error");
+			map.put("message", "エラーが発生しました");
+			return map;
+		}
+		if(restaurantList.size() == 0) {
+			map.put("status", "success");
+			map.put("message", "レストランが1件も登録されていません");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "レストラン一覧を表示します");
+		map.put("restaurant", restaurantList);
+		
+		return map;
+		
 	}
 	
 	/**
