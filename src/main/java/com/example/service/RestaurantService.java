@@ -1,6 +1,8 @@
 package com.example.service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +71,43 @@ public class RestaurantService {
 		}
 		restaurantRepository.insertRestaurant(restaurant);
 		return restaurant;
+	}
+	
+	/**
+	 * 並び替え用のステータスを受け取り、レストラン検索をします。
+	 * 
+	 * @return レストランの情報
+	 */
+	public List<Restaurant> findRestaurants(String changeOrder, String genre, Integer type) {
+		
+		List<Restaurant> restaurants = restaurantRepository.findAll();
+		
+		// 並び替え
+		if (changeOrder.equals("最新順")) {
+			restaurants.stream()
+				.sorted(Comparator.comparing(Restaurant::getId).reversed())
+				.collect(Collectors.toList());
+		} else {
+			restaurants.stream()
+				.sorted(Comparator.comparing(Restaurant::getStar).reversed())
+				.collect(Collectors.toList());
+		}
+		
+		// ジャンル
+		if (!(genre.equals("G000"))) {
+			restaurants.stream()
+				.filter(rest -> rest.getGenreFk().equals(genre))
+				.collect(Collectors.toList());
+		}
+		
+		// タイプ
+		// 「すべて」の場合はvalueに「0」を入れてもらうよう、フロントの方と相談する
+		if (!(type.equals(0))) {
+			restaurants.stream()
+				.filter(rest -> rest.getType().equals(type))
+				.collect(Collectors.toList());
+		}
+		
+		return restaurants;
 	}
 }

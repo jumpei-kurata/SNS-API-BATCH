@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.Restaurant;
+import com.example.form.FindRestaurantsForm;
 import com.example.form.InsertRestaurantByHotpepperForm;
 import com.example.form.InsertRestaurantForm;
 import com.example.service.ErrorService;
@@ -198,6 +199,15 @@ public class RestaurantController {
 		return map;
 
 	}
-
 	
+	/**
+	 * 並び替え用のステータスを受け取り、レストランを検索します。
+	 * @param form
+	 * @return レストランの情報
+	 */
+	@GetMapping(value = "/restaurant/findRestaurants/{changeOrder}/{genre}/{type}")
+	public List<Restaurant> findRestaurants(@PathVariable String changeOrder, String genre, Integer type) {
+		return restaurantService.findRestaurants(changeOrder, genre, type);
+	}
+
 }
