@@ -248,7 +248,28 @@ public class RestaurantController {
 	 * @return レストランの情報
 	 */
 	@GetMapping(value = "/restaurant")
-	public List<Restaurant> findRestaurants(String order, String genre, int type) {
-		return restaurantService.findRestaurants(order, genre, type);
+	public Map<String, Object> findRestaurants(String order, String genre, int type) {
+		Map<String, Object> map = new HashMap<>();
+		
+		List<Restaurant> restaurantList = new ArrayList<>(); 
+		restaurantList = restaurantService.findRestaurants(order, genre, type);
+		
+		if(restaurantList == null) {
+			map.put("status", "error");
+			map.put("message", "エラーが発生しました");
+			return map;
+		}
+		if(restaurantList.size() == 0) {
+			map.put("status", "success");
+			map.put("message", "レストランが1件も登録されていません");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "レストラン一覧を表示します");
+		map.put("restaurant", restaurantList);
+		
+		
+		return map;
 	}
 }
