@@ -100,6 +100,54 @@
 		ORDER BY rv.review_id DESC 
 		LIMIT 50
 	</select>
+	
+	
+	
+	<select id="findByReviewUserId" resultMap="reviewMap">
+		SELECT 
+		rv.review_id , 
+		rv.user_fk , 
+		u.account_name , 
+		u.user_photo_path ,
+		rv.restaurant_fk,
+		rst.restaurant_name,
+		rst.restaurant_photo_path,
+		rv.review_star , 
+		rv.review_sentence ,
+		rv.review_like_count , 
+		rv.review_comment_count, 
+		rv.review_posted_time ,
+		(CASE WHEN lc.like_comment_id is null THEN false 
+		ELSE true END) AS is_my_like, 
+		rv.deleted AS deleted
+		FROM 
+		reviews AS rv 
+		LEFT JOIN
+		(
+		(SELECT like_comment_id,comment FROM like_comments
+		WHERE user_fk = #{visitingUserId} AND is_like = true ) AS lc
+		LEFT JOIN links_to_review AS ltr
+		ON lc.like_comment_id = ltr.like_comment_fk 
+		)
+		ON rv.review_id = ltr.review_fk 
+		LEFT JOIN 
+		users AS u 
+		ON 
+		rv.user_fk = u.user_id 
+		LEFT JOIN 
+		restaurants AS rst
+		ON 
+		rv.restaurant_fk = rst.restaurant_id
+		WHERE 
+		rv.user_fk = #{requestedUserId}
+		AND
+		rv.deleted = false
+		ORDER BY rv.review_id DESC 
+		LIMIT 50
+	</select>
+	
+	
+	
 	<select id="findByRestaurantId" resultMap="reviewMap">
 		SELECT 
 		rv.review_id , 

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.domain.Review;
+import com.example.domain.Timeline;
 
 /**
  * reviewsテーブルのRepository
@@ -27,6 +28,9 @@ public interface ReviewRepository {
 
 	//引数のレビューIDより古く、レストランIDに該当するレビューを新しい順に50件検索
 	List<Review> findOlderByRestaurantId(Review review);
+	
+	// 投稿ユーザーの最新50件のレビューを新しい順に検索	
+	List<Review> findByReviewUserId(@Param("requestedUserId") Integer requestedUserId ,@Param("visitingUserId") Integer visitingUserId );
 	
 	// レビュー1件検索
 	Review findById(Review review);
