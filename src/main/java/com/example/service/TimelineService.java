@@ -28,12 +28,12 @@ public class TimelineService {
 	 * @return
 	 */
 	public List<Timeline> findAll(Timeline timeline) {
-		List<Timeline>list = timelineRepository.findAllTimeline(timeline);
+		List<Timeline> list = timelineRepository.findAllTimeline(timeline);
 		return list;
 	}
 
 	public List<Timeline> findOld(Timeline timeline) {
-		List<Timeline>list = timelineRepository.findAllTimelineOld(timeline);
+		List<Timeline> list = timelineRepository.findAllTimelineOld(timeline);
 		return list;
 	}
 	
@@ -46,11 +46,9 @@ public class TimelineService {
 	public List<Timeline> showListByPostUserId(User requestedUser,User visitingUser) {
 		
 		// もらってきたUserをもとに,レポジトリへuserIdを渡す
-		List<Timeline>list = timelineRepository.findByPostUserId(requestedUser.getId(),visitingUser.getId());
+		List<Timeline> list = timelineRepository.findByPostUserId(requestedUser.getId(),visitingUser.getId());
 		return list;
 	}
-	
-	
 	
 	
 	/**

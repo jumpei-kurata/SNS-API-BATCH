@@ -56,7 +56,7 @@
 		tl.timeline_like_count AS t_l_count, 
 		tl.timeline_comment_count AS t_c_count, 
 		tl.timeline_posted_time AS t_p_time, 
-		(CASE WHEN lc.like_comment_id is null  THEN false 
+		(CASE WHEN lc.like_comment_id is null THEN false 
 		ELSE true END) AS is_my_like, 
 		tl.deleted AS deleted
 		FROM 
@@ -97,7 +97,8 @@
 		timelines AS tl 
 		LEFT JOIN
 		(
-		(SELECT like_comment_id,comment FROM like_comments WHERE user_fk = #{visitingUserId} AND is_like = true ) AS lc
+		(SELECT like_comment_id,comment FROM like_comments
+		WHERE user_fk = #{visitingUserId} AND is_like = true ) AS lc
 		LEFT JOIN links_to_timeline AS ltl
 		ON lc.like_comment_id = ltl.like_comment_fk 
 		)
