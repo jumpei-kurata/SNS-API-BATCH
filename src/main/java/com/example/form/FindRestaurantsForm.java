@@ -7,17 +7,17 @@ package com.example.form;
  */
 public class FindRestaurantsForm {
 	/** 並び替え */
-	private String changeOrder;
+	private String order;
 	/** ジャンル */
 	private String genre;
 	/** タイプ */
 	private Integer type;
 	
-	public String getChangeOrder() {
-		return changeOrder;
+	public String getOrder() {
+		return order;
 	}
-	public void setChangeOrder(String changeOrder) {
-		this.changeOrder = changeOrder;
+	public void setOrder(String order) {
+		this.order = order;
 	}
 	public String getGenre() {
 		return genre;

@@ -1,5 +1,6 @@
 package com.example.service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class RestaurantService {
 	 * @return レストランの情報
 	 */
 	public List<Restaurant> getRestaurantList() {
-		return restaurantRepository.findAll();
+		return restaurantRepository.findByDefault();
 	}
 	
 	/**
@@ -39,7 +40,7 @@ public class RestaurantService {
 	 * @return レストランの情報
 	 */
 	public List<Restaurant> getRestaurantListMore(Restaurant restaurant) {
-		return restaurantRepository.findAllMore(restaurant);
+		return restaurantRepository.findByDefaultMore(restaurant);
 	}
 	
 	/**
@@ -87,36 +88,39 @@ public class RestaurantService {
 	 * 
 	 * @return レストランの情報
 	 */
-	public List<Restaurant> findRestaurants(String changeOrder, String genre, Integer type) {
+	public List<Restaurant> findRestaurants(String order, String genre, Integer type) {
 		
 		List<Restaurant> restaurants = restaurantRepository.findAll();
+		List<Restaurant> restList = new ArrayList<>();
 		
 		// 並び替え
-		if (changeOrder.equals("最新順")) {
-			restaurants.stream()
+		if (order.equals("最新順")) {
+			restList = restaurants.stream()
 				.sorted(Comparator.comparing(Restaurant::getId).reversed())
 				.collect(Collectors.toList());
-		} else {
-			restaurants.stream()
+		} else if (order.equals("評価順")) {
+			restList = restaurants.stream()
 				.sorted(Comparator.comparing(Restaurant::getStar).reversed())
 				.collect(Collectors.toList());
 		}
 		
-		// ジャンル
-		if (!(genre.equals("G000"))) {
-			restaurants.stream()
-				.filter(rest -> rest.getGenreFk().equals(genre))
-				.collect(Collectors.toList());
+		// 1.ジャンルのみが指定されている場合
+		// 2.タイプのみが指定されている場合
+		// 3.ジャンルとタイプのどちらも指定されている場合
+		if (!(genre.equals("G000")) && type.equals(0)) {
+			restList = restaurants.stream()
+					.filter(rest -> rest.getGenreFk().equals(genre))
+					.collect(Collectors.toList());
+		} else if (genre.equals("G000") && !(type.equals(0))) {
+			restList = restaurants.stream()
+					.filter(rest -> rest.getType().equals(type))
+					.collect(Collectors.toList());
+		} else if (!(genre.equals("G000") && type.equals(0))) {
+			restList = restaurants.stream()
+					.filter(rest -> rest.getGenreFk().equals(genre) && rest.getType().equals(type))
+					.collect(Collectors.toList());
 		}
 		
-		// タイプ
-		// 「すべて」の場合はvalueに「0」を入れてもらうよう、フロントの方と相談する
-		if (!(type.equals(0))) {
-			restaurants.stream()
-				.filter(rest -> rest.getType().equals(type))
-				.collect(Collectors.toList());
-		}
-		
-		return restaurants;
+		return restList;
 	}
 }
