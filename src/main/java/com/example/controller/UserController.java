@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.Mail;
+import com.example.domain.Review;
 import com.example.domain.Timeline;
 import com.example.domain.User;
 import com.example.form.ConfirmMailForm;
@@ -26,6 +27,7 @@ import com.example.form.changePasswordAfterLoginForm;
 import com.example.form.changePasswordForm;
 import com.example.form.changePasswordMailForm;
 import com.example.service.ErrorService;
+import com.example.service.ReviewService;
 import com.example.service.TimelineService;
 import com.example.service.UserService;
 
@@ -40,11 +42,15 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
 	@Autowired
 	private ErrorService errorService;
 
 	@Autowired
 	private TimelineService timelineService;
+	
+	@Autowired
+	private ReviewService reviewService;
 
 	/**
 	 * ユーザーを登録します
@@ -124,11 +130,13 @@ public class UserController {
 		}
 		
 		List<Timeline> postedTimelineList = timelineService.showListByPostUserId(requestedUser,visitingUser);
+		List<Review> postedReviewList = reviewService.showListByPostUserId(requestedUser,visitingUser);
 		
 		map.put("status", "success");
 		map.put("message", "ロードに成功しました");
 		map.put("user", requestedUser);
 		map.put("postedTimelineList", postedTimelineList);
+		map.put("postedReviewList", postedReviewList);
 		
 		return map;
 	}

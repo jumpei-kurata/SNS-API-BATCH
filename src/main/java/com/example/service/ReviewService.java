@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.Restaurant;
 import com.example.domain.Review;
+import com.example.domain.Timeline;
+import com.example.domain.User;
 import com.example.repository.RestaurantRepository;
 import com.example.repository.ReviewRepository;
 
@@ -45,6 +47,19 @@ public class ReviewService {
 	 */
 	public List<Review> findOld(Review review) {
 		List<Review> list = reviewRepository.findAllReviewOld(review);
+		return list;
+	}
+	
+	/**
+	 * 渡されたUserのIDで投稿されたレビュー最新50件を検索する。
+	 * 
+	 * @param user
+	 * @return　
+	 */
+	public List<Review> showListByPostUserId(User requestedUser,User visitingUser) {
+		
+		// もらってきたUserをもとに,レポジトリへuserIdを渡す
+		List<Review> list = reviewRepository.findByReviewUserId(requestedUser.getId(),visitingUser.getId());
 		return list;
 	}
 	
