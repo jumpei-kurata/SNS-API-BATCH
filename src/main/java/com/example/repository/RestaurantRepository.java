@@ -23,8 +23,11 @@ public interface RestaurantRepository {
 	// 全件検索
 	List<Restaurant> findAll();
 	
-	// 古いレストランを検索
-	List<Restaurant> findAllMore(Restaurant restaurant);
+	// 全件検索したものから降順で50件取得
+	List<Restaurant> findByDefault();
+	
+	// 表示されているレストランより古いレストラン情報を取得
+	List<Restaurant> findByDefaultMore(Restaurant restaurant);
 	
 	// レストランテーブルにデータを挿入
 	void insertRestaurant(Restaurant restaurant);
