@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.Restaurant;
+import com.example.form.FindRestaurantsForm;
 import com.example.form.InsertRestaurantByHotpepperForm;
 import com.example.form.InsertRestaurantForm;
 import com.example.service.ErrorService;
@@ -40,31 +41,31 @@ public class RestaurantController {
 	 * 
 	 * @return
 	 */
-	@GetMapping(value = "/restaurant")
-	public Map<String,Object> getRestaurantList(){
-		Map<String, Object> map = new HashMap<>();
-		
-		List<Restaurant> restaurantList = new ArrayList<>(); 
-		restaurantList = restaurantService.getRestaurantList();
-		
-		if(restaurantList == null) {
-			map.put("status", "error");
-			map.put("message", "エラーが発生しました");
-			return map;
-		}
-		if(restaurantList.size() == 0) {
-			map.put("status", "success");
-			map.put("message", "レストランが1件も登録されていません");
-			return map;
-		}
-		
-		map.put("status", "success");
-		map.put("message", "レストラン一覧を表示します");
-		map.put("restaurant", restaurantList);
-		
-		return map;
-
-	}
+//	@GetMapping(value = "/restaurant")
+//	public Map<String,Object> getRestaurantList(){
+//		Map<String, Object> map = new HashMap<>();
+//		
+//		List<Restaurant> restaurantList = new ArrayList<>(); 
+//		restaurantList = restaurantService.getRestaurantList();
+//		
+//		if(restaurantList == null) {
+//			map.put("status", "error");
+//			map.put("message", "エラーが発生しました");
+//			return map;
+//		}
+//		if(restaurantList.size() == 0) {
+//			map.put("status", "success");
+//			map.put("message", "レストランが1件も登録されていません");
+//			return map;
+//		}
+//		
+//		map.put("status", "success");
+//		map.put("message", "レストラン一覧を表示します");
+//		map.put("restaurant", restaurantList);
+//		
+//		return map;
+//
+//	}
 
 	/**
 	 * レストラン一覧について、渡されたレストランより古い50件をロードします。
@@ -240,6 +241,35 @@ public class RestaurantController {
 		return map;
 
 	}
-
 	
+	/**
+	 * 並び替え用のステータスを受け取り、レストランを検索します。
+	 * @param form
+	 * @return レストランの情報
+	 */
+	@GetMapping(value = "/restaurant")
+	public Map<String, Object> findRestaurants(String order, String genre, int type) {
+		Map<String, Object> map = new HashMap<>();
+		
+		List<Restaurant> restaurantList = new ArrayList<>(); 
+		restaurantList = restaurantService.findRestaurants(order, genre, type);
+		
+		if(restaurantList == null) {
+			map.put("status", "error");
+			map.put("message", "エラーが発生しました");
+			return map;
+		}
+		if(restaurantList.size() == 0) {
+			map.put("status", "success");
+			map.put("message", "レストランが1件も登録されていません");
+			return map;
+		}
+		
+		map.put("status", "success");
+		map.put("message", "レストラン一覧を表示します");
+		map.put("restaurant", restaurantList);
+		
+		
+		return map;
+	}
 }
