@@ -50,6 +50,19 @@ public class TimelineService {
 		return list;
 	}
 	
+	/**
+	 * 渡されたUserのIDで閲覧される側がいいねしたタイムライン最新50件を検索する。
+	 * 
+	 * @param user
+	 * @return　
+	 */
+	public List<Timeline> showListByRequestedUserIdLike(User requestedUser,User visitingUser) {
+		
+		// もらってきたUserをもとに,レポジトリへuserIdを渡す
+		List<Timeline> list = timelineRepository.findByRequestedUserIdLike(requestedUser.getId(),visitingUser.getId());
+		return list;
+	}
+	
 	
 	/**
 	 * タイムライン投稿
