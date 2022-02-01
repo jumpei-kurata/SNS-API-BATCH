@@ -6,8 +6,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.example.domain.LikeComment;
+import com.example.domain.Notification;
 import com.example.domain.Review;
 import com.example.domain.Timeline;
+import com.example.domain.User;
 /**
  * いいねコメントテーブルのRepository
  * 
@@ -58,5 +60,13 @@ public interface LikeCommentRepository {
 		
 	// コメントのいいねカウントを更新する
 	void updateLikeCount(@Param("id") Integer id, @Param("status") Integer status);
+
+// 通知周り
+	// 通知を表示する
+	List<Notification> findNotificationByUserId (User user);
+	
+	// 通知を表示する
+	void updateHasNoticed (User user);
+	
 	
 }
