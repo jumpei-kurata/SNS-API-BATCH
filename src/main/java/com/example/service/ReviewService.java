@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.Restaurant;
 import com.example.domain.Review;
-import com.example.domain.Timeline;
 import com.example.domain.User;
 import com.example.repository.RestaurantRepository;
 import com.example.repository.ReviewRepository;
