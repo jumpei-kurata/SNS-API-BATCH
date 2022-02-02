@@ -115,6 +115,42 @@
 		LIMIT 50
 	</select>
 	
+	<select id="findByLikeUserId" resultMap="timelineMap">
+		SELECT 
+		tl.timeline_id AS id, 
+		tl.user_fk AS u_id, 
+		u.account_name AS a_name, 
+		u.user_photo_path AS u_p_path, 
+		tl.timeline_sentence AS t_sentence, 
+		tl.timeline_like_count AS t_l_count, 
+		tl.timeline_comment_count AS t_c_count, 
+		tl.timeline_posted_time AS t_p_time, 
+		(CASE WHEN lc.like_comment_id is null THEN false 
+		ELSE true END) AS is_my_like, 
+		tl.deleted AS deleted
+		FROM 
+		timelines AS tl 
+		LEFT JOIN
+		(
+		(SELECT * FROM like_comments WHERE user_fk = #{requestedUserId} AND is_like = true ) AS lc
+		LEFT JOIN links_to_timeline AS ltl
+		ON lc.like_comment_id = ltl.like_comment_fk 
+		)
+		ON tl.timeline_id = ltl.timeline_fk 
+		LEFT JOIN 
+		users AS u 
+		ON 
+		tl.user_fk = u.user_id 
+		WHERE 
+		lc.user_fk = #{requestedUserId}
+		AND 
+		lc.is_like = true
+		AND
+		tl.deleted = false
+		ORDER BY lc.actioned_time DESC 
+		LIMIT 50
+	</select>
+	
 	<insert id="insertTimeline" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO timelines (user_fk,timeline_sentence)
 		VALUES (#{userId},#{sentence})

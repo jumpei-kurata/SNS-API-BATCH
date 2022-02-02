@@ -131,12 +131,16 @@ public class UserController {
 		
 		List<Timeline> postedTimelineList = timelineService.showListByPostUserId(requestedUser,visitingUser);
 		List<Review> postedReviewList = reviewService.showListByPostUserId(requestedUser,visitingUser);
+		List<Timeline> likedTimelineList = timelineService.showListByLikeUserId(requestedUser, visitingUser);
+		List<Review> likedReviewList = reviewService.showListByLikeUserId(requestedUser, visitingUser);
 		
 		map.put("status", "success");
 		map.put("message", "ロードに成功しました");
 		map.put("user", requestedUser);
 		map.put("postedTimelineList", postedTimelineList);
 		map.put("postedReviewList", postedReviewList);
+		map.put("likedTimelineList", likedTimelineList);
+		map.put("likedReviewList", likedReviewList);
 		
 		return map;
 	}

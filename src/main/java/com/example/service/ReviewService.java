@@ -63,6 +63,19 @@ public class ReviewService {
 	}
 	
 	/**
+	 * 渡されたUserのIDで閲覧される側がいいねしたレビュー最新50件を検索する。
+	 * 
+	 * @param user
+	 * @return　
+	 */
+	public List<Review> showListByLikeUserId(User requestedUser,User visitingUser) {
+		
+		// もらってきたUserをもとに,レポジトリへuserIdを渡す
+		List<Review> list = reviewRepository.findByLikeUserId(requestedUser.getId(),visitingUser.getId());
+		return list;
+	}
+	
+	/**
 	 * レストランに対応する、レビューの50件検索
 	 * 
 	 * @return
