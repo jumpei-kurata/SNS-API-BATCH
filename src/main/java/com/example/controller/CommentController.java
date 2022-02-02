@@ -35,7 +35,7 @@ public class CommentController {
 	private LikeCommentService likeCommentService; 
 
 	/**
-	 * コメントIDにあわせ、そのコメントが紐づくタイムライン、またはレビューの情報を返します。
+	 * コメントIDにあわせ、そのコメントが紐づくタイムライン、またはレビューの詳細情報を返します。
 	 * 
 	 * @param id
 	 * @param userLogicalId
@@ -69,7 +69,7 @@ public class CommentController {
 			return map;
 		}
 		
-		
+		// いずれにせよ使うのでcommentListをインスタンス化
 		List<LikeComment> commentList = new ArrayList<>();
 		
 		// つぶやきに紐づくのであれば、timeline詳細を返す 
@@ -83,6 +83,12 @@ public class CommentController {
 			
 			// timelineをロードしてくる
 			timeline = timelineService.findTimelineById(timeline);
+			
+			if (timeline == null) {
+				map.put("status", "error");
+				map.put("message", "該当するつぶやきが存在しません");
+				return map;
+			}
 			
 			// それに紐づくコメント一覧もロード
 			commentList = likeCommentService.findCommentListToTimeline(timeline);
@@ -107,6 +113,12 @@ public class CommentController {
 			
 			// reviewをロードしてくる
 			review = reviewService.findById(review);
+			
+			if (review == null) {
+				map.put("status", "error");
+				map.put("message", "そのレビューは存在しません");
+				return map;
+			}
 			
 			// それに紐づくコメント一覧もロード
 			commentList = likeCommentService.findCommentListToReview(review);
