@@ -93,33 +93,60 @@ public class RestaurantService {
 		List<Restaurant> restaurants = restaurantRepository.findAll();
 		List<Restaurant> restList = new ArrayList<>();
 		
-		// 並び替え
-		if (order.equals("最新順")) {
-			restList = restaurants.stream()
-				.sorted(Comparator.comparing(Restaurant::getId).reversed())
-				.collect(Collectors.toList());
-		} else if (order.equals("評価順")) {
-			restList = restaurants.stream()
-				.sorted(Comparator.comparing(Restaurant::getStar).reversed())
-				.collect(Collectors.toList());
-		}
-		
-		// 1.ジャンルのみが指定されている場合
-		// 2.タイプのみが指定されている場合
-		// 3.ジャンルとタイプのどちらも指定されている場合
-		if (!(genre.equals("G000")) && type.equals(0)) {
+		// 1.「最新順」かつ「ジャンル」のみが指定されている場合
+		// 2.「最新順」かつ「タイプ」のみが指定されている場合
+		// 3.「最新順」かつ「ジャンル」とタイプのどちらも指定されている場合
+		// 4.「最新順」かつ「ジャンル」と「タイプ」のどちらも指定されていない場合
+		if (order.equals("最新順") && !(genre.equals("G000")) && type.equals(0)) {
 			restList = restaurants.stream()
 					.filter(rest -> rest.getGenreFk().equals(genre))
+					.sorted(Comparator.comparing(Restaurant::getId).reversed())
 					.collect(Collectors.toList());
-		} else if (genre.equals("G000") && !(type.equals(0))) {
+		} else if (order.equals("最新順") && genre.equals("G000") && !(type.equals(0))) {
 			restList = restaurants.stream()
 					.filter(rest -> rest.getType().equals(type))
+					.sorted(Comparator.comparing(Restaurant::getId).reversed())
 					.collect(Collectors.toList());
-		} else if (!(genre.equals("G000") && type.equals(0))) {
+		} else if (order.equals("最新順") && !(genre.equals("G000") && type.equals(0))) {
 			restList = restaurants.stream()
 					.filter(rest -> rest.getGenreFk().equals(genre) && rest.getType().equals(type))
+					.sorted(Comparator.comparing(Restaurant::getId).reversed())
+					.collect(Collectors.toList());
+		} else if (order.equals("最新順") && genre.equals("G000") && type.equals(0)) {
+			restList = restaurants.stream()
+					.sorted(Comparator.comparing(Restaurant::getId).reversed())
 					.collect(Collectors.toList());
 		}
+		
+		// 1.「評価順」かつ「ジャンル」のみが指定されている場合
+		// 2.「評価順」かつ「タイプ」のみが指定されている場合
+		// 3.「評価順」かつ「ジャンル」とタイプのどちらも指定されている場合
+		// 4.「評価順」かつ「ジャンル」と「タイプ」のどちらも指定されていない場合
+		if (order.equals("評価順") && !(genre.equals("G000")) && type.equals(0)) {
+			restList = restaurants.stream()
+					.filter(rest -> rest.getGenreFk().equals(genre))
+					.sorted(Comparator.comparing(Restaurant::getId).reversed())
+					.sorted(Comparator.comparing(Restaurant::getStar).reversed())
+					.collect(Collectors.toList());
+		} else if (order.equals("評価順") && genre.equals("G000") && !(type.equals(0))) {
+			restList = restaurants.stream()
+					.filter(rest -> rest.getType().equals(type))
+					.sorted(Comparator.comparing(Restaurant::getId).reversed())
+					.sorted(Comparator.comparing(Restaurant::getStar).reversed())
+					.collect(Collectors.toList());
+		} else if (order.equals("評価順") && !(genre.equals("G000") && type.equals(0))) {
+			restList = restaurants.stream()
+					.filter(rest -> rest.getGenreFk().equals(genre) && rest.getType().equals(type))
+					.sorted(Comparator.comparing(Restaurant::getId).reversed())
+					.sorted(Comparator.comparing(Restaurant::getStar).reversed())
+					.collect(Collectors.toList());
+		} else if (order.equals("評価順") && genre.equals("G000") && type.equals(0)) {
+			restList = restaurants.stream()
+					.sorted(Comparator.comparing(Restaurant::getId).reversed())
+					.collect(Collectors.toList());
+		}
+		
+		System.out.println(restList);
 		
 		return restList;
 	}
