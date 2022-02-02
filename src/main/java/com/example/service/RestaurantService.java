@@ -143,6 +143,7 @@ public class RestaurantService {
 		} else if (order.equals("評価順") && genre.equals("G000") && type.equals(0)) {
 			restList = restaurants.stream()
 					.sorted(Comparator.comparing(Restaurant::getId).reversed())
+					.sorted(Comparator.comparing(Restaurant::getStar).reversed())
 					.collect(Collectors.toList());
 		}
 		
