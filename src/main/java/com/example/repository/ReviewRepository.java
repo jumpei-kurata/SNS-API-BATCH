@@ -32,7 +32,7 @@ public interface ReviewRepository {
 	List<Review> findByReviewUserId(@Param("requestedUserId") Integer requestedUserId ,@Param("visitingUserId") Integer visitingUserId );
 	
 	// 閲覧されるユーザーの最新50件のいいねしたレビューを新しい順に検索	
-	List<Review> findByRequestedUserIdLike(@Param("requestedUserId") Integer requestedUserId ,@Param("visitingUserId") Integer visitingUserId );
+	List<Review> findByLikeUserId(@Param("requestedUserId") Integer requestedUserId ,@Param("visitingUserId") Integer visitingUserId );
 	
 	// レビュー1件検索
 	Review findById(Review review);

@@ -115,7 +115,7 @@
 		LIMIT 50
 	</select>
 	
-	<select id="findByRequestedUserIdLike" resultMap="timelineMap">
+	<select id="findByLikeUserId" resultMap="timelineMap">
 		SELECT 
 		tl.timeline_id AS id, 
 		tl.user_fk AS u_id, 

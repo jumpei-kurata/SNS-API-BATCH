@@ -68,7 +68,7 @@ public class ReviewService {
 	 * @param user
 	 * @return　
 	 */
-	public List<Review> showListByRequestedUserIdLike(User requestedUser,User visitingUser) {
+	public List<Review> showListByReviewUserId(User requestedUser,User visitingUser) {
 		
 		// もらってきたUserをもとに,レポジトリへuserIdを渡す
 		List<Review> list = reviewRepository.findByReviewUserId(requestedUser.getId(),visitingUser.getId());

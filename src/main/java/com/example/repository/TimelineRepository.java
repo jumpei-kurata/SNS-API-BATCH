@@ -26,7 +26,7 @@ public interface TimelineRepository {
 	List<Timeline> findByPostUserId(@Param("requestedUserId") Integer requestedUserId ,@Param("visitingUserId") Integer visitingUserId );
 	
 	// 閲覧されるユーザーの最新50件のいいねしたつぶやきを新しい順に検索
-	List<Timeline> findByRequestedUserIdLike(@Param("requestedUserId") Integer requestedUserId ,@Param("visitingUserId") Integer visitingUserId );
+	List<Timeline> findByLikeUserId(@Param("requestedUserId") Integer requestedUserId ,@Param("visitingUserId") Integer visitingUserId );
 
 	//タイムラインを登録
 	void insertTimeline(Timeline timeline);

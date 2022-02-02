@@ -144,9 +144,7 @@
 		LIMIT 50
 	</select>
 	
-	
-	
-	<select id="findByRequestedUserIdLike" resultMap="reviewMap">
+	<select id="findByLikeUserId" resultMap="reviewMap">
 		SELECT 
 		rv.review_id , 
 		rv.user_fk , 
@@ -190,8 +188,6 @@
 		ORDER BY rv.review_id DESC 
 		LIMIT 50
 	</select>
-	
-	
 	
 	<select id="findByRestaurantId" resultMap="reviewMap">
 		SELECT 

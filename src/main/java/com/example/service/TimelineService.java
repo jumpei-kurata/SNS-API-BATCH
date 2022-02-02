@@ -56,10 +56,10 @@ public class TimelineService {
 	 * @param user
 	 * @return　
 	 */
-	public List<Timeline> showListByRequestedUserIdLike(User requestedUser,User visitingUser) {
+	public List<Timeline> showListByLikeUserId(User requestedUser,User visitingUser) {
 		
 		// もらってきたUserをもとに,レポジトリへuserIdを渡す
-		List<Timeline> list = timelineRepository.findByRequestedUserIdLike(requestedUser.getId(),visitingUser.getId());
+		List<Timeline> list = timelineRepository.findByLikeUserId(requestedUser.getId(),visitingUser.getId());
 		return list;
 	}
 	
