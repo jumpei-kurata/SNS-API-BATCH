@@ -256,6 +256,47 @@
 		LIMIT 50
 	</select>	
 	
+	<select id="findByLikeUserId" resultMap="LikeCommentMap">
+		SELECT 
+		com.like_comment_id , 
+		com.user_fk , 
+		u.account_name , 
+		u.user_photo_path , 
+		com.is_like ,
+		com.comment ,
+		com.comment_like_count ,
+		com.actioned_time ,
+		com.has_noticed ,
+		com.is_read ,
+		(CASE WHEN my_likes.like_comment_id is null THEN false 
+		ELSE true END) AS is_my_like, 
+		com.comment_deleted
+		FROM 
+		like_comments AS com
+		LEFT JOIN users AS u 
+		ON com.user_fk = u.user_id 
+		
+		LEFT JOIN
+		(
+		(SELECT * FROM like_comments WHERE user_fk = 1 AND is_like = true ) AS my_likes #visitingUserId
+		LEFT JOIN links_to_like_comment AS l_my_like
+		ON my_likes.like_comment_id = l_my_like.like_comment_fk2
+		)
+		ON	l_my_like.like_comment_fk1 = com.like_comment_id
+		
+		JOIN 
+		(
+		(SELECT * FROM like_comments WHERE user_fk = 2 AND is_like = true ) AS his_likes #requestedUserId
+		LEFT JOIN links_to_like_comment AS l_his_like
+		ON his_likes.like_comment_id = l_his_like.like_comment_fk2
+		)
+		ON 
+		l_his_like.like_comment_fk1 = com.like_comment_id 
+		ORDER BY 
+		his_likes.actioned_time DESC 
+	</select>
+	
+	
 	<insert id="insertLike" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO like_comments 
 		(user_fk , is_like) 
