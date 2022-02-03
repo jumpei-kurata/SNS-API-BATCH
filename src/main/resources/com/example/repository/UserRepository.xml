@@ -23,7 +23,38 @@
 	</resultMap>
 	<select id="findById" resultMap="userMap">
 		SELECT
-		*
+		u.user_id,
+		u.user_name,
+		u.hire_date,
+		u.service_fk,
+		s.service_name,
+		u.user_photo_path,
+		u.birth_day,
+		u.introduction,
+		u.logined_time
+		FROM
+		users AS u
+		JOIN 
+		services AS s 
+		ON 
+		u.service_fk = s.service_id 
+		WHERE
+		u.user_id = #{id}
+		AND
+		u.deleted = false
+	</select>
+	<select id="findByIdForLogin" resultMap="userMap">
+		SELECT
+		u.user_id,
+		u.user_name,
+		u.hire_date,
+		u.service_fk,
+		s.service_name,
+		u.user_photo_path,
+		u.birth_day,
+		u.introduction,
+		u.user_logical_id,
+		u.logined_time
 		FROM
 		users AS u
 		JOIN 

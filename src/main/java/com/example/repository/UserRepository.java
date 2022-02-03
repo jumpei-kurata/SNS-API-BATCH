@@ -8,6 +8,9 @@ public interface UserRepository {
 	// 1件検索
 	User findById(User user);
 	
+	// ログイン用1件検索(論理IDも渡す)
+	User findByIdForLogin(User user);
+	
 	// メールアドレスで検索
 	List<User> findByEmail(User user);
 	
