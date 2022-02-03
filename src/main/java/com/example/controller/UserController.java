@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.domain.LikeComment;
 import com.example.domain.Mail;
 import com.example.domain.Review;
 import com.example.domain.Timeline;
@@ -27,6 +28,7 @@ import com.example.form.changePasswordAfterLoginForm;
 import com.example.form.changePasswordForm;
 import com.example.form.changePasswordMailForm;
 import com.example.service.ErrorService;
+import com.example.service.LikeCommentService;
 import com.example.service.ReviewService;
 import com.example.service.TimelineService;
 import com.example.service.UserService;
@@ -52,6 +54,10 @@ public class UserController {
 	@Autowired
 	private ReviewService reviewService;
 
+	@Autowired
+	private LikeCommentService likeCommentService;
+		
+	
 	/**
 	 * ユーザーを登録します
 	 * 
@@ -133,6 +139,7 @@ public class UserController {
 		List<Review> postedReviewList = reviewService.showListByPostUserId(requestedUser,visitingUser);
 		List<Timeline> likedTimelineList = timelineService.showListByLikeUserId(requestedUser, visitingUser);
 		List<Review> likedReviewList = reviewService.showListByLikeUserId(requestedUser, visitingUser);
+		List<LikeComment> likedCommentList = likeCommentService.showListByLikeUserId(requestedUser, visitingUser);
 		
 		map.put("status", "success");
 		map.put("message", "ロードに成功しました");
@@ -141,6 +148,7 @@ public class UserController {
 		map.put("postedReviewList", postedReviewList);
 		map.put("likedTimelineList", likedTimelineList);
 		map.put("likedReviewList", likedReviewList);
+		map.put("likedCommentList", likedCommentList);
 		
 		return map;
 	}
