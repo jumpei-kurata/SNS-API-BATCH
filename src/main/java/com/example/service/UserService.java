@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,8 @@ public class UserService {
 	private MailRepository mailRepository;
 	@Autowired
 	private MailSender sender;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	// このアドレスからメールを送ります
 	private final String FROMEMAIL = "lunchkus@gmail.com";
@@ -70,7 +73,10 @@ public class UserService {
 	 * @return
 	 */
 	public User login(User user, LoginForm form) {
-
+		
+		// パスワードのハッシュ化
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		
 		if (user.getPassword().equals(form.getPassword())) {
 
 			userRepository.loginedUpdate(user);
@@ -79,6 +85,7 @@ public class UserService {
 		} else {
 			return null;
 		}
+		
 	}
 
 	/**
@@ -89,6 +96,9 @@ public class UserService {
 	 */
 	public User insertUser(User user) {
 
+		// パスワードのハッシュ化
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		
 		// メールアドレス重複チェック
 		List<User> list = userRepository.findByEmail(user);
 
@@ -141,6 +151,9 @@ public class UserService {
 	 */
 	public User changePassword(User user) {
 		
+		// パスワードのハッシュ化
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		
 		List<User>userList = userRepository.findByEmail(user);
 		
 		if(userList.size() != 1) {
@@ -166,6 +179,9 @@ public class UserService {
 	 * @return
 	 */
 	public User changePasswordAfterLogin(User user,String beforePassword,String afterPassword) {
+		
+		// パスワードのハッシュ化
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		// 上記でDBから持ってきたUser情報と、入力されたパスワードが一致しているかを確認
 		// 一致していなければ、return
