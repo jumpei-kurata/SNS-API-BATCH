@@ -68,5 +68,8 @@ public interface LikeCommentRepository {
 	// 通知を表示する
 	void updateHasNoticed (User user);
 	
+// ユーザー周り
+	// 特定のユーザーがいいねしたコメントリストの取得
+	List<LikeComment> findByLikeUserId(@Param("requestedUserId") Integer requestedUserId ,@Param("visitingUserId") Integer visitingUserId );
 	
 }
