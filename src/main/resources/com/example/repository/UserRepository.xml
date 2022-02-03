@@ -23,7 +23,15 @@
 	</resultMap>
 	<select id="findById" resultMap="userMap">
 		SELECT
-		*
+		u.user_id,
+		u.user_name,
+		u.hire_date,
+		u.service_fk,
+		s.service_name,
+		u.user_photo_path,
+		u.birth_day,
+		u.introduction,
+		u.logined_time
 		FROM
 		users AS u
 		JOIN 
