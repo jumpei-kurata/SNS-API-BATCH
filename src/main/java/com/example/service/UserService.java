@@ -74,7 +74,7 @@ public class UserService {
 		if (user.getPassword().equals(form.getPassword())) {
 
 			userRepository.loginedUpdate(user);
-			user = userRepository.findById(user);
+			user = userRepository.findByIdForLogin(user);
 			return user;
 		} else {
 			return null;
