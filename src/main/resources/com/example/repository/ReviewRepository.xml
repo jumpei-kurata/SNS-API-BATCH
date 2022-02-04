@@ -180,7 +180,7 @@
 		ON 
 		rv.restaurant_fk = rst.restaurant_id
 		WHERE 
-		rv.user_fk = #{requestedUserId}
+		lc.user_fk = #{requestedUserId}
 		AND
 		lc.is_like = true
 		AND
