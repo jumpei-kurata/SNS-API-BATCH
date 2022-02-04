@@ -345,7 +345,7 @@ public class ReviewController {
 		}
 
 		reviewService.deleteReview(review);
-		//連なるコメントも削除
+		//紐づいたコメントも削除
 		likeCommentService.deleteCommentListToReview(review);
 		map.put("status", "success");
 		map.put("message", "レビューの削除に成功しました");
