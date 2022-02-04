@@ -75,9 +75,10 @@ public class UserService {
 	public User login(User user, LoginForm form) {
 		
 		// パスワードのハッシュ化
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+//		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
-		if (user.getPassword().equals(form.getPassword())) {
+		// passwordEncoderの照合機能を使った照合
+		if (passwordEncoder.matches( form.getPassword() , user.getPassword() )){
 
 			userRepository.loginedUpdate(user);
 			user = userRepository.findByIdForLogin(user);
