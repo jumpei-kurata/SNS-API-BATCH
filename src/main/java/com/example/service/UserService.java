@@ -152,8 +152,8 @@ public class UserService {
 	 */
 	public User changePassword(User user) {
 		
-		// パスワードのハッシュ化
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		// パスワードのハッシュ化、パスワードとして一旦保持
+		String password = passwordEncoder.encode(user.getPassword());
 		
 		List<User>userList = userRepository.findByEmail(user);
 		
@@ -161,7 +161,6 @@ public class UserService {
 			return null;
 		}
 
-		String password = user.getPassword();
 		user = userList.get(0);
 		user.setPassword(password);
 
