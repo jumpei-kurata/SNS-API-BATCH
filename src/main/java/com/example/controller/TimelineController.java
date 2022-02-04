@@ -230,6 +230,8 @@ public class TimelineController {
 		}
 		
 		timelineService.updateDelete(timeline);
+        //紐づいたコメントも削除
+		likeCommentService.deleteCommentListToTimeline(timeline);
 		map.put("status", "success");
 		map.put("message", "タイムラインの削除に成功しました");
 		return map;
