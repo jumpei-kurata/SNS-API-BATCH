@@ -174,8 +174,9 @@ public class UserService {
 	 * パスワードを変更します
 	 * (ログイン後にパスワードを変更したい際の変更用メソッド)
 	 * 
-	 * 
-	 * @param user
+	 * @param user　論理IDでロードされた現状のUser情報
+	 * @param beforePassword
+	 * @param afterPassword
 	 * @return
 	 */
 	public User changePasswordAfterLogin(User user,String beforePassword,String afterPassword) {
@@ -185,7 +186,7 @@ public class UserService {
 		
 		// 上記でDBから持ってきたUser情報と、入力されたパスワードが一致しているかを確認
 		// 一致していなければ、return
-		if (!( user.getPassword().equals(beforePassword) && beforePassword.equals(user.getPassword()) )) {
+		if (!passwordEncoder.matches(user.getPassword(), beforePassword)) {
 			return null ;
 		}
 		
