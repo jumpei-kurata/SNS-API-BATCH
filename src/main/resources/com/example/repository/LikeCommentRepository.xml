@@ -177,20 +177,6 @@
 	 	links_to_timeline  AS ltt 
 		ON 
 		ltt.like_comment_fk = lc.like_comment_id 
-		LEFT JOIN 
-		users AS u 
-		ON 
-		lc.user_fk = u.user_id 
-		LEFT JOIN 
-		(SELECT * FROM
-		links_to_like_comment AS ltlc 
-		LEFT JOIN 
-		like_comments AS lc2
-		ON 
-		ltlc.like_comment_fk2 = lc2.like_comment_id 
-		WHERE user_fk = #{userId} AND is_like = TRUE ) AS joinedltlc
-		ON 
-		lc.like_comment_id = joinedltlc.like_comment_fk1
 		SET lc.comment_deleted = true
 		WHERE 
 		ltt.timeline_fk = #{id} 
@@ -248,20 +234,6 @@
 	 	links_to_review  AS ltr 
 		ON 
 		ltr.like_comment_fk = lc.like_comment_id 
-		LEFT JOIN 
-		users AS u 
-		ON 
-		lc.user_fk = u.user_id 
-		LEFT JOIN 
-		(SELECT * FROM
-		links_to_like_comment AS ltlc 
-		LEFT JOIN 
-		like_comments AS lc2
-		ON 
-		ltlc.like_comment_fk2 = lc2.like_comment_id 
-		WHERE user_fk = #{userId} AND is_like = TRUE ) AS joinedltlc
-		ON 
-		lc.like_comment_id = joinedltlc.like_comment_fk1
 		SET lc.comment_deleted = true
 		WHERE 
 		ltr.review_fk = #{id} 
