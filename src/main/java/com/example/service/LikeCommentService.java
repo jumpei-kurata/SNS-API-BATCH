@@ -179,6 +179,16 @@ public class LikeCommentService {
 	public List<LikeComment> findCommentListToTimeline(Timeline timeline) {
 		return likeCommentRepository.findCommentListByTimelineId(timeline);
 	}
+	
+	/**
+	 * 一つのタイムラインに連なる、コメントリストの消去
+	 * 
+	 * @param timeline
+	 * @return
+	 */
+	public List<LikeComment> deleteCommentListToTimeline(Timeline timeline) {
+		return likeCommentRepository.deleteCommentListByTimelineId(timeline);
+	}
 
 	/**
 	 * タイムライン接続テーブルに登録(テスト用のメソッドで使用)
@@ -266,6 +276,16 @@ public class LikeCommentService {
 	 */
 	public List<LikeComment> findCommentListToReview(Review review) {
 		return likeCommentRepository.findCommentListByReviewId(review);
+	}
+	
+	/**
+	 * 一つのレビューに連なる、コメントリストの削除
+	 * 
+	 * @param review
+	 * @return
+	 */
+	public List<LikeComment> deleteCommentListToReview(Review review) {
+		return likeCommentRepository.deleteCommentListByReviewId(review);
 	}
 
 // コメントへのいいね周り
