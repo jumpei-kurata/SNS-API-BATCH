@@ -41,15 +41,21 @@ public interface LikeCommentRepository {
 	//　タイムラインに紐づくコメントリストを検索
 	List<LikeComment> findCommentListByTimelineId(Timeline timeline);
 
+	//　タイムラインに紐づくコメントリストをupdateで消去
+	List<LikeComment> deleteCommentListByTimelineId(Timeline timeline);
+
 	//　userId で SELECT
 	LikeComment findLikeCommentByUserIdAndTimelineId(LikeComment likeComment);
 	
 	//　userIdとtimelineIdで、いいね有無を検索
 	LikeComment findLikeToTLByUserIdAndTimeLineId(LikeComment likeComment);
-	
+
 // レビュー周り	
-	//　タイムラインに紐づくコメントリストを検索
+	//　レビューに紐づくコメントリストを検索
 	List<LikeComment> findCommentListByReviewId(Review review);
+	
+	//　レビューに紐づくコメントリストをupdateで消去
+	List<LikeComment> deleteCommentListByReviewId(Review review);
 	
 	//　userIdとreviewIdで、いいね有無を検索
 	LikeComment findLikeToReviewByUserIdAndReviewId(LikeComment likeComment);

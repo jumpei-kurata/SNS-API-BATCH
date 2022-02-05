@@ -169,6 +169,20 @@
 		AND lc.comment_deleted = false 
 		ORDER BY lc.like_comment_id ASC
 	</select>
+	
+	<select id="deleteCommentListByTimelineId" resultMap="LikeCommentMap">
+		UPDATE
+		like_comments AS lc
+		JOIN 
+	 	links_to_timeline  AS ltt 
+		ON 
+		ltt.like_comment_fk = lc.like_comment_id 
+		SET lc.comment_deleted = true
+		WHERE 
+		ltt.timeline_fk = #{id} 
+		AND lc.comment IS NOT NULL
+		AND lc.comment_deleted = false 
+	</select>
 
 	<select id="findCommentListByReviewId" resultMap="LikeCommentMap">
 		SELECT 
@@ -212,6 +226,20 @@
 		AND lc.comment_deleted = false 
 		ORDER BY lc.like_comment_id ASC
 	</select>	
+
+	<select id="deleteCommentListByReviewId" resultMap="LikeCommentMap">
+		UPDATE
+		like_comments AS lc
+		JOIN 
+	 	links_to_review  AS ltr 
+		ON 
+		ltr.like_comment_fk = lc.like_comment_id 
+		SET lc.comment_deleted = true
+		WHERE 
+		ltr.review_fk = #{id} 
+		AND lc.comment IS NOT NULL
+		AND lc.comment_deleted = false 
+	</select>
 
 	<select id="findNotificationByUserId" resultMap="NotificationMap">
 		SELECT 
