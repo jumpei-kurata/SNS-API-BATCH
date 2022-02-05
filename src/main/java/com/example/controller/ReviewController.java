@@ -1,6 +1,5 @@
 package com.example.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.LikeComment;
 import com.example.domain.Review;
-import com.example.domain.Timeline;
 import com.example.domain.User;
 import com.example.form.InsertReviewCommentForm;
 import com.example.form.InsertReviewForm;
@@ -259,7 +257,7 @@ public class ReviewController {
 		param.setUserId(user.getId());
 		
 		// そしてロードしてもらう
-		List<LikeComment> commentList = likeCommentService.findCommentListToReview(review);
+		List<LikeComment> commentList = likeCommentService.findCommentListToReview(param);
 
 		// それぞれの情報をマップに詰めて送る
 		map.put("status", "success");
