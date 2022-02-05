@@ -146,8 +146,17 @@ public class TimelineController {
 			map.put("message", "つぶやきが存在しません");
 			return map;
 		}
+
+	// コメントリストをロードする
+		// コメントリストをロードするメソッドに引数として渡すためのタイムラインインスタンスを生成
+		Timeline param = new Timeline();
 		
-		List<LikeComment> commentList = likeCommentService.findCommentListToTimeline(timeline);
+		// 上でロードしてきたタイムラインのIDと、現在見ているユーザーのIDを引数にセット
+		param.setId(timeline.getId());
+		param.setUserId(user.getId());
+		
+		// そしてロードしてもらう
+		List<LikeComment> commentList = likeCommentService.findCommentListToTimeline(param);
 		
 		map.put("status", "success");
 		map.put("message", "タイムライン詳細の検索に成功しました");
