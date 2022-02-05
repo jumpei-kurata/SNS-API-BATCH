@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.LikeComment;
 import com.example.domain.Review;
+import com.example.domain.Timeline;
 import com.example.domain.User;
 import com.example.form.InsertReviewCommentForm;
 import com.example.form.InsertReviewForm;
@@ -249,9 +250,16 @@ public class ReviewController {
 			return map;
 		}
 
-		// レビューIDに対応したコメント一覧のロード
-		List<LikeComment> commentList = new ArrayList<>();
-		commentList = likeCommentService.findCommentListToReview(review);
+	// レビューIDに対応したコメント一覧のロード
+		// コメントリストをロードするメソッドに引数として渡すためのタイムラインインスタンスを生成
+		Review param = new Review();
+		
+		// 上でロードしてきたタイムラインのIDと、現在見ているユーザーのIDを引数にセット
+		param.setId(review.getId());
+		param.setUserId(user.getId());
+		
+		// そしてロードしてもらう
+		List<LikeComment> commentList = likeCommentService.findCommentListToReview(review);
 
 		// それぞれの情報をマップに詰めて送る
 		map.put("status", "success");
