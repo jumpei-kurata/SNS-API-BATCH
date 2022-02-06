@@ -125,14 +125,21 @@
 		tl.timeline_like_count AS t_l_count, 
 		tl.timeline_comment_count AS t_c_count, 
 		tl.timeline_posted_time AS t_p_time, 
-		(CASE WHEN lc.like_comment_id is null THEN false 
+		(CASE WHEN myLike.like_comment_id is null THEN false 
 		ELSE true END) AS is_my_like, 
 		tl.deleted AS deleted
 		FROM 
 		timelines AS tl 
 		LEFT JOIN
 		(
-		(SELECT * FROM like_comments WHERE user_fk = #{requestedUserId} AND is_like = true ) AS lc
+		(SELECT * FROM like_comments WHERE user_fk = #{visitingUserId} AND is_like = true ) AS myLike 
+		LEFT JOIN links_to_timeline AS ltl2
+		ON myLike.like_comment_id = ltl2.like_comment_fk 
+		)
+		ON tl.timeline_id = ltl2.timeline_fk 
+		JOIN
+		(
+		(SELECT * FROM like_comments WHERE user_fk = #{requestedUserId} AND is_like = true ) AS lc 
 		LEFT JOIN links_to_timeline AS ltl
 		ON lc.like_comment_id = ltl.like_comment_fk 
 		)
@@ -142,8 +149,6 @@
 		ON 
 		tl.user_fk = u.user_id 
 		WHERE 
-		lc.user_fk = #{requestedUserId}
-		AND 
 		lc.is_like = true
 		AND
 		tl.deleted = false
