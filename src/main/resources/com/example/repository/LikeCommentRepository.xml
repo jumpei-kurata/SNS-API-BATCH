@@ -306,7 +306,7 @@
 		
 		LEFT JOIN
 		(
-		(SELECT * FROM like_comments WHERE user_fk = 1 AND is_like = true ) AS my_likes #visitingUserId
+		(SELECT * FROM like_comments WHERE user_fk = #{visitingUserId} AND is_like = true ) AS my_likes 
 		LEFT JOIN links_to_like_comment AS l_my_like
 		ON my_likes.like_comment_id = l_my_like.like_comment_fk2
 		)
@@ -314,7 +314,7 @@
 		
 		JOIN 
 		(
-		(SELECT * FROM like_comments WHERE user_fk = 2 AND is_like = true ) AS his_likes #requestedUserId
+		(SELECT * FROM like_comments WHERE user_fk = #{requestedUserId} AND is_like = true ) AS his_likes 
 		LEFT JOIN links_to_like_comment AS l_his_like
 		ON his_likes.like_comment_id = l_his_like.like_comment_fk2
 		)
