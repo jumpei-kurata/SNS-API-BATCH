@@ -174,6 +174,9 @@ public class UserController {
 			return map;
 		}
 		
+		// ユーザー情報を帰す場合も、フロントにパスワードを返す必要はないので渡す前に隠す
+		user.setPassword(null);
+		
 		map.put("status", "success");
 		map.put("message", "ロードに成功しました");
 		map.put("user", user);
