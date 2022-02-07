@@ -158,19 +158,27 @@
 		rv.review_like_count , 
 		rv.review_comment_count, 
 		rv.review_posted_time ,
-		(CASE WHEN lc.like_comment_id is null THEN false 
+		(CASE WHEN myLike.like_comment_id is null THEN false 
 		ELSE true END) AS is_my_like, 
 		rv.deleted AS deleted
 		FROM 
 		reviews AS rv 
 		LEFT JOIN
 		(
-		(SELECT * FROM like_comments
-		WHERE user_fk = #{requestedUserId} AND is_like = true ) AS lc
+		(SELECT like_comment_id,comment FROM like_comments
+		WHERE user_fk = #{visitingUserId} AND is_like = true ) AS myLike
 		LEFT JOIN links_to_review AS ltr
-		ON lc.like_comment_id = ltr.like_comment_fk 
+		ON myLike.like_comment_id = ltr.like_comment_fk 
 		)
 		ON rv.review_id = ltr.review_fk 
+		JOIN
+		(
+		(SELECT like_comment_id,comment FROM like_comments
+		WHERE user_fk = #{requestedUserId} AND is_like = true ) AS lc
+		LEFT JOIN links_to_review AS ltr2
+		ON lc.like_comment_id = ltr2.like_comment_fk 
+		)
+		ON rv.review_id = ltr2.review_fk 
 		LEFT JOIN 
 		users AS u 
 		ON 
@@ -180,10 +188,6 @@
 		ON 
 		rv.restaurant_fk = rst.restaurant_id
 		WHERE 
-		lc.user_fk = #{requestedUserId}
-		AND
-		lc.is_like = true
-		AND
 		rv.deleted = false
 		ORDER BY rv.review_id DESC 
 		LIMIT 50
