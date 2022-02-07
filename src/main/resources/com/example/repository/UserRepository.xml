@@ -24,7 +24,7 @@
 	<select id="findById" resultMap="userMap">
 		SELECT
 		u.user_id,
-		u.user_name,
+		u.account_name,
 		u.hire_date,
 		u.service_fk,
 		s.service_name,
@@ -46,7 +46,7 @@
 	<select id="findByIdForLogin" resultMap="userMap">
 		SELECT
 		u.user_id,
-		u.user_name,
+		u.account_name,
 		u.hire_date,
 		u.service_fk,
 		s.service_name,
