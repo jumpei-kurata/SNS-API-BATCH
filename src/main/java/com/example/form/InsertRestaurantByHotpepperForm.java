@@ -8,40 +8,40 @@ import lombok.Data;
 @Data
 public class InsertRestaurantByHotpepperForm {
 	@NotBlank(message = "名前が入力されていません")
-	String name;
+	private String name;
 
 	@NotBlank(message = "店舗住所が入力されていません")
-	String address;
+	private String address;
 
 	@NotBlank(message = "店のジャンルが選択されていません")
-	String genreFk;
+	private String genreFk;
 
 	@Min(value=1,message = "提供タイプが選択されていません")
-	Integer type;
+	private Integer type;
 
 	@NotBlank(message = "画像が登録されていません")
-	String photoPath;
+	private String photoPath;
 
 	@NotBlank(message = "ホットペッパーIDが登録されていません")
-	String hotpepperId;
+	private String hotpepperId;
 
 	@NotBlank(message = "説明文が登録されていません")
-	String description;
+	private String description;
 
 	@NotBlank(message = "アクセス情報が登録されていません")
-	String access;
+	private String access;
 
 	@NotBlank(message = "緯度情報が登録されていません")
-	String latitude;
+	private String latitude;
 
 	@NotBlank(message = "経度情報が登録されていません")
-	String longitude;
+	private String longitude;
 
 	@NotBlank(message = "URLが登録されていません")
-	String url;
+	private String url;
 
 	@NotBlank(message = "喫煙情報が登録されていません")
-	String smoking;
+	private String smoking;
 
 	public String getName() {
 		return name;
