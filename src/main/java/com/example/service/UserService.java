@@ -181,12 +181,9 @@ public class UserService {
 	 */
 	public User changePasswordAfterLogin(User user,String beforePassword,String afterPassword) {
 		
-		// パスワードのハッシュ化
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		
 		// 上記でDBから持ってきたUser情報と、入力されたパスワードが一致しているかを確認
 		// 一致していなければ、return
-		if (!passwordEncoder.matches(user.getPassword(), beforePassword)) {
+		if (!passwordEncoder.matches( beforePassword,user.getPassword())) {
 			return null ;
 		}
 		
