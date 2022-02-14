@@ -1,8 +1,14 @@
 package com.example.form;
 
-public class ConfirmMailForm {
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
+public class ConfirmMailForm {
+	
+	@Size(min=2,max=31)
 	private String name;
+	
+	@Email
 	private String email;
 	
 	public String getName() {
