@@ -2,6 +2,13 @@ package com.example.form;
 
 import java.sql.Date;
 
+/**
+ * ユーザー情報を編集するためのデータを受け取るフォームクラス。<br>
+ * 意図的にnullを許容しており、後のrepositoryにて、nullの情報は変更しない形になっている。
+ * 
+ * @author cyjoh
+ *
+ */
 public class UserEditForm {
 
 	private String userLogicalId;

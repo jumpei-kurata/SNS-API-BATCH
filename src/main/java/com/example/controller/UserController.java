@@ -265,6 +265,29 @@ public class UserController {
 	public Map<String, Object> sendCheckMail(@RequestBody ConfirmMailForm form) {
 		Map<String, Object> map = new HashMap<>();
 
+		
+		// 入力されたメールアドレスがすでに本登録済みでないかを確認する
+		
+		// ユーザーをインスタンス化
+		User user = new User();
+		user.setEmail(form.getEmail());
+		
+		// メールアドレスでロード
+		user = userService.findByEmail(user);
+		
+		// すでに本登録されていたら、その旨をフロントへreturn
+		if(user != null ) {
+			map.put("status", "error");
+			map.put("message", "そのメールアドレスはすでに本登録が完了しています");
+			return map;
+			
+		}
+			
+			
+		// 入力されたアドレスが一度仮登録に使われているか、まだかを確認する
+		// 一度使われていれば、メールアドレス以外の情報は一度取得したDBから持ってくる。
+		//　なければformのデータをmailドメインに詰める。
+		
 		Mail mail = new Mail();
 		mail.setEmail(form.getEmail());
 		List<Mail> list = userService.findMailByEmail(mail);
@@ -276,7 +299,7 @@ public class UserController {
 		} else {
 			mail = list.get(0);
 		}
-
+		
 		try {
 			userService.accountConfirmMail(mail);
 		} catch (Exception e) {

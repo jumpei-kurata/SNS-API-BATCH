@@ -220,8 +220,8 @@ public class UserService {
 		try {
 			msg.setFrom(FROMEMAIL);
 			msg.setTo(mail.getEmail());
-			msg.setSubject("メールアドレス認証のお願い");
-			msg.setText(mail.getName() + " 様\nURLです\n\n" + "http://localhost:3000/auth/signup/" + token);
+			msg.setSubject("【ランチックス】メールアドレス認証のお願い");
+			msg.setText(mail.getName() + " 様\n\n以下が認証用URLです。\nこちらから本登録をお願い致します。\n\n" + "http://test.lunchkus.net/auth/signup/" + token);
 			sender.send(msg);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -249,9 +249,9 @@ public class UserService {
 		try {
 			msg.setFrom(FROMEMAIL);
 			msg.setTo(user.getEmail());
-			msg.setSubject("パスワードの再設定について");
-			msg.setText(user.getName() + "様\n\n" + "パスワードの再設定がリクエストされました\n" + "以下のリンクから再設定が可能です。\n\n"
-					+ "http://localhost:3000/auth/updatepass/" + token + "\n\n" + "このメールに心当たりが無い場合は無視してください。\n"
+			msg.setSubject("【ランチックス】パスワードの再設定について");
+			msg.setText(user.getName() + "様\n\n" + "パスワードの再設定がリクエストされました。\n" + "以下のリンクから再設定が可能です。\n\n"
+					+ "http://test.lunchkus.net/auth/updatepass/" + token + "\n\n" + "このメールに心当たりが無い場合は無視してください。\n"
 					+ "上記URLを通して再設定しない限り、パスワードは変更されません。\n");
 			sender.send(msg);
 		} catch (Exception e) {
