@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.domain.Restaurant;
-import com.example.form.FindRestaurantsForm;
 import com.example.form.InsertRestaurantByHotpepperForm;
 import com.example.form.InsertRestaurantForm;
 import com.example.service.ErrorService;

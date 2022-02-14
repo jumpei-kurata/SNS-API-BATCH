@@ -12,23 +12,23 @@ import lombok.Data;
 @Data
 public class InsertRestaurantForm {
 	@NotBlank(message = "名前が入力されていません")
-	String name;
+	private String name;
 
 	@NotBlank(message = "店舗住所が入力されていません")
-	String address;
+	private String address;
 
 	@NotBlank(message = "店のジャンルが選択されていません")
-	String genreFk;
+	private String genreFk;
 
 	@Min(value=1,message = "提供タイプが選択されていません")
-	Integer type;
+	private Integer type;
 
-	String description;
-	String access;
-	String latitude;
-	String longitude;
-	String url;
-	String smoking;
+	private String description;
+	private String access;
+	private String latitude;
+	private String longitude;
+	private String url;
+	private String smoking;
 
 	public String getName() {
 		return name;
