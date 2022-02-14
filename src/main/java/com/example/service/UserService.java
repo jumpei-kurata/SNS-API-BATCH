@@ -220,8 +220,8 @@ public class UserService {
 		try {
 			msg.setFrom(FROMEMAIL);
 			msg.setTo(mail.getEmail());
-			msg.setSubject("メールアドレス認証のお願い");
-			msg.setText(mail.getName() + " 様\nURLです\n\n" + "http://localhost:3000/auth/signup/" + token);
+			msg.setSubject("【ランチックス】メールアドレス認証のお願い");
+			msg.setText(mail.getName() + " 様\n\n以下が認証用URLです。\nこちらから本登録をお願い致します。\n\n" + "http://test.lunchkus.net/auth/signup/" + token);
 			sender.send(msg);
 		} catch (Exception e) {
 			e.printStackTrace();
