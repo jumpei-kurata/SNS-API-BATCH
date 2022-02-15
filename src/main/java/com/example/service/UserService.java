@@ -187,8 +187,9 @@ public class UserService {
 			return null ;
 		}
 		
-		// 一致していれば、パスワードの経脳を実行
-		user.setPassword(afterPassword);
+		// 一致していれば、パスワードの変更を実行
+		
+		user.setPassword(passwordEncoder.encode(afterPassword));
 		userRepository.changePassword(user);
 		
 		// 最後に最新情報をロードして、コントローラーに返す。
