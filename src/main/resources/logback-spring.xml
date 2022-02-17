@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE logback>
+<configuration>
+    <property name="LOG_DIR" value="./logs" />
+    <property name="FILE_PREFIX" value="logback" />
+    <timestamp key="time" datePattern="yyyyMMdd_HHmmss" />
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_DIR}/${FILE_PREFIX}_${time}.log</file>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root>
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>
