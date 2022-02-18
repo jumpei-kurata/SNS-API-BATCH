@@ -1,16 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE logback>
-<configuration>
+
+<!-- <configuration>
     <property name="LOG_DIR" value="./logs" />
     <property name="FILE_PREFIX" value="logback" />
     <timestamp key="time" datePattern="yyyyMMdd_HHmmss" />
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/${FILE_PREFIX}_${time}.log</file>
+        
+         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      		<fileNamePattern>${LOG_DIR}/${FILE_PREFIX}-%d{yyyy-MM-dd}.log</fileNamePattern>
+      		<cleanHistoryOnStart>true</cleanHistoryOnStart>
+      		<maxHistory>1</maxHistory> ★最大保持件数を設定
+   		 </rollingPolicy>
+   		 
         <encoder>
             <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
         </encoder>
     </appender>
-    <root>
+    <root level="INFO">
         <appender-ref ref="FILE" />
+    </root>
+</configuration> -->
+
+<configuration scan="true" scanPeriod="30 seconds">
+	<property name="LOG_DIR" value="./logs" />
+    <property name="FILE_PREFIX" value="logback" />
+    <timestamp key="time" datePattern="yyyy-MM-dd" />
+    <jmxConfigurator />
+
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${FILE_PREFIX}_${time}_ERROR.log</file>
+
+        <!-- ERRORレベル以上のログのみを出力するためのフィルタ -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logfile.name}_ERROR.%d{yyyy-MM-dd}</fileNamePattern>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <maxHistory>14</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] [%logger{35}:%line]%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${FILE_PREFIX}_${time}_WARN.log</file>
+
+        <!-- WARNレベル以上のログのみを出力するためのフィルタ -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logfile.name}_WARN.%d{yyyy-MM-dd}</fileNamePattern>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <maxHistory>14</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] [%logger{35}:%line]%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${FILE_PREFIX}_${time}_INFO.log</file>
+
+        <!-- INFOレベルのログのみを出力するためのフィルタ -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logfile.name}_INFO.%d{yyyy-MM-dd}</fileNamePattern>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <maxHistory>14</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%p] [%t] [%logger{35}:%line]%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root>
+        <appender-ref ref="ERROR_FILE" />
+        <appender-ref ref="WARN_FILE" />
+        <appender-ref ref="INFO_FILE" />
     </root>
 </configuration>
